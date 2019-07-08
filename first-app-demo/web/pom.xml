@@ -11,6 +11,9 @@
 
     <artifactId>web</artifactId>
 
+    <!-- 将 packaging 调整成 war (默认为jar) -->
+    <packaging>war</packaging>
+
     <dependencies>
         <dependency>
             <groupId>com.chanshiyu</groupId>
@@ -18,5 +21,17 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.chanshiyu.firstappdemo.FirstAppDemoApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

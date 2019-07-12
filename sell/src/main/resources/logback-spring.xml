@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <!-- 控制台输出配置 -->
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <!-- Info 日志文件配置 -->
+    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤 Error 级别日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>Error</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%d - %msg%n</pattern>
+        </encoder>
+        <!-- 滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 路径 -->
+            <fileNamePattern>C:/Users/chanshiyu/Documents/log/sell/info.%d.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Error 日志文件配置 -->
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤 Info 级别日志-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>Error</level>
+        </filter>
+        <encoder>
+            <pattern>%d - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>C:/Users/chanshiyu/Documents/log/sell/error.%d.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 将上述配置引入并控制日志级别 -->
+    <root level="info">
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="fileInfoLog" />
+        <appender-ref ref="fileErrorLog" />
+    </root>
+</configuration>

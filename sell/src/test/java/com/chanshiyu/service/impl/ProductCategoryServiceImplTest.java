@@ -21,26 +21,26 @@ public class ProductCategoryServiceImplTest {
     private ProductCategoryServiceImpl productCategoryService;
 
     @Test
-    public void findOne() {
+    public void findOneTest() {
         ProductCategory result = productCategoryService.findOne(1);
         Assert.assertEquals(new Integer(1), result.getCategoryId());
     }
 
     @Test
-    public void findAll() {
+    public void findAllTest() {
         List<ProductCategory> result = productCategoryService.findAll();
         Assert.assertNotEquals(0, result.size());
     }
 
     @Test
-    public void findByCategoryTypeIn() {
+    public void findByCategoryTypeInTest() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4);
         List<ProductCategory> result = productCategoryService.findByCategoryTypeIn(list);
         Assert.assertNotEquals(0, result.size());
     }
 
     @Test
-    public void save() {
+    public void saveTest() {
         ProductCategory productCategory = new ProductCategory("畅销榜", 6);
         ProductCategory result = productCategoryService.save(productCategory);
         Assert.assertNotNull(result);

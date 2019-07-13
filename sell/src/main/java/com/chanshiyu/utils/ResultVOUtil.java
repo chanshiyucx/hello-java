@@ -6,7 +6,7 @@ public class ResultVOUtil {
 
     public static ResultVO success(Object object) {
         ResultVO resultVO = new ResultVO();
-        resultVO.setCode(0);
+        resultVO.setStatus(200);
         resultVO.setMsg("ok");
         resultVO.setData(object);
         return resultVO;
@@ -18,7 +18,7 @@ public class ResultVOUtil {
 
     public static ResultVO error(Integer code, String msg) {
         ResultVO resultVO = new ResultVO();
-        resultVO.setCode(code);
+        resultVO.setStatus(code);
         resultVO.setMsg(msg);
         return resultVO;
     }

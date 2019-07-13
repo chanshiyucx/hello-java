@@ -1,5 +1,6 @@
 package com.chanshiyu.controller;
 
+import com.chanshiyu.VO.ProductCategoryVO;
 import com.chanshiyu.VO.ProductInfoVO;
 import com.chanshiyu.VO.ProductVO;
 import com.chanshiyu.VO.ResultVO;
@@ -11,6 +12,7 @@ import com.chanshiyu.utils.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,8 +34,12 @@ public class BuyerProductController {
     @Autowired
     private ProductCategoryService productCategoryService;
 
+    /**
+     * 查询所有上架的商品
+     * @return 上架商品列表
+     */
     @GetMapping("/list")
-    public ResultVO list() {
+    public ResultVO getList() {
         // 1. 查询所有商品
         List<ProductInfo> productInfoList = productInfoService.findUpAll();
 
@@ -67,5 +73,18 @@ public class BuyerProductController {
         }
 
         return ResultVOUtil.success(productVOList);
+    }
+
+    @GetMapping("/category")
+    public ResultVO getCategory() {
+        List<ProductCategory> productCategoryList = productCategoryService.findAll();
+        List<ProductCategoryVO> productCategoryVOList = new ArrayList<>();
+        for(ProductCategory productCategory : productCategoryList) {
+            ProductCategoryVO productCategoryVO = new ProductCategoryVO();
+            BeanUtils.copyProperties(productCategory, productCategoryVO);
+            productCategoryVOList.add(productCategoryVO);
+        }
+
+        return ResultVOUtil.success(productCategoryVOList);
     }
 }

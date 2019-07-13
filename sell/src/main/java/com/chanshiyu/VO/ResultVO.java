@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class ResultVO<T> {
 
-    private Integer code;
+    private Integer status;
 
     private String msg;
 

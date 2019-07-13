@@ -7,6 +7,7 @@ import com.chanshiyu.dataobject.ProductCategory;
 import com.chanshiyu.dataobject.ProductInfo;
 import com.chanshiyu.service.ProductCategoryService;
 import com.chanshiyu.service.ProductInfoService;
+import com.chanshiyu.utils.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,11 +66,6 @@ public class BuyerProductController {
             productVOList.add(productVO);
         }
 
-        ResultVO resultVO = new ResultVO();
-        resultVO.setCode(0);
-        resultVO.setMsg("OK");
-        resultVO.setData(productVOList);
-
-        return resultVO;
+        return ResultVOUtil.success(productVOList);
     }
 }

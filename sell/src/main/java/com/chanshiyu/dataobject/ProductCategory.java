@@ -1,5 +1,8 @@
 package com.chanshiyu.dataobject;
 
+import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,7 +11,9 @@ import javax.persistence.Id;
 /**
  * 商品类目
  */
-@Entity
+@Entity // 实体
+@DynamicUpdate // 自动更新时间
+@Data // lombok 自动生成 getter 和 setter
 public class ProductCategory {
 
     /* 类目 id */
@@ -22,36 +27,12 @@ public class ProductCategory {
     /* 类目编号 */
     private Integer categoryType;
 
-    public Integer getCategoryId() {
-        return categoryId;
+    /* 列表查询时需要增加一个默认的构造器 */
+    public ProductCategory() {
     }
 
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
+    public ProductCategory(String categoryName, Integer categoryType) {
         this.categoryName = categoryName;
-    }
-
-    public Integer getCategoryType() {
-        return categoryType;
-    }
-
-    public void setCategoryType(Integer categoryType) {
         this.categoryType = categoryType;
-    }
-
-    @Override
-    public String toString() {
-        return "ProductCategory{" +
-                "categoryId=" + categoryId +
-                ", categoryName='" + categoryName + '\'' +
-                ", categoryType=" + categoryType +
-                '}';
     }
 }

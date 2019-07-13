@@ -2,13 +2,16 @@ package com.chanshiyu.repository;
 
 import com.chanshiyu.dataobject.ProductCategory;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
+import javax.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,11 +28,17 @@ public class ProductCategoryRepositoryTest {
     }
 
     @Test
+    @Transactional // 测试数据不插入数据库
     public void saveTest() {
-        ProductCategory productCategory = new ProductCategory();
-        productCategory.setCategoryId(1);
-        productCategory.setCategoryName("新品榜");
-        productCategory.setCategoryType(1);
-        repository.save(productCategory);
+        ProductCategory productCategory = new ProductCategory("女生最爱", 3);
+        ProductCategory result = repository.save(productCategory);
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void findByCategoryTypeInTest() {
+        List<Integer> list = Arrays.asList(1,2,3,4);
+        List<ProductCategory> result = repository.findByCategoryTypeIn(list);
+        Assert.assertNotEquals(0, ((List) result).size());
     }
 }

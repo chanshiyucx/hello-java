@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.math.BigDecimal;
 
+/**
+ * 商品详情 -> 对于数据库中表的字段
+ */
 @Entity
 @Data
 @DynamicUpdate

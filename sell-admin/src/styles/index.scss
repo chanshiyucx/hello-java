@@ -53,7 +53,7 @@ div:focus {
     visibility: hidden;
     display: block;
     font-size: 0;
-    content: " ";
+    content: ' ';
     clear: both;
     height: 0;
   }
@@ -62,4 +62,8 @@ div:focus {
 // main-container global css
 .app-container {
   padding: 20px;
+}
+
+.filter-container {
+  margin-bottom: 20px;
 }

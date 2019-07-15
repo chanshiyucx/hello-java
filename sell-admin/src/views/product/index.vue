@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { getCategoryList, createCategory } from '@/api/product'
+import { getProductList } from '@/api/product'
 
 const initEditForm = {
   name: '',
@@ -78,7 +78,7 @@ export default {
   methods: {
     async getData() {
       this.loading.table = true
-      const res = await getCategoryList()
+      const res = await getProductList()
       this.loading.table = false
       if (res.status !== 200) {
         return this.$message.error(res.msg)
@@ -99,13 +99,13 @@ export default {
       })
     },
     async handleSure() {
-      this.loading.table = true
-      const res = await createCategory(this.editForm)
-      this.loading.table = false
-      if (res.status !== 200) {
-        return this.$message.error(res.msg)
-      }
-      this.list = res.data
+      // this.loading.table = true
+      // const res = await createCategory(this.editForm)
+      // this.loading.table = false
+      // if (res.status !== 200) {
+      //   return this.$message.error(res.msg)
+      // }
+      // this.list = res.data
     },
     handleDelete() {}
   }

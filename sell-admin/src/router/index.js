@@ -36,13 +36,11 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
   {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
-
   {
     path: '/',
     component: Layout,
@@ -56,7 +54,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/category',
     component: Layout,
@@ -69,7 +66,18 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/product',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Product',
+        component: () => import('@/views/product/index'),
+        meta: { title: '商品列表', icon: 'product' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

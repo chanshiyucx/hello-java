@@ -12,12 +12,10 @@ import com.chanshiyu.utils.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,4 +85,15 @@ public class BuyerProductController {
 
         return ResultVOUtil.success(productCategoryVOList);
     }
+
+    //@PostMapping("/category")
+    //public ResultVO createCategory(@RequestBody Map<String,Object> reqMap) {
+    //    String categoryName = reqMap.get("categoryName").toString();
+    //    Integer categoryType = reqMap.get("categoryType");
+    //
+    //    ProductCategory productCategory = new ProductCategory();
+    //    productCategory.setCategoryName(categoryName);
+    //    productCategory.setCategoryType(categoryType);
+    //    return ResultVOUtil.success(productCategoryService.save(productCategory));
+    //}
 }

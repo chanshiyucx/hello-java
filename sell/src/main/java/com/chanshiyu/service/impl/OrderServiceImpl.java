@@ -127,13 +127,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDTO cancel(OrderDTO orderDTO) {
-        OrderMaster orderMaster = new OrderMaster();
+        checkOrderStatus(orderDTO);
 
-        // 判断订单状态
-        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
-            log.error("【取消订单】订单状态不正确，orderDTO = {}", orderDTO);
-            throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
-        }
+        OrderMaster orderMaster = new OrderMaster();
 
         // 修改订单状态，注意先设置状态再COPY，不然最后返回的OrderDTO支付状态还是0
         orderDTO.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
@@ -160,14 +156,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDTO finish(OrderDTO orderDTO) {
-        OrderMaster orderMaster = new OrderMaster();
+        checkOrderStatus(orderDTO);
 
-        // 1. 判断订单状态
-        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
-            log.error("【完成订单】订单状态不正确，orderDTO = {}", orderDTO);
-            throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
-        }
+        OrderMaster orderMaster = new OrderMaster();
 
         // 2. 修改订单状态
         orderDTO.setOrderStatus(OrderStatusEnum.FINISHED.getCode());
@@ -182,14 +175,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDTO paid(OrderDTO orderDTO) {
-        OrderMaster orderMaster = new OrderMaster();
+        checkOrderStatus(orderDTO);
 
-        // 1. 判断订单状态
-        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
-            log.error("【完成订单】订单状态不正确，orderDTO = {}", orderDTO);
-            throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
-        }
+        OrderMaster orderMaster = new OrderMaster();
 
         // 2. 判断支付状态
         if (!orderDTO.getPayStatus().equals(PayStatusEnum.WAIT.getCode())) {
@@ -207,5 +197,13 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return orderDTO;
+    }
+
+    // 1. 判断订单状态
+    private void checkOrderStatus(OrderDTO orderDTO) {
+        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
+            log.error("【完成订单】订单状态不正确，orderDTO = {}", orderDTO);
+            throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
+        }
     }
 }

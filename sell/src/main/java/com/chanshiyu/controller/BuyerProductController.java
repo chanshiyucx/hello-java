@@ -72,28 +72,4 @@ public class BuyerProductController {
 
         return ResultVOUtil.success(productVOList);
     }
-
-    @GetMapping("/category")
-    public ResultVO getCategory() {
-        List<ProductCategory> productCategoryList = productCategoryService.findAll();
-        List<ProductCategoryVO> productCategoryVOList = new ArrayList<>();
-        for(ProductCategory productCategory : productCategoryList) {
-            ProductCategoryVO productCategoryVO = new ProductCategoryVO();
-            BeanUtils.copyProperties(productCategory, productCategoryVO);
-            productCategoryVOList.add(productCategoryVO);
-        }
-
-        return ResultVOUtil.success(productCategoryVOList);
-    }
-
-    //@PostMapping("/category")
-    //public ResultVO createCategory(@RequestBody Map<String,Object> reqMap) {
-    //    String categoryName = reqMap.get("categoryName").toString();
-    //    Integer categoryType = reqMap.get("categoryType");
-    //
-    //    ProductCategory productCategory = new ProductCategory();
-    //    productCategory.setCategoryName(categoryName);
-    //    productCategory.setCategoryType(categoryType);
-    //    return ResultVOUtil.success(productCategoryService.save(productCategory));
-    //}
 }

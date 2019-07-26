@@ -4,6 +4,7 @@ import com.chanshiyu.dataobject.OrderDetail;
 import com.chanshiyu.dataobject.OrderMaster;
 import com.chanshiyu.dto.OrderDTO;
 import com.chanshiyu.enums.OrderStatusEnum;
+import com.chanshiyu.enums.PayStatusEnum;
 import com.chanshiyu.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Or;
@@ -77,9 +78,17 @@ public class OrderServiceImplTest {
 
     @Test
     public void finish() {
+        OrderDTO orderDTO = orderService.findOne(ORDER_ID);
+        OrderDTO result = orderService.finish(orderDTO);
+        log.info("完成订单 {}", result);
+        Assert.assertEquals(OrderStatusEnum.FINISHED.getCode(), orderDTO.getOrderStatus());
     }
 
     @Test
     public void paid() {
+        OrderDTO orderDTO = orderService.findOne(ORDER_ID);
+        OrderDTO result = orderService.paid(orderDTO);
+        log.info("支付订单 {}", result);
+        Assert.assertEquals(PayStatusEnum.SUCCESS.getCode(), orderDTO.getPayStatus());
     }
 }

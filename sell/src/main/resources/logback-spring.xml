@@ -12,7 +12,7 @@
     <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 过滤 Error 级别日志-->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>Error</level>
+            <level>ERROR</level>
             <onMatch>DENY</onMatch>
             <onMismatch>ACCEPT</onMismatch>
         </filter>
@@ -30,7 +30,7 @@
     <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 过滤 Info 级别日志-->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>Error</level>
+            <level>ERROR</level>
         </filter>
         <encoder>
             <pattern>%d - %msg%n</pattern>

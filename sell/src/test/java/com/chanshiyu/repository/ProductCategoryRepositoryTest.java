@@ -29,7 +29,7 @@ public class ProductCategoryRepositoryTest {
 
     @Test
     @Transactional // 测试数据不插入数据库
-    public void saveTest() {
+    public void  saveTest() {
         ProductCategory productCategory = new ProductCategory("女生最爱", 3);
         ProductCategory result = repository.save(productCategory);
         Assert.assertNotNull(result);

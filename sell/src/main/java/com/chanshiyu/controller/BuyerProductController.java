@@ -61,10 +61,12 @@ public class BuyerProductController {
 
             List<ProductInfoVO> productInfoVOList = new ArrayList<>();
             for (ProductInfo productInfo : productInfoList) {
-                ProductInfoVO productInfoVO = new ProductInfoVO();
-                // 复制属性
-                BeanUtils.copyProperties(productInfo, productInfoVO);
-                productInfoVOList.add(productInfoVO);
+                if (productInfo.getCategoryType().equals(productCategory.getCategoryType())) {
+                    ProductInfoVO productInfoVO = new ProductInfoVO();
+                    // 复制属性
+                    BeanUtils.copyProperties(productInfo, productInfoVO);
+                    productInfoVOList.add(productInfoVO);
+                }
             }
             productVO.setProductInfoVOList(productInfoVOList);
             productVOList.add(productVO);

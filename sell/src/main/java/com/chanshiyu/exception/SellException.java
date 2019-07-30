@@ -1,8 +1,10 @@
 package com.chanshiyu.exception;
 
 import com.chanshiyu.enums.ResultEnum;
+import lombok.Getter;
 
-public class SellException extends RuntimeException {
+@Getter
+public class  SellException extends RuntimeException {
 
     private Integer code;
 

@@ -37,7 +37,7 @@ public class OrderDTO {
 
     private Integer payStatus = PayStatusEnum.WAIT.getCode();
 
-    // 这里会用到创建和更新时间
+    // 序列化创建和更新时间
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 

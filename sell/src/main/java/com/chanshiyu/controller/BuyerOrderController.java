@@ -9,6 +9,10 @@ import com.chanshiyu.form.OrderForm;
 import com.chanshiyu.service.BuyerService;
 import com.chanshiyu.service.OrderService;
 import com.chanshiyu.utils.ResultVOUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +30,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/buyer/order")
 @Slf4j
+@Api(tags = "买家订单", description = "买家订单相关 Rest API")
 public class BuyerOrderController {
 
     @Autowired
@@ -34,7 +39,7 @@ public class BuyerOrderController {
     @Autowired
     private BuyerService buyerService;
 
-    // 创建订单
+    @ApiOperation(value="创建订单")
     @PostMapping("/create")
     public ResultVO<Map<String, String>> create(@Valid OrderForm orderForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -55,7 +60,12 @@ public class BuyerOrderController {
         return ResultVOUtil.success(map);
     }
 
-    // 订单列表
+    @ApiOperation(value="订单列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "openid", value = "买家 openid", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "page", value = "页码", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "size", value = "分页大小", required = true, dataType = "Integer"),
+    })
     @GetMapping("/list")
     public ResultVO<List<OrderDTO>> list(@RequestParam("openid") String openid,
                                          @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -71,7 +81,11 @@ public class BuyerOrderController {
         return ResultVOUtil.success(orderDTOPage.getContent());
     }
 
-    // 订单详情
+    @ApiOperation(value="订单详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "openid", value = "买家 openid", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "orderId", value = "订单 ID", required = true, dataType = "String")
+    })
     @GetMapping("/detail")
     public ResultVO<OrderDTO> detail(@RequestParam("openid") String openid,
                                      @RequestParam("orderId") String orderId) {
@@ -79,8 +93,12 @@ public class BuyerOrderController {
         return ResultVOUtil.success(orderDTO);
     }
 
-    // 取消订单
-     @PostMapping("/cancel")
+    @ApiOperation(value="取消订单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "openid", value = "买家 openid", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "orderId", value = "订单 ID", required = true, dataType = "String")
+    })
+    @PostMapping("/cancel")
     public ResultVO cancel(@RequestParam("openid") String openid,
                            @RequestParam("orderId") String orderId) {
          buyerService.cancelOrder(openid, orderId);

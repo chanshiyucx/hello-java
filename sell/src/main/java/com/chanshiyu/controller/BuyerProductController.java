@@ -8,6 +8,8 @@ import com.chanshiyu.dataobject.ProductInfo;
 import com.chanshiyu.service.ProductCategoryService;
 import com.chanshiyu.service.ProductInfoService;
 import com.chanshiyu.utils.ResultVOUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/buyer/product")
+@Api(tags = "买家商品", description = "买家商品相关 Rest API")
 public class BuyerProductController {
 
     @Autowired
@@ -35,6 +38,7 @@ public class BuyerProductController {
      * 查询所有上架的商品
      * @return 上架商品列表
      */
+    @ApiOperation(value="上架商品列表")
     @GetMapping("/list")
     public ResultVO getList() {
         // 1. 查询所有商品

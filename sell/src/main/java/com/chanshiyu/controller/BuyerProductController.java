@@ -1,6 +1,5 @@
 package com.chanshiyu.controller;
 
-import com.chanshiyu.VO.ProductCategoryVO;
 import com.chanshiyu.VO.ProductInfoVO;
 import com.chanshiyu.VO.ProductVO;
 import com.chanshiyu.VO.ResultVO;

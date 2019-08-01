@@ -7,7 +7,6 @@ import javax.validation.constraints.NotEmpty;
 /**
  * 专门处理表单验证
  */
-
 @Data
 public class OrderForm {
 

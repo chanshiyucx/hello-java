@@ -4,7 +4,7 @@
     <!-- 控制台输出配置 -->
     <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d - %msg%n</pattern>
+            <pattern>%d - %c{2} - %msg%n</pattern>
         </layout>
     </appender>
 

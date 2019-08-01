@@ -2,6 +2,9 @@ package com.chanshiyu.enums;
 
 import lombok.Getter;
 
+/**
+ * 订单支付状态
+ */
 @Getter
 public enum PayStatusEnum {
 

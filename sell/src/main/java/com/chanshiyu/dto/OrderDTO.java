@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//DTO：data transform object 在各个层之间传输数据，类似于 DAO dataobject，在 DAO 基础上增加字段
-// @JsonInclude(JsonInclude.Include.NON_NULL) 返回前端移除 null 值
-
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderDTO {
@@ -32,12 +29,10 @@ public class OrderDTO {
 
     private BigDecimal orderAmount;
 
-    // tintint 对应 Integer，给状态加上默认值
     private Integer orderStatus = OrderStatusEnum.NEW.getCode();
 
     private Integer payStatus = PayStatusEnum.WAIT.getCode();
 
-    // 序列化创建和更新时间
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 

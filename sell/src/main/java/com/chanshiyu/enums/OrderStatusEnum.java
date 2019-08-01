@@ -1,9 +1,10 @@
 package com.chanshiyu.enums;
 
-import lombok.Data;
 import lombok.Getter;
 
-// 注意要加上 Getter 注解
+/**
+ * 订单状态
+ */
 @Getter
 public enum OrderStatusEnum {
 

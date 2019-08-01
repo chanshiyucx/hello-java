@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
 
+/**
+ * 订单详情
+ */
 @Entity
 @Data
 public class OrderDetail {

@@ -30,7 +30,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/buyer/order")
 @Slf4j
-@Api(tags = "买家订单", description = "买家订单相关 Rest API")
+@Api(tags = "买家订单")
 public class BuyerOrderController {
 
     @Autowired

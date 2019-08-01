@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/buyer/product")
-@Api(tags = "买家商品", description = "买家商品相关 Rest API")
+@Api(tags = "买家商品")
 public class BuyerProductController {
 
     @Autowired

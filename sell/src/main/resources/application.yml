@@ -12,7 +12,7 @@ swagger:
   description: 测试用 Api 接口，包括商品分类和买家订单
   version: 1.0.0
   terms-of-service-url: https://chanshiyu.com/
-  base-package: com.chanshiyu
+  base-package: com.chanshiyu.controller
   contact:
     name: Chanshiyu
     url: https://chanshiyu.com/

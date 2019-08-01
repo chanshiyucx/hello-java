@@ -1,4 +1,4 @@
-package com.chanshiyu.controller;
+package com.chanshiyu.controller.Buyer;
 
 import com.chanshiyu.VO.ProductInfoVO;
 import com.chanshiyu.VO.ProductVO;
@@ -44,14 +44,7 @@ public class BuyerProductController {
         // 1. 查询所有商品
         List<ProductInfo> productInfoList = productInfoService.findUpAll();
 
-        // 2. 查询所有类目
-        // 传统方式 for 循环查询
-        //List<Integer> categoryTypeList = new ArrayList<>();
-        //for (ProductInfo productInfo : productInfoList) {
-        //    categoryTypeList.add(productInfo.getCategoryType());
-        //}
-
-        // 精简方式（lambda java8）
+        // 2. 查询所有类目（lambda java8）
         List<Integer> categoryTypeList = productInfoList.stream().map(e -> e.getCategoryType()).collect(Collectors.toList());
         List<ProductCategory> productCategoryList = productCategoryService.findByCategoryTypeIn(categoryTypeList);
 

@@ -14,8 +14,8 @@ import java.util.Date;
  * 买家订单
  */
 @Entity
-@Data
 @DynamicUpdate
+@Data
 public class OrderMaster {
 
     @Id

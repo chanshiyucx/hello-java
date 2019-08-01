@@ -11,8 +11,8 @@ import java.math.BigDecimal;
  * 商品详情
  */
 @Entity
-@Data
 @DynamicUpdate
+@Data
 public class ProductInfo {
 
     @Id

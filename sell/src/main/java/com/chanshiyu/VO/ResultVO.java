@@ -3,7 +3,7 @@ package com.chanshiyu.VO;
 import lombok.Data;
 
 /**
- * http 请求返回
+ * Http 请求返回结果
  */
 @Data
 public class ResultVO<T> {

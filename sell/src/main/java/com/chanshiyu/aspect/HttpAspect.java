@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class HttpAspect {
 
-    @Pointcut("execution(public * com.chanshiyu.controller.BuyerProductController.*(..))")
+    @Pointcut("execution(public * com.chanshiyu.controller.Buyer.BuyerProductController.*(..))")
     public void log() {
     }
 

@@ -1,4 +1,4 @@
-package com.chanshiyu.controller;
+package com.chanshiyu.controller.Buyer;
 
 import com.chanshiyu.VO.ResultVO;
 import com.chanshiyu.convert.OrderForm2OrderDTOConvert;

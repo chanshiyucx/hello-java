@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * 买家商品
- */
 @RestController
 @RequestMapping("/buyer/product")
 @Api(tags = "买家商品")
@@ -34,13 +31,9 @@ public class BuyerProductController {
     @Autowired
     private ProductCategoryService productCategoryService;
 
-    /**
-     * 查询所有上架的商品
-     * @return 上架商品列表
-     */
     @ApiOperation(value="上架商品列表")
     @GetMapping("/list")
-    public ResultVO getList() {
+    public ResultVO<List<ProductVO>> getList() {
         // 1. 查询所有商品
         List<ProductInfo> productInfoList = productInfoService.findUpAll();
 

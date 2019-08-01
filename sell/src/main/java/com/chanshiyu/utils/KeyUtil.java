@@ -2,7 +2,7 @@ package com.chanshiyu.utils;
 
 import java.util.Random;
 
-public class   KeyUtil {
+public class KeyUtil {
 
     /**
      * 生成唯一主键

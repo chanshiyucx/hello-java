@@ -16,9 +16,9 @@ public class ResultVOUtil {
         return success(null);
     }
 
-    public static ResultVO error(Integer code, String msg) {
+    public static ResultVO error(Integer status, String msg) {
         ResultVO resultVO = new ResultVO();
-        resultVO.setStatus(code);
+        resultVO.setStatus(status);
         resultVO.setMsg(msg);
         return resultVO;
     }

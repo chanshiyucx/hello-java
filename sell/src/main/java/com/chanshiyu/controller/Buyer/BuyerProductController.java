@@ -33,12 +33,12 @@ public class BuyerProductController {
 
     @ApiOperation(value="上架商品列表")
     @GetMapping("/list")
-    public ResultVO<List<ProductVO>> getList() {
+    public ResultVO<List<ProductVO>> list() {
         // 1. 查询所有商品
         List<ProductInfo> productInfoList = productInfoService.findUpAll();
 
         // 2. 查询所有类目（lambda java8）
-        List<Integer> categoryTypeList = productInfoList.stream().map(e -> e.getCategoryType()).collect(Collectors.toList());
+        List<Integer> categoryTypeList = productInfoList.stream().map(ProductInfo::getCategoryType).collect(Collectors.toList());
         List<ProductCategory> productCategoryList = productCategoryService.findByCategoryTypeIn(categoryTypeList);
 
         // 3. 数据拼装
@@ -52,7 +52,6 @@ public class BuyerProductController {
             for (ProductInfo productInfo : productInfoList) {
                 if (productInfo.getCategoryType().equals(productCategory.getCategoryType())) {
                     ProductInfoVO productInfoVO = new ProductInfoVO();
-                    // 复制属性
                     BeanUtils.copyProperties(productInfo, productInfoVO);
                     productInfoVOList.add(productInfoVO);
                 }

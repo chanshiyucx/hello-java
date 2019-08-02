@@ -15,8 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 public class HttpAspect {
 
     @Pointcut("execution(public * com.chanshiyu.controller.Buyer.BuyerProductController.*(..))")
-    public void log() {
-    }
+    public void log() {}
 
     @Before("log()")
     public void doBefore(JoinPoint joinPoint) {

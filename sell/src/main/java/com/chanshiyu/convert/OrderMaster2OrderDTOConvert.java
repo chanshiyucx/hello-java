@@ -16,6 +16,6 @@ public class OrderMaster2OrderDTOConvert {
     }
 
     public static List<OrderDTO> convert(List<OrderMaster> orderMasterList) {
-        return orderMasterList.stream().map(e -> convert(e)).collect(Collectors.toList());
+        return orderMasterList.stream().map(OrderMaster2OrderDTOConvert::convert).collect(Collectors.toList());
     }
 }

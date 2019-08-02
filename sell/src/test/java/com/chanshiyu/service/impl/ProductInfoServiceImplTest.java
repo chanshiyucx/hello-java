@@ -1,7 +1,8 @@
 package com.chanshiyu.service.impl;
 
 import com.chanshiyu.dataobject.ProductInfo;
-import lombok.extern.slf4j.Slf4j;
+import com.chanshiyu.enums.ProductStatusEnum;
+import com.chanshiyu.utils.KeyUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Slf4j
 public class ProductInfoServiceImplTest {
 
     @Autowired
@@ -26,7 +24,7 @@ public class ProductInfoServiceImplTest {
 
     @Test
     public void findOneTest() {
-        ProductInfo result = productInfoService.findOne("001");
+        ProductInfo result = productInfoService.findOne("1564736031032204675");
         Assert.assertNotNull(result);
     }
 
@@ -40,18 +38,18 @@ public class ProductInfoServiceImplTest {
     public void findAllTest() {
         PageRequest pageRequest = new PageRequest(0, 2);
         Page<ProductInfo> result = productInfoService.findAll(pageRequest);
-        log.info(String.valueOf(result.getTotalElements()));
+        Assert.assertNotEquals(0, result.getTotalElements());
     }
 
     @Test
     public void saveTest() {
         ProductInfo productInfo = new ProductInfo();
-        productInfo.setProductId("001");
-        productInfo.setProductName("商品1");
-        productInfo.setProductPrice(new BigDecimal(100));
-        productInfo.setProductStock(10);
-        productInfo.setProductStatus(0);
-        productInfo.setProductDescription("hello chanshiyu");
+        productInfo.setProductId(KeyUtil.genUniqueKey());
+        productInfo.setProductName("求闻史记");
+        productInfo.setProductPrice(new BigDecimal(50));
+        productInfo.setProductStock(20);
+        productInfo.setProductStatus(ProductStatusEnum.UP.getCode());
+        productInfo.setProductDescription("東方求闻史记");
         productInfo.setProductIcon("https://chanshiyu.com");
         productInfo.setCategoryType(2);
         ProductInfo result = productInfoService.save(productInfo);

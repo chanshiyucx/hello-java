@@ -25,8 +25,7 @@ public class ProductCategory {
     private Integer categoryType;
 
     /* 列表查询时需要增加一个默认的构造器 */
-    public ProductCategory() {
-    }
+    public ProductCategory() {}
 
     public ProductCategory(String categoryName, Integer categoryType) {
         this.categoryName = categoryName;

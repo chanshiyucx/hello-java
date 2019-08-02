@@ -28,7 +28,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Override
     public List<ProductInfo> findUpAll() {
-        return repository.findByProductStatus(ProductStatusEnum.UP.getCode()); // 查询上架商品
+        return repository.findByProductStatus(ProductStatusEnum.UP.getCode());
     }
 
     @Override
@@ -42,6 +42,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
+    @Transactional
     public void increaseStock(List<CartDTO> cartDTOList) {
         for (CartDTO cartDTO : cartDTOList) {
             ProductInfo productInfo = findOne(cartDTO.getProductId());
@@ -49,8 +50,8 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                 throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
             }
 
-            Integer result = productInfo.getProductStock() + cartDTO.getProductQuantity();
-            productInfo.setProductStock(result);
+            Integer stock = productInfo.getProductStock() + cartDTO.getProductQuantity();
+            productInfo.setProductStock(stock);
             save(productInfo);
         }
     }
@@ -64,12 +65,12 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                  throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
              }
 
-             Integer result = productInfo.getProductStock() - cartDTO.getProductQuantity();
-             if(result < 0) {
+             Integer stock = productInfo.getProductStock() - cartDTO.getProductQuantity();
+             if(stock < 0) {
                  throw new SellException(ResultEnum.PRODUCT_STOCK_ERROR);
              }
 
-             productInfo.setProductStock(result);
+             productInfo.setProductStock(stock);
              save(productInfo);
          }
     }

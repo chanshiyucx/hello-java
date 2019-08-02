@@ -1,7 +1,6 @@
 package com.chanshiyu.repository;
 
 import com.chanshiyu.dataobject.ProductCategory;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +14,6 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Slf4j
 public class ProductCategoryRepositoryTest {
 
     @Autowired
@@ -24,12 +22,12 @@ public class ProductCategoryRepositoryTest {
     @Test
     public void findOneTest() {
         ProductCategory productCategory = repository.findById(1).orElse(null);
-        log.info(productCategory.toString());
+        Assert.assertNotNull(productCategory);
     }
 
     @Test
-    @Transactional // 测试数据不插入数据库
-    public void  saveTest() {
+    @Transactional
+    public void saveTest() {
         ProductCategory productCategory = new ProductCategory("女生最爱", 3);
         ProductCategory result = repository.save(productCategory);
         Assert.assertNotNull(result);
@@ -39,6 +37,6 @@ public class ProductCategoryRepositoryTest {
     public void findByCategoryTypeInTest() {
         List<Integer> list = Arrays.asList(1,2,3,4);
         List<ProductCategory> result = repository.findByCategoryTypeIn(list);
-        Assert.assertNotEquals(0, ((List) result).size());
+        Assert.assertNotEquals(0, result.size());
     }
 }

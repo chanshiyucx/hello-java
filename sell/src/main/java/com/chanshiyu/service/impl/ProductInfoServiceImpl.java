@@ -7,6 +7,7 @@ import com.chanshiyu.enums.ResultEnum;
 import com.chanshiyu.exception.SellException;
 import com.chanshiyu.repository.ProductInfoRepository;
 import com.chanshiyu.service.ProductInfoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Autowired
@@ -43,7 +45,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Override
     @Transactional
-    public void  increaseStock(List<CartDTO> cartDTOList) {
+    public void increaseStock(List<CartDTO> cartDTOList) {
         for (CartDTO cartDTO : cartDTOList) {
             ProductInfo productInfo = findOne(cartDTO.getProductId());
             if (productInfo == null) {

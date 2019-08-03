@@ -23,9 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/buyer/order")
@@ -41,7 +39,7 @@ public class BuyerOrderController {
 
     @ApiOperation(value="创建订单")
     @PostMapping("/create")
-    public ResultVO<Map<String, String>> create(@Valid OrderForm orderForm, BindingResult bindingResult) {
+    public ResultVO<OrderDTO> create(@Valid @RequestBody OrderForm orderForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             log.error("【创建订单】参数不正确，orderForm={}", orderForm);
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
@@ -54,17 +52,15 @@ public class BuyerOrderController {
         }
 
         OrderDTO createResult = orderService.create(orderDTO);
-        Map<String, String> map = new HashMap<>();
-        map.put("orderId", createResult.getOrderId());
 
-        return ResultVOUtil.success(map);
+        return ResultVOUtil.success(createResult);
     }
 
     @ApiOperation(value="订单列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "openid", value = "买家 openid", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "page", value = "页码", required = true, dataType = "Integer"),
-            @ApiImplicitParam(name = "size", value = "分页大小", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = true, dataType = "Integer"),
     })
     @GetMapping("/list")
     public ResultVO<List<OrderDTO>> list(@RequestParam("openid") String openid,

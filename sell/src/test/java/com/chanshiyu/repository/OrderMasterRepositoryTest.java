@@ -1,7 +1,7 @@
 package com.chanshiyu.repository;
 
 import com.chanshiyu.dataobject.OrderMaster;
-import lombok.extern.slf4j.Slf4j;
+import com.chanshiyu.utils.KeyUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,30 +11,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Slf4j
 public class OrderMasterRepositoryTest {
 
     @Autowired
     private OrderMasterRepository repository;
 
+    private final String OPENID = "110110";
+
     @Test
-    //@Transactional // 测试数据不插入数据库
     public void saveTest() {
         OrderMaster orderMaster = new OrderMaster();
-        orderMaster.setOrderId("12345678");
+        orderMaster.setOrderId(KeyUtil.genUniqueKey());
         orderMaster.setBuyerName("shiyu");
-        orderMaster.setBuyerPhone("0123456789");
-        orderMaster.setBuyerAddress("world");
-        orderMaster.setBuyerOpenid("220220");
-        orderMaster.setOrderAmount(new BigDecimal(1.1));
+        orderMaster.setBuyerPhone("12345678901");
+        orderMaster.setBuyerAddress("幻想乡");
+        orderMaster.setBuyerOpenid(OPENID);
+        orderMaster.setOrderAmount(new BigDecimal(1000));
         OrderMaster result = repository.save(orderMaster);
         Assert.assertNotNull(result);
     }
@@ -42,7 +38,7 @@ public class OrderMasterRepositoryTest {
     @Test
     public void findByBuyerOpenidTest() {
         PageRequest pageRequest = new PageRequest(0, 2);
-        Page<OrderMaster> result = repository.findByBuyerOpenid("110110", pageRequest);
-        log.info(String.valueOf(result.getTotalElements()));
+        Page<OrderMaster> result = repository.findByBuyerOpenid(OPENID, pageRequest);
+        Assert.assertNotEquals(0, result.getTotalElements());
     }
 }

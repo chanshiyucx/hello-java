@@ -43,17 +43,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMasterRepository orderMasterRepository;
 
-    /**
-     * Transactional 事物，抛出异常不进行操作
-     * @param orderDTO
-     * @return
-     */
     @Override
     @Transactional
     public OrderDTO create(OrderDTO orderDTO) {
         String orderId = KeyUtil.genUniqueKey();
-
-        // 注意是 BigInteger.ZERO
+        // 订单金额，注意是 BigInteger.ZERO
         BigDecimal orderAmount = new BigDecimal(BigInteger.ZERO);
 
         // 1. 查询商品（数量、价格）
@@ -77,12 +71,11 @@ public class OrderServiceImpl implements OrderService {
 
         // 4. 订单主表入库
         orderDTO.setOrderId(orderId);
+        orderDTO.setOrderAmount(orderAmount);
+        orderDTO.setOrderStatus(OrderStatusEnum.NEW.getCode());
+        orderDTO.setPayStatus(PayStatusEnum.WAIT.getCode());
         OrderMaster orderMaster = new OrderMaster();
-        // 注意要先 copy 再设置，不然 null 值也会被 copy 过去
         BeanUtils.copyProperties(orderDTO, orderMaster);
-        orderMaster.setOrderAmount(orderAmount);
-        orderMaster.setOrderStatus(OrderStatusEnum.NEW.getCode());
-        orderMaster.setPayStatus(PayStatusEnum.WAIT.getCode());
         orderMasterRepository.save(orderMaster);
 
         // 5. 扣库存

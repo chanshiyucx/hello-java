@@ -1,8 +1,6 @@
 package com.chanshiyu.dto;
 
 import com.chanshiyu.dataobject.OrderDetail;
-import com.chanshiyu.enums.OrderStatusEnum;
-import com.chanshiyu.enums.PayStatusEnum;
 import com.chanshiyu.utils.serializer.Date2LongSerializer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -29,9 +27,9 @@ public class OrderDTO {
 
     private BigDecimal orderAmount;
 
-    private Integer orderStatus = OrderStatusEnum.NEW.getCode();
+    private Integer orderStatus;
 
-    private Integer payStatus = PayStatusEnum.WAIT.getCode();
+    private Integer payStatus;
 
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
@@ -40,5 +38,4 @@ public class OrderDTO {
     private Date updateTime;
 
     private List<OrderDetail> orderDetailList = new ArrayList<>();
-
 }

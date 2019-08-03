@@ -68,7 +68,6 @@ public class OrderServiceImpl implements OrderService {
             orderDetailRepository.save(orderDetail);
         }
 
-
         // 4. 订单主表入库
         orderDTO.setOrderId(orderId);
         orderDTO.setOrderAmount(orderAmount);
@@ -119,7 +118,6 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDTO cancel(OrderDTO orderDTO) {
         checkOrderStatus(orderDTO);
-
         OrderMaster orderMaster = new OrderMaster();
 
         // 修改订单状态，注意先设置状态再COPY，不然最后返回的OrderDTO支付状态还是0
@@ -150,7 +148,6 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDTO finish(OrderDTO orderDTO) {
         checkOrderStatus(orderDTO);
-
         OrderMaster orderMaster = new OrderMaster();
 
         // 2. 修改订单状态
@@ -169,7 +166,6 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDTO paid(OrderDTO orderDTO) {
         checkOrderStatus(orderDTO);
-
         OrderMaster orderMaster = new OrderMaster();
 
         // 2. 判断支付状态

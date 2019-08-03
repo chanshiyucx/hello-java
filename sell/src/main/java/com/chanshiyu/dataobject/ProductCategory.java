@@ -16,12 +16,15 @@ import javax.persistence.Id;
 @Data
 public class ProductCategory {
 
+    /** 类目ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer categoryId;
 
+    /** 类目名称 */
     private String categoryName;
 
+    /** 类目编号 */
     private Integer categoryType;
 
     /* 列表查询时需要增加一个默认的构造器 */

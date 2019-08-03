@@ -30,6 +30,7 @@ public class BuyerProductController {
 
     @Autowired
     private ProductCategoryService productCategoryService;
+    
 
     @ApiOperation(value="上架商品列表")
     @GetMapping("/list")

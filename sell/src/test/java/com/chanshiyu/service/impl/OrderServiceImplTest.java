@@ -5,7 +5,6 @@ import com.chanshiyu.dto.OrderDTO;
 import com.chanshiyu.enums.OrderStatusEnum;
 import com.chanshiyu.enums.PayStatusEnum;
 import com.chanshiyu.service.OrderService;
-import com.chanshiyu.service.ProductInfoService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,7 +55,7 @@ public class OrderServiceImplTest {
 
     @Test
     public void findList() {
-        PageRequest pageRequest = new PageRequest(0, 2);
+        PageRequest pageRequest = PageRequest.of(0, 2);
         Page<OrderDTO> orderDTOPage = orderService.findList(BUYER_OPENID, pageRequest);
         Assert.assertNotEquals(0, orderDTOPage.getTotalElements());
     }

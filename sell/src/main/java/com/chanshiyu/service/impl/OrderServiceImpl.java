@@ -107,20 +107,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<OrderDTO> findList(String buyerOpenid, Pageable pageable) {
         Page<OrderMaster> orderMasterPage = orderMasterRepository.findByBuyerOpenid(buyerOpenid, pageable);
-        // 转换器转换，注意 orderMasterPage.getContent() 方法将 Page 转换为 List
+        // 转换器转换，将 Page 转换为 List
         List<OrderDTO> orderDTOList = OrderMaster2OrderDTOConvert.convert(orderMasterPage.getContent());
-        // orderMasterPage.getTotalElements() 获取总数
-        Page<OrderDTO> orderDTOPage = new PageImpl<OrderDTO>(orderDTOList, pageable, orderMasterPage.getTotalElements());
-        return orderDTOPage;
+        return new PageImpl<OrderDTO>(orderDTOList, pageable, orderMasterPage.getTotalElements());
     }
 
     @Override
     @Transactional
     public OrderDTO cancel(OrderDTO orderDTO) {
+        // 1. 判断订单状态
         checkOrderStatus(orderDTO);
         OrderMaster orderMaster = new OrderMaster();
 
-        // 修改订单状态，注意先设置状态再COPY，不然最后返回的OrderDTO支付状态还是0
+        // 2. 修改订单状态
         orderDTO.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
         BeanUtils.copyProperties(orderDTO, orderMaster);
         OrderMaster updateResult = orderMasterRepository.save(orderMaster);
@@ -129,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
             throw new SellException(ResultEnum.ORDER_UPDATE_FAIL);
         }
 
-        // 返还库存
+        // 3. 返还库存
         if(CollectionUtils.isEmpty(orderDTO.getOrderDetailList())) {
             log.error("【取消订单】订单中无商品详情, orderDTO = {}", orderDTO);
             throw new SellException(ResultEnum.ORDER_DETAIL_EMPTY);
@@ -140,13 +139,13 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
         productInfoService.increaseStock(cartDTOList);
 
-        // TODO: 如果已支付则退款
         return orderDTO;
     }
 
     @Override
     @Transactional
     public OrderDTO finish(OrderDTO orderDTO) {
+        // 1. 判断订单状态
         checkOrderStatus(orderDTO);
         OrderMaster orderMaster = new OrderMaster();
 
@@ -165,6 +164,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDTO paid(OrderDTO orderDTO) {
+        // 1. 判断订单状态
         checkOrderStatus(orderDTO);
         OrderMaster orderMaster = new OrderMaster();
 
@@ -186,7 +186,7 @@ public class OrderServiceImpl implements OrderService {
         return orderDTO;
     }
 
-    // 1. 判断订单状态
+    // 判断订单状态
     private void checkOrderStatus(OrderDTO orderDTO) {
         if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
             log.error("【完成订单】订单状态不正确，orderDTO = {}", orderDTO);

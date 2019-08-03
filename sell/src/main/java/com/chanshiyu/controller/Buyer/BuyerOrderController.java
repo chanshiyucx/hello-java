@@ -68,14 +68,14 @@ public class BuyerOrderController {
     })
     @GetMapping("/list")
     public ResultVO<List<OrderDTO>> list(@RequestParam("openid") String openid,
-                                         @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
+                                         @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                          @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         if(StringUtils.isEmpty(openid)) {
             log.error("【查询订单列表】openid为空");
             throw new SellException(ResultEnum.PARAM_ERROR);
         }
 
-        PageRequest pageRequest = new PageRequest(pageNum, pageSize);
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
         Page<OrderDTO> orderDTOPage = orderService.findList(openid, pageRequest);
 
         return ResultVOUtil.success(orderDTOPage.getContent());

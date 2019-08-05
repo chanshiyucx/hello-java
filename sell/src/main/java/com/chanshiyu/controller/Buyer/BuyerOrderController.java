@@ -74,7 +74,7 @@ public class BuyerOrderController {
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
         Page<OrderDTO> orderDTOPage = orderService.findList(openid, pageRequest);
 
-        return ResultVOUtil.success(orderDTOPage.getContent());
+        return ResultVOUtil.successPage(orderDTOPage);
     }
 
     @ApiOperation(value = "订单详情")

@@ -1,7 +1,6 @@
 package com.chanshiyu.controller.Seller;
 
 import com.chanshiyu.VO.ResultVO;
-import com.chanshiyu.dataobject.OrderMaster;
 import com.chanshiyu.dto.OrderDTO;
 import com.chanshiyu.service.OrderService;
 import com.chanshiyu.utils.ResultVOUtil;
@@ -39,7 +38,6 @@ public class SellerOrderController {
                                          @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
         Page<OrderDTO> orderDTOPage= orderService.findList(pageRequest);
-        return ResultVOUtil.success(orderDTOPage);
+        return ResultVOUtil.successPage(orderDTOPage);
     }
-
 }

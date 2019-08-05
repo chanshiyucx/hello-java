@@ -12,8 +12,11 @@ public interface OrderService {
     /** 查询单个订单 */
     OrderDTO findOne(String orderId);
 
-    /** 查询订单列表 */
+    /** 查询用户订单列表 */
     Page<OrderDTO> findList(String buyerOpenid, Pageable pageable);
+
+    /** 查询所有订单列表 */
+    Page<OrderDTO> findList(Pageable pageable);
 
     /** 取消订单 */
     OrderDTO cancel(OrderDTO orderDTO);

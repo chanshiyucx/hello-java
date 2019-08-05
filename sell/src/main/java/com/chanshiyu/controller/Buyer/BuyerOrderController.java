@@ -37,7 +37,7 @@ public class BuyerOrderController {
     @Autowired
     private BuyerService buyerService;
 
-    @ApiOperation(value="创建订单")
+    @ApiOperation(value = "创建订单")
     @PostMapping("/create")
     public ResultVO<OrderDTO> create(@Valid @RequestBody OrderForm orderForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -56,7 +56,7 @@ public class BuyerOrderController {
         return ResultVOUtil.success(createResult);
     }
 
-    @ApiOperation(value="订单列表")
+    @ApiOperation(value = "订单列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "openid", value = "买家 openid", required = true, dataType = "String"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "Integer"),
@@ -77,7 +77,7 @@ public class BuyerOrderController {
         return ResultVOUtil.success(orderDTOPage.getContent());
     }
 
-    @ApiOperation(value="订单详情")
+    @ApiOperation(value = "订单详情")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "openid", value = "买家 openid", required = true, dataType = "String"),
             @ApiImplicitParam(name = "orderId", value = "订单 ID", required = true, dataType = "String")
@@ -89,7 +89,7 @@ public class BuyerOrderController {
         return ResultVOUtil.success(orderDTO);
     }
 
-    @ApiOperation(value="取消订单")
+    @ApiOperation(value = "取消订单")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "openid", value = "买家 openid", required = true, dataType = "String"),
             @ApiImplicitParam(name = "orderId", value = "订单 ID", required = true, dataType = "String")
@@ -97,7 +97,7 @@ public class BuyerOrderController {
     @PostMapping("/cancel")
     public ResultVO cancel(@RequestParam("openid") String openid,
                            @RequestParam("orderId") String orderId) {
-         buyerService.cancelOrder(openid, orderId);
+        buyerService.cancelOrder(openid, orderId);
         return ResultVOUtil.success();
     }
 }

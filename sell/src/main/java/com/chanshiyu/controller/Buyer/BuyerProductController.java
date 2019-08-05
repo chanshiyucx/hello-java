@@ -32,7 +32,7 @@ public class BuyerProductController {
     private ProductCategoryService productCategoryService;
     
 
-    @ApiOperation(value="上架商品列表")
+    @ApiOperation(value = "上架商品列表")
     @GetMapping("/list")
     public ResultVO<List<ProductVO>> list() {
         // 1. 查询所有商品

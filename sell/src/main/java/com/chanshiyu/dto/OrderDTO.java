@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class OrderDTO {
     @ApiModelProperty("买家openid")
     private String buyerOpenid;
 
-    @ApiModelProperty("订单数量")
+    @ApiModelProperty("订单金额")
     private BigDecimal orderAmount;
 
     @ApiModelProperty("订单状态")
@@ -49,5 +48,5 @@ public class OrderDTO {
     private Date updateTime;
 
     @ApiModelProperty("商品列表")
-    private List<OrderDetail> orderDetailList = new ArrayList<>();
+    private List<OrderDetail> orderDetailList;
 }

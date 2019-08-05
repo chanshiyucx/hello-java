@@ -11,12 +11,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,6 +49,16 @@ public class SellerCategoryController {
             log.error("【创建类目】参数不正确，categoryForm={}", categoryForm);
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
         }
+
+        // 判断是否已存在该类目编号
+        List<Integer> categoryTypes = new ArrayList<>();
+        categoryTypes.add(categoryForm.getCategoryType());
+        List<ProductCategory> productCategoryList = productCategoryService.findByCategoryTypeIn(categoryTypes);
+        if (!CollectionUtils.isEmpty(productCategoryList)) {
+            log.error("【创建类目】类目已存在，categoryForm={}", categoryForm);
+            throw new SellException(ResultEnum.CATEGORY_IS_EXIST);
+        }
+
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(categoryForm, productCategory);
         ProductCategory result = productCategoryService.save(productCategory);
@@ -59,6 +72,7 @@ public class SellerCategoryController {
             log.error("【更新类目】参数不正确，categoryForm={}", categoryForm);
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
         }
+
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(categoryForm, productCategory);
         ProductCategory result = productCategoryService.save(productCategory);

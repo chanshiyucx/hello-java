@@ -31,11 +31,15 @@ import java.util.List;
 @Api(tags = "买家订单")
 public class BuyerOrderController {
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
+
+    private final BuyerService buyerService;
 
     @Autowired
-    private BuyerService buyerService;
+    public BuyerOrderController(OrderService orderService, BuyerService buyerService) {
+        this.orderService = orderService;
+        this.buyerService = buyerService;
+    }
 
     @ApiOperation(value = "创建订单")
     @PostMapping("/create")

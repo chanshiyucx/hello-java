@@ -25,12 +25,15 @@ import java.util.stream.Collectors;
 @Api(tags = "买家商品")
 public class BuyerProductController {
 
-    @Autowired
-    private ProductInfoService productInfoService;
+    private final ProductInfoService productInfoService;
+
+    private final ProductCategoryService productCategoryService;
 
     @Autowired
-    private ProductCategoryService productCategoryService;
-    
+    public BuyerProductController(ProductInfoService productInfoService, ProductCategoryService productCategoryService) {
+        this.productInfoService = productInfoService;
+        this.productCategoryService = productCategoryService;
+    }
 
     @ApiOperation(value = "上架商品列表")
     @GetMapping("/list")

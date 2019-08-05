@@ -25,8 +25,12 @@ import java.util.List;
 @Api(tags = "卖家订单")
 public class SellerOrderController {
 
+    private final OrderService orderService;
+
     @Autowired
-    private OrderService orderService;
+    public SellerOrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @ApiOperation(value = "订单列表")
     @ApiImplicitParams({

@@ -62,7 +62,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Category',
         component: () => import('@/views/category/index'),
-        meta: { title: '分类列表', icon: 'category' }
+        meta: { title: '类目管理', icon: 'category' }
       }
     ]
   },
@@ -74,7 +74,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Product',
         component: () => import('@/views/product/index'),
-        meta: { title: '商品列表', icon: 'product' }
+        meta: { title: '商品管理', icon: 'product' }
       }
     ]
   },

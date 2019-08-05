@@ -27,6 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/buyer/order")
+@SuppressWarnings("unchecked")
 @Slf4j
 @Api(tags = "买家订单")
 public class BuyerOrderController {

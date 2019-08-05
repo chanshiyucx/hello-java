@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/seller/category")
+@SuppressWarnings("unchecked")
 @Api(tags = "商品类目")
 public class SellerCategoryController {
 

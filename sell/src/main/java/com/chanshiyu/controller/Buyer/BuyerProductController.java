@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/buyer/product")
+@SuppressWarnings("unchecked")
 @Api(tags = "买家商品")
 public class BuyerProductController {
 

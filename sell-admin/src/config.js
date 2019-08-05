@@ -6,5 +6,5 @@ if (!isDev) {
 }
 
 export default {
-  baseURL: 'http://127.0.0.1:80/api/buyer'
+  baseURL: 'http://127.0.0.1/'
 }

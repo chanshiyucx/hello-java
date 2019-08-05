@@ -2,19 +2,27 @@ package com.chanshiyu.controller.Seller;
 
 import com.chanshiyu.VO.ResultVO;
 import com.chanshiyu.dataobject.ProductCategory;
+import com.chanshiyu.enums.ResultEnum;
+import com.chanshiyu.exception.SellException;
+import com.chanshiyu.form.CategoryForm;
 import com.chanshiyu.service.ProductCategoryService;
 import com.chanshiyu.utils.ResultVOUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/seller/category")
 @SuppressWarnings("unchecked")
+@Slf4j
 @Api(tags = "商品类目")
 public class SellerCategoryController {
 
@@ -32,31 +40,27 @@ public class SellerCategoryController {
     }
 
     @ApiOperation(value = "创建类目")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "categoryName", value = "类目名称", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "categoryType", value = "类目编号", required = true, dataType = "Integer")
-    })
     @PostMapping("/create")
-    public ResultVO<ProductCategory> create(@RequestParam("categoryName") String categoryName,
-                                            @RequestParam("categoryType") Integer categoryType) {
-        ProductCategory productCategory = new ProductCategory(categoryName, categoryType);
+    public ResultVO<ProductCategory> create(@Valid @RequestBody CategoryForm categoryForm, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            log.error("【创建类目】参数不正确，categoryForm={}", categoryForm);
+            throw new SellException(ResultEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
+        }
+        ProductCategory productCategory = new ProductCategory();
+        BeanUtils.copyProperties(categoryForm, productCategory);
         ProductCategory result = productCategoryService.save(productCategory);
         return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "更新类目")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "categoryId", value = "类目ID", required = true, dataType = "Integer"),
-            @ApiImplicitParam(name = "categoryName", value = "类目名称", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "categoryType", value = "类目编号", required = true, dataType = "Integer")
-    })
     @PutMapping("/update")
-    public ResultVO<ProductCategory> update(@RequestParam("categoryId") Integer categoryId,
-                                            @RequestParam("categoryName") String categoryName,
-                                            @RequestParam("categoryType") Integer categoryType) {
-        ProductCategory productCategory = productCategoryService.findOne(categoryId);
-        productCategory.setCategoryName(categoryName);
-        productCategory.setCategoryType(categoryType);
+    public ResultVO<ProductCategory> update(@Valid @RequestBody CategoryForm categoryForm, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            log.error("【更新类目】参数不正确，categoryForm={}", categoryForm);
+            throw new SellException(ResultEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
+        }
+        ProductCategory productCategory = new ProductCategory();
+        BeanUtils.copyProperties(categoryForm, productCategory);
         ProductCategory result = productCategoryService.save(productCategory);
         return ResultVOUtil.success(result);
     }

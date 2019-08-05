@@ -5,9 +5,9 @@
     </div>
 
     <el-table v-loading="loading.table" :data="list" border fit highlight-current-row stripe>
-      <el-table-column prop="id" label="ID" align="center" min-width="150px" />
-      <el-table-column prop="name" label="名称" align="center" min-width="150px" />
-      <el-table-column prop="type" label="类型" align="center" min-width="150px" />
+      <el-table-column prop="categoryId" label="ID" align="center" min-width="150px" />
+      <el-table-column prop="categoryName" label="类目名称" align="center" min-width="150px" />
+      <el-table-column prop="categoryType" label="类目编号" align="center" min-width="150px" />
       <el-table-column label="操作" align="center" min-width="150px">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleDialog(scope.row)">编辑</el-button>
@@ -17,58 +17,59 @@
     </el-table>
 
     <el-dialog
-      :title="`${status === 'edit' ? '编辑' : '新增'}分类`"
-      :visible.sync="visible.editDialog"
+      :title="`${status === 'edit' ? '编辑' : '新增'}类目`"
+      :visible.sync="visible.formDialog"
       :close-on-click-modal="false"
       width="500px"
     >
       <el-form
-        ref="editForm"
+        ref="dataForm"
         :rules="rules"
-        :model="editForm"
+        :model="dataForm"
         label-position="left"
         label-width="100px"
         style="width: 400px;"
       >
-        <el-form-item label="分类名称" prop="name">
-          <el-input v-model="editForm.name" />
+        <el-form-item label="类目名称" prop="categoryName">
+          <el-input v-model="dataForm.categoryName" />
         </el-form-item>
-        <el-form-item label="分类类型" prop="type">
-          <el-input v-model="editForm.type" />
+        <el-form-item label="类目编号" prop="categoryType">
+          <el-input v-model="dataForm.categoryType" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="visible.editDialog = false">取消</el-button>
-        <el-button type="primary" :loading="loading.editDialog" @click="handleSure">确认</el-button>
+        <el-button @click="visible.formDialog = false">取消</el-button>
+        <el-button type="primary" :loading="loading.formDialog" @click="handleSure">确认</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getCategoryList, createCategory } from '@/api/product'
+import { getCategoryList, createCategory, updateCategory, deleteCategory } from '@/api/category'
 
-const initEditForm = {
-  name: '',
-  type: ''
+const initdataForm = {
+  categoryName: '',
+  categoryType: ''
 }
 
 export default {
+  name: 'Category',
   data() {
     return {
       loading: {
         table: false,
-        editDialog: false
+        formDialog: false
       },
       visible: {
-        editDialog: false
+        formDialog: false
       },
       status: 'edit',
       list: null,
-      editForm: { ...initEditForm },
+      dataForm: { ...initdataForm },
       rules: {
-        name: [{ required: true, message: '请输入分类名称', trigger: 'change' }],
-        type: [{ required: true, message: '请输入分类类型', trigger: 'change' }]
+        categoryName: [{ required: true, message: '请输入类目名称', trigger: 'change' }],
+        categoryType: [{ required: true, message: '请输入类目编号', trigger: 'change' }]
       }
     }
   },
@@ -86,28 +87,57 @@ export default {
       this.list = res.data
     },
     handleDialog(row) {
-      this.visible.editDialog = true
       if (row) {
         this.status = 'edit'
-        this.editForm = { ...row }
+        this.dataForm = { ...row }
       } else {
         this.status = 'create'
-        this.editForm = { ...initEditForm }
+        this.dataForm = { ...initdataForm }
       }
+      this.loading.formDialog = false
+      this.visible.formDialog = true
       this.$nextTick(() => {
-        this.$refs['editForm'].clearValidate()
+        this.$refs['dataForm'].clearValidate()
       })
     },
     async handleSure() {
-      this.loading.table = true
-      const res = await createCategory(this.editForm)
-      this.loading.table = false
-      if (res.status !== 200) {
-        return this.$message.error(res.msg)
-      }
-      this.list = res.data
+      this.$refs['dataForm'].validate(async valid => {
+        if (!valid) return this.$message.error('请检查类目信息')
+        this.loading.formDialog = true
+        const req = { ...this.dataForm }
+        let res
+        if (this.status === 'edit') {
+          res = await updateCategory(req)
+        } else {
+          res = await createCategory(req)
+        }
+        this.loading.formDialog = false
+        if (res.status !== 200) {
+          return this.$message.error(res.msg)
+        }
+        this.visible.formDialog = false
+        this.getData()
+      })
     },
-    handleDelete() {}
+    handleDelete(row) {
+      this.$confirm('此操作将永久删除该类目, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async() => {
+          this.loading.table = true
+          const res = await deleteCategory({ categoryId: row.categoryId })
+          this.loading.table = false
+          if (res.status !== 200) {
+            return this.$message.error(res.msg)
+          }
+          this.getData()
+        })
+        .catch(() => {
+          console.log('取消操作')
+        })
+    }
   }
 }
 </script>

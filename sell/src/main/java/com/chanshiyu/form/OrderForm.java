@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 
 /**
- * 下单表单验证
+ * 下单表单
  */
 @Data
 public class OrderForm {

@@ -33,4 +33,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public ProductCategory save(ProductCategory productCategory) {
         return repository.save(productCategory);
     }
+
+    @Override
+    public void delete(Integer categoryTypeId) {
+        repository.deleteById(categoryTypeId);
+    }
 }

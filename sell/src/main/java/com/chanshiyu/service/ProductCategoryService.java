@@ -17,4 +17,7 @@ public interface ProductCategoryService {
 
     /** 保存类目 */
     ProductCategory save(ProductCategory productCategory);
+
+    /** 移除类目 */
+    void delete(Integer categoryTypeId);
 }

@@ -51,7 +51,6 @@ public class ProductInfoServiceImplTest {
         productInfo.setProductStatus(ProductStatusEnum.UP.getCode());
         productInfo.setProductDescription("東方求闻史记");
         productInfo.setProductIcon("https://chanshiyu.com");
-        productInfo.setCategoryType(2);
         ProductInfo result = productInfoService.save(productInfo);
         Assert.assertNotNull(result);
     }

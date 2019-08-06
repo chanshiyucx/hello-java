@@ -9,7 +9,7 @@ public class ResultVOUtil {
     public static ResultVO success(Object object) {
         ResultVO resultVO = new ResultVO();
         resultVO.setStatus(200);
-        resultVO.setMsg("ok");
+        resultVO.setMsg("OK");
         resultVO.setData(object);
         return resultVO;
     }

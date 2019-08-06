@@ -12,8 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ProductInfoRepositoryTest {
@@ -31,7 +29,6 @@ public class ProductInfoRepositoryTest {
          productInfo.setProductStock(100);
          productInfo.setProductStatus(0);
          productInfo.setProductIcon("https://chanshiyu.com");
-         productInfo.setCategoryType(1);
          ProductInfo result = repository.save(productInfo);
          Assert.assertNotNull(result);
      }

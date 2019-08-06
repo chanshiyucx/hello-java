@@ -16,10 +16,6 @@ public class ProductVO {
     @JsonProperty("name")
     private String categoryName;
 
-    @ApiModelProperty("类目编号")
-    @JsonProperty("type")
-    private Integer categoryType;
-
     @ApiModelProperty("商品列表")
     @JsonProperty("list")
     private List<ProductInfoVO> productInfoVOList;

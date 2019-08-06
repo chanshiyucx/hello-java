@@ -4,7 +4,7 @@ import com.chanshiyu.enums.ResultEnum;
 import lombok.Getter;
 
 @Getter
-public class  SellException extends RuntimeException {
+public class SellException extends RuntimeException {
 
     private Integer code;
 

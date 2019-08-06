@@ -39,6 +39,11 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
+    public List<ProductInfo> findAllByCategoryId(Integer categoryId) {
+        return repository.findAllByCategoryId(categoryId);
+    }
+
+    @Override
     public ProductInfo save(ProductInfo productInfo) {
         return repository.save(productInfo);
     }

@@ -18,7 +18,8 @@ public enum ResultEnum {
     CART_EMPTY(19, "购物车不能为空"),
     ORDER_OWNER_ERROR(20, "该订单不属于当前用户"),
     CATEGORY_IS_EXIST(21, "商品类目已存在"),
-    CATEGORY_NOT_EXIST(22, "商品类目不存在")
+    CATEGORY_NOT_EXIST(22, "商品类目不存在"),
+    CATEGORY_IS_ACTIVE(23, "商品类目尚在使用")
     ;
 
     private Integer code;

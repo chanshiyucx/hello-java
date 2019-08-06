@@ -18,6 +18,9 @@ public interface ProductInfoService {
     /** 查询所有商品列表 */
     Page<ProductInfo> findAll(Pageable pageable);
 
+    /** 查询指定类目下的商品列表 */
+    List<ProductInfo> findAllByCategoryId(Integer categoryId);
+
     /** 保存商品 */
     ProductInfo save(ProductInfo productInfo);
 

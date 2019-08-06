@@ -2,10 +2,12 @@ package com.chanshiyu.controller.Seller;
 
 import com.chanshiyu.VO.ResultVO;
 import com.chanshiyu.dataobject.ProductCategory;
+import com.chanshiyu.dataobject.ProductInfo;
 import com.chanshiyu.enums.ResultEnum;
 import com.chanshiyu.exception.SellException;
 import com.chanshiyu.form.ProductCategoryForm;
 import com.chanshiyu.service.ProductCategoryService;
+import com.chanshiyu.service.ProductInfoService;
 import com.chanshiyu.utils.ResultVOUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -17,7 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,8 +30,11 @@ public class SellerCategoryController {
 
     private final ProductCategoryService productCategoryService;
 
-    public SellerCategoryController(ProductCategoryService productCategoryService) {
+    private final ProductInfoService productInfoService;
+
+    public SellerCategoryController(ProductCategoryService productCategoryService, ProductInfoService productInfoService) {
         this.productCategoryService = productCategoryService;
+        this.productInfoService = productInfoService;
     }
 
     @ApiOperation(value = "类目列表")
@@ -46,15 +50,6 @@ public class SellerCategoryController {
         if(bindingResult.hasErrors()) {
             log.error("【创建类目】参数不正确，productCategoryForm={}", productCategoryForm);
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
-        }
-
-        // 判断是否已存在该类目编号
-        List<Integer> categoryTypeList = new ArrayList<>();
-        categoryTypeList.add(productCategoryForm.getCategoryType());
-        List<ProductCategory> productCategoryList = productCategoryService.findByCategoryTypeIn(categoryTypeList);
-        if (!CollectionUtils.isEmpty(productCategoryList)) {
-            log.error("【创建类目】类目已存在，categoryForm={}", productCategoryForm);
-            throw new SellException(ResultEnum.CATEGORY_IS_EXIST);
         }
 
         ProductCategory productCategory = new ProductCategory();
@@ -87,6 +82,14 @@ public class SellerCategoryController {
     @ApiImplicitParam(name = "categoryId", value = "类目ID", required = true, dataType = "Integer")
     @DeleteMapping("/delete")
     public ResultVO delete(@RequestParam("categoryId") Integer categoryId) {
+
+        // 判断是否类目已绑定商品
+        List<ProductInfo> productInfoList = productInfoService.findAllByCategoryId(categoryId);
+        if (!CollectionUtils.isEmpty(productInfoList)) {
+            log.error("【移除类目】类目尚在使用，不能删除，categoryId={}", categoryId);
+            throw new SellException(ResultEnum.CATEGORY_IS_ACTIVE);
+        }
+
         productCategoryService.delete(categoryId);
         return ResultVOUtil.success();
     }

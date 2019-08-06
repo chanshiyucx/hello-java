@@ -28,15 +28,15 @@ public class ProductCategoryRepositoryTest {
     @Test
     @Transactional
     public void saveTest() {
-        ProductCategory productCategory = new ProductCategory("女生最爱", 3);
+        ProductCategory productCategory = new ProductCategory("女生最爱");
         ProductCategory result = repository.save(productCategory);
         Assert.assertNotNull(result);
     }
 
     @Test
-    public void findByCategoryTypeInTest() {
+    public void findAllByIdTest() {
         List<Integer> list = Arrays.asList(1,2,3,4);
-        List<ProductCategory> result = repository.findByCategoryTypeIn(list);
+        List<ProductCategory> result = repository.findAllById(list);
         Assert.assertNotEquals(0, result.size());
     }
 }

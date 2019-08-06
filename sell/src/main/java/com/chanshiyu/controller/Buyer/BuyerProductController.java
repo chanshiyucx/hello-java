@@ -43,19 +43,18 @@ public class BuyerProductController {
         List<ProductInfo> productInfoList = productInfoService.findUpAll();
 
         // 2. 查询所有类目（lambda java8）
-        List<Integer> categoryTypeList = productInfoList.stream().map(ProductInfo::getCategoryType).collect(Collectors.toList());
-        List<ProductCategory> productCategoryList = productCategoryService.findByCategoryTypeIn(categoryTypeList);
+        List<Integer> categoryIdList = productInfoList.stream().map(ProductInfo::getCategoryId).collect(Collectors.toList());
+        List<ProductCategory> productCategoryList = productCategoryService.findAllById(categoryIdList);
 
         // 3. 数据拼装
         List<ProductVO> productVOList = new ArrayList<>();
         for(ProductCategory productCategory : productCategoryList) {
             ProductVO productVO = new ProductVO();
-            productVO.setCategoryType(productCategory.getCategoryType());
             productVO.setCategoryName(productCategory.getCategoryName());
 
             List<ProductInfoVO> productInfoVOList = new ArrayList<>();
             for (ProductInfo productInfo : productInfoList) {
-                if (productInfo.getCategoryType().equals(productCategory.getCategoryType())) {
+                if (productInfo.getCategoryId().equals(productCategory.getCategoryId())) {
                     ProductInfoVO productInfoVO = new ProductInfoVO();
                     BeanUtils.copyProperties(productInfo, productInfoVO);
                     productInfoVOList.add(productInfoVO);

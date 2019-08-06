@@ -31,15 +31,15 @@ public class ProductCategoryServiceImplTest {
     }
 
     @Test
-    public void findByCategoryTypeInTest() {
+    public void findAllByIdTest() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4);
-        List<ProductCategory> result = productCategoryService.findByCategoryTypeIn(list);
+        List<ProductCategory> result = productCategoryService.findAllById(list);
         Assert.assertNotEquals(0, result.size());
     }
 
     @Test
     public void saveTest() {
-        ProductCategory productCategory = new ProductCategory("畅销榜", 6);
+        ProductCategory productCategory = new ProductCategory("畅销榜");
         ProductCategory result = productCategoryService.save(productCategory);
         Assert.assertNotNull(result);
     }

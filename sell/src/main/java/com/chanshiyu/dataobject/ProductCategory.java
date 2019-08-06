@@ -1,6 +1,5 @@
 package com.chanshiyu.dataobject;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
@@ -26,14 +25,10 @@ public class ProductCategory {
     @ApiModelProperty("类目名称")
     private String categoryName;
 
-    @ApiModelProperty("类目编号")
-    private Integer categoryType;
-
     /* 列表查询时需要增加一个默认的构造器 */
     public ProductCategory() {}
 
-    public ProductCategory(String categoryName, Integer categoryType) {
+    public ProductCategory(String categoryName) {
         this.categoryName = categoryName;
-        this.categoryType = categoryType;
     }
 }

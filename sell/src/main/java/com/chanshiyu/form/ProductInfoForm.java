@@ -42,5 +42,5 @@ public class ProductInfoForm {
 
     @ApiModelProperty("商品类目")
     @NotNull(message = "商品类目必填")
-    private Integer categoryType;
+    private Integer categoryId;
 }

@@ -13,7 +13,7 @@ public interface ProductCategoryService {
     List<ProductCategory> findAll();
 
     /** 查询指定类目列表 */
-    List<ProductCategory> findByCategoryTypeIn(List<Integer> categoryTypeList);
+    List<ProductCategory> findAllById(List<Integer> categoryIdList);
 
     /** 保存类目 */
     ProductCategory save(ProductCategory productCategory);

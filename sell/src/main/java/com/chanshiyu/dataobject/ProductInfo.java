@@ -39,5 +39,5 @@ public class ProductInfo {
     private String productIcon;
 
     /** 商品类目 */
-    private Integer categoryType;
+    private Integer categoryId;
 }

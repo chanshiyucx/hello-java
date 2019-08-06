@@ -8,16 +8,20 @@
       <el-table-column prop="productName" label="名称" align="center" min-width="150px" />
       <el-table-column prop="productDescription" label="描述" align="center" min-width="150px" />
       <el-table-column prop="productIcon" label="小图" align="center" min-width="150px" />
-      <el-table-column prop="productPrice" label="单价" align="center" min-width="150px" />
-      <el-table-column prop="productStock" label="库存" align="center" min-width="150px" />
-      <el-table-column prop="productStock" label="状态" align="center" min-width="150px">
+      <el-table-column prop="productPrice" label="单价" align="center" min-width="100px" />
+      <el-table-column prop="productStock" label="库存" align="center" min-width="100px" />
+      <el-table-column label="类目" align="center" min-width="100px">
+        <template slot-scope="scope">
+          <span>{{ getCategoryName(scope.row.categoryId) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="productStock" label="状态" align="center" min-width="100px">
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.productStatus === 0 ? 'success' : 'danger'"
           >{{ scope.row.productStatus === 0 ? '上架' : '下架' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="categoryType" label="类目" align="center" min-width="150px" />
       <el-table-column label="操作" align="center" min-width="150px">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleDialog(scope.row)">编辑</el-button>
@@ -55,8 +59,8 @@
         <el-form-item label="小图" prop="productIcon">
           <el-input v-model="dataForm.productIcon" />
         </el-form-item>
-        <el-form-item label="类目" prop="categoryType">
-          <el-select v-model="dataForm.categoryType" placeholder="请选择类目">
+        <el-form-item label="类目" prop="categoryId">
+          <el-select v-model="dataForm.categoryId" placeholder="请选择类目">
             <el-option
               v-for="item in categoryList"
               :key="item.categoryId"
@@ -88,7 +92,7 @@ const initdataForm = {
   productStatus: 0,
   productDescription: '',
   productIcon: '',
-  categoryType: ''
+  categoryId: ''
 }
 
 export default {
@@ -108,12 +112,35 @@ export default {
       dataForm: { ...initdataForm },
       rules: {
         productName: [{ required: true, message: '请输入名称', trigger: 'change' }],
-        productPrice: [{ required: true, message: '请输入单价', trigger: 'change' }],
-        productStock: [{ required: true, message: '请输入库存', trigger: 'change' }],
+        productPrice: [
+          { required: true, message: '请输入单价', trigger: 'change' },
+          {
+            validator(rule, value, callback) {
+              if (isNaN(Number(value))) {
+                callback('商品单价必须为数值类型')
+              } else {
+                callback()
+              }
+            }
+          }
+        ],
+        productStock: [
+          { required: true, message: '请输入库存', trigger: 'change' },
+          {
+            validator(rule, value, callback) {
+              const num = Number(value)
+              if (isNaN(num) || num !== ~~num) {
+                callback('商品库存必须为整数')
+              } else {
+                callback()
+              }
+            }
+          }
+        ],
         productStatus: [{ required: true, message: '请输入状态', trigger: 'change' }],
         productDescription: [{ required: true, message: '请输入描述', trigger: 'change' }],
         productIcon: [{ required: true, message: '请输入小图', trigger: 'change' }],
-        categoryType: [{ required: true, message: '请输入类目', trigger: 'change' }]
+        categoryId: [{ required: true, message: '请输入类目', trigger: 'change' }]
       }
     }
   },
@@ -123,22 +150,29 @@ export default {
   },
   methods: {
     async getCategoryList() {
-      this.loading.table = true
-      const res = await getCategoryList()
-      this.loading.table = false
-      if (res.status !== 200) {
-        return this.$message.error(res.msg)
+      try {
+        this.loading.table = true
+        const res = await getCategoryList()
+        this.loading.table = false
+        this.categoryList = res.data
+      } catch (error) {
+        this.loading.table = false
       }
-      this.categoryList = res.data
     },
     async getData() {
-      this.loading.table = true
-      const res = await getProductList()
-      this.loading.table = false
-      if (res.status !== 200) {
-        return this.$message.error(res.msg)
+      try {
+        this.loading.table = true
+        const res = await getProductList()
+        this.loading.table = false
+        this.list = res.data
+      } catch (error) {
+        this.loading.table = false
       }
-      this.list = res.data
+    },
+    getCategoryName(categoryId) {
+      if (!this.categoryList) return categoryId
+      const category = this.categoryList.find(o => o.categoryId === categoryId)
+      return category ? category.categoryName : categoryId
     },
     handleDialog(row) {
       if (row) {
@@ -158,21 +192,21 @@ export default {
     async handleSure() {
       this.$refs['dataForm'].validate(async valid => {
         if (!valid) return this.$message.error('请检查类目信息')
-        this.loading.formDialog = true
-        const req = { ...this.dataForm }
-        req.productStatus = req.productStatus ? 0 : 1
-        let res
-        if (this.status === 'edit') {
-          res = await updateProduct(req)
-        } else {
-          res = await createProduct(req)
+        try {
+          this.loading.formDialog = true
+          const req = { ...this.dataForm }
+          req.productStatus = req.productStatus ? 0 : 1
+          if (this.status === 'edit') {
+            await updateProduct(req)
+          } else {
+            await createProduct(req)
+          }
+          this.loading.formDialog = false
+          this.visible.formDialog = false
+          this.getData()
+        } catch (error) {
+          this.loading.formDialog = false
         }
-        this.loading.formDialog = false
-        if (res.status !== 200) {
-          return this.$message.error(res.msg)
-        }
-        this.visible.formDialog = false
-        this.getData()
       })
     },
     handleDelete(row) {
@@ -182,13 +216,14 @@ export default {
         type: 'warning'
       })
         .then(async() => {
-          this.loading.table = true
-          const res = await deleteProduct({ productId: row.productId })
-          this.loading.table = false
-          if (res.status !== 200) {
-            return this.$message.error(res.msg)
+          try {
+            this.loading.table = true
+            await deleteProduct({ productId: row.productId })
+            this.loading.table = false
+            this.getData()
+          } catch (error) {
+            this.loading.table = false
           }
-          this.getData()
         })
         .catch(() => {
           console.log('取消操作')

@@ -7,7 +7,6 @@
     <el-table v-loading="loading.table" :data="list" border fit highlight-current-row stripe>
       <el-table-column prop="categoryId" label="ID" align="center" min-width="150px" />
       <el-table-column prop="categoryName" label="类目名称" align="center" min-width="150px" />
-      <el-table-column prop="categoryType" label="类目编号" align="center" min-width="150px" />
       <el-table-column label="操作" align="center" min-width="150px">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleDialog(scope.row)">编辑</el-button>
@@ -33,9 +32,6 @@
         <el-form-item label="类目名称" prop="categoryName">
           <el-input v-model="dataForm.categoryName" />
         </el-form-item>
-        <el-form-item label="类目编号" prop="categoryType">
-          <el-input v-model="dataForm.categoryType" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="visible.formDialog = false">取消</el-button>
@@ -49,8 +45,7 @@
 import { getCategoryList, createCategory, updateCategory, deleteCategory } from '@/api/category'
 
 const initdataForm = {
-  categoryName: '',
-  categoryType: ''
+  categoryName: ''
 }
 
 export default {
@@ -68,8 +63,7 @@ export default {
       list: null,
       dataForm: { ...initdataForm },
       rules: {
-        categoryName: [{ required: true, message: '请输入类目名称', trigger: 'change' }],
-        categoryType: [{ required: true, message: '请输入类目编号', trigger: 'change' }]
+        categoryName: [{ required: true, message: '请输入类目名称', trigger: 'change' }]
       }
     }
   },
@@ -78,13 +72,14 @@ export default {
   },
   methods: {
     async getData() {
-      this.loading.table = true
-      const res = await getCategoryList()
-      this.loading.table = false
-      if (res.status !== 200) {
-        return this.$message.error(res.msg)
+      try {
+        this.loading.table = true
+        const res = await getCategoryList()
+        this.loading.table = false
+        this.list = res.data
+      } catch (error) {
+        this.loading.table = false
       }
-      this.list = res.data
     },
     handleDialog(row) {
       if (row) {
@@ -103,20 +98,20 @@ export default {
     async handleSure() {
       this.$refs['dataForm'].validate(async valid => {
         if (!valid) return this.$message.error('请检查类目信息')
-        this.loading.formDialog = true
-        const req = { ...this.dataForm }
-        let res
-        if (this.status === 'edit') {
-          res = await updateCategory(req)
-        } else {
-          res = await createCategory(req)
+        try {
+          this.loading.formDialog = true
+          const req = { ...this.dataForm }
+          if (this.status === 'edit') {
+            await updateCategory(req)
+          } else {
+            await createCategory(req)
+          }
+          this.loading.formDialog = false
+          this.visible.formDialog = false
+          this.getData()
+        } catch (error) {
+          this.loading.formDialog = false
         }
-        this.loading.formDialog = false
-        if (res.status !== 200) {
-          return this.$message.error(res.msg)
-        }
-        this.visible.formDialog = false
-        this.getData()
       })
     },
     handleDelete(row) {
@@ -126,13 +121,14 @@ export default {
         type: 'warning'
       })
         .then(async() => {
-          this.loading.table = true
-          const res = await deleteCategory({ categoryId: row.categoryId })
-          this.loading.table = false
-          if (res.status !== 200) {
-            return this.$message.error(res.msg)
+          try {
+            this.loading.table = true
+            await deleteCategory({ categoryId: row.categoryId })
+            this.loading.table = false
+            this.getData()
+          } catch (error) {
+            this.loading.table = false
           }
-          this.getData()
         })
         .catch(() => {
           console.log('取消操作')

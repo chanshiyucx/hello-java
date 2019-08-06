@@ -1,30 +1,25 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+  <div class="dashboard">
+    <img :src="emptyGif" class="emptyGif" >
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
+  data() {
+    return {
+      emptyGif: 'https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3'
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
+  img {
+    display: block;
+    margin: 30px auto;
   }
 }
 </style>

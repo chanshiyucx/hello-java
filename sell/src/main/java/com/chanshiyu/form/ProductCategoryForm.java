@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  * 商品类目表单
  */
 @Data
-public class CategoryForm {
+public class ProductCategoryForm {
 
     @ApiModelProperty("类目ID")
     private Integer categoryId;

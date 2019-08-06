@@ -4,14 +4,12 @@ import com.chanshiyu.VO.ResultVO;
 import com.chanshiyu.dataobject.ProductCategory;
 import com.chanshiyu.enums.ResultEnum;
 import com.chanshiyu.exception.SellException;
-import com.chanshiyu.form.CategoryForm;
+import com.chanshiyu.form.ProductCategoryForm;
 import com.chanshiyu.service.ProductCategoryService;
 import com.chanshiyu.utils.ResultVOUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
@@ -44,37 +42,43 @@ public class SellerCategoryController {
 
     @ApiOperation(value = "创建类目")
     @PostMapping("/create")
-    public ResultVO<ProductCategory> create(@Valid @RequestBody CategoryForm categoryForm, BindingResult bindingResult) {
+    public ResultVO<ProductCategory> create(@Valid @RequestBody ProductCategoryForm productCategoryForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-            log.error("【创建类目】参数不正确，categoryForm={}", categoryForm);
+            log.error("【创建类目】参数不正确，productCategoryForm={}", productCategoryForm);
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
         }
 
         // 判断是否已存在该类目编号
-        List<Integer> categoryTypes = new ArrayList<>();
-        categoryTypes.add(categoryForm.getCategoryType());
-        List<ProductCategory> productCategoryList = productCategoryService.findByCategoryTypeIn(categoryTypes);
+        List<Integer> categoryTypeList = new ArrayList<>();
+        categoryTypeList.add(productCategoryForm.getCategoryType());
+        List<ProductCategory> productCategoryList = productCategoryService.findByCategoryTypeIn(categoryTypeList);
         if (!CollectionUtils.isEmpty(productCategoryList)) {
-            log.error("【创建类目】类目已存在，categoryForm={}", categoryForm);
+            log.error("【创建类目】类目已存在，categoryForm={}", productCategoryForm);
             throw new SellException(ResultEnum.CATEGORY_IS_EXIST);
         }
 
         ProductCategory productCategory = new ProductCategory();
-        BeanUtils.copyProperties(categoryForm, productCategory);
+        BeanUtils.copyProperties(productCategoryForm, productCategory);
         ProductCategory result = productCategoryService.save(productCategory);
         return ResultVOUtil.success(result);
     }
 
     @ApiOperation(value = "更新类目")
     @PutMapping("/update")
-    public ResultVO<ProductCategory> update(@Valid @RequestBody CategoryForm categoryForm, BindingResult bindingResult) {
+    public ResultVO<ProductCategory> update(@Valid @RequestBody ProductCategoryForm productCategoryForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-            log.error("【更新类目】参数不正确，categoryForm={}", categoryForm);
+            log.error("【更新类目】参数不正确，categoryForm={}", productCategoryForm);
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
         }
 
-        ProductCategory productCategory = new ProductCategory();
-        BeanUtils.copyProperties(categoryForm, productCategory);
+        // 判断类目是否已存在
+        ProductCategory productCategory = productCategoryService.findOne(productCategoryForm.getCategoryId());
+        if (productCategory == null) {
+            log.error("【更新类目】类目不存在，categoryForm={}", productCategoryForm);
+            throw new SellException(ResultEnum.CATEGORY_NOT_EXIST);
+        }
+
+        BeanUtils.copyProperties(productCategoryForm, productCategory);
         ProductCategory result = productCategoryService.save(productCategory);
         return ResultVOUtil.success(result);
     }

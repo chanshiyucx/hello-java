@@ -1,13 +1,23 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button type="primary" icon="el-icon-plus" @click="handleDialog()">新增分类</el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="handleDialog()">新增商品</el-button>
     </div>
 
     <el-table v-loading="loading.table" :data="list" border fit highlight-current-row stripe>
-      <el-table-column prop="categoryId" label="ID" align="center" min-width="150px" />
-      <el-table-column prop="categoryName" label="类目名称" align="center" min-width="150px" />
-      <el-table-column prop="categoryType" label="类目编号" align="center" min-width="150px" />
+      <el-table-column prop="productName" label="名称" align="center" min-width="150px" />
+      <el-table-column prop="productDescription" label="描述" align="center" min-width="150px" />
+      <el-table-column prop="productIcon" label="小图" align="center" min-width="150px" />
+      <el-table-column prop="productPrice" label="单价" align="center" min-width="150px" />
+      <el-table-column prop="productStock" label="库存" align="center" min-width="150px" />
+      <el-table-column prop="productStock" label="状态" align="center" min-width="150px">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.productStatus === 0 ? 'success' : 'danger'"
+          >{{ scope.row.productStatus === 0 ? '上架' : '下架' }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="categoryType" label="类目" align="center" min-width="150px" />
       <el-table-column label="操作" align="center" min-width="150px">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleDialog(scope.row)">编辑</el-button>
@@ -30,11 +40,33 @@
         label-width="100px"
         style="width: 400px;"
       >
-        <el-form-item label="类目名称" prop="categoryName">
-          <el-input v-model="dataForm.categoryName" />
+        <el-form-item label="名称" prop="productName">
+          <el-input v-model="dataForm.productName" />
         </el-form-item>
-        <el-form-item label="类目编号" prop="categoryType">
-          <el-input v-model="dataForm.categoryType" />
+        <el-form-item label="单价" prop="productPrice">
+          <el-input v-model="dataForm.productPrice" />
+        </el-form-item>
+        <el-form-item label="库存" prop="productStock">
+          <el-input v-model="dataForm.productStock" />
+        </el-form-item>
+        <el-form-item label="描述" prop="productDescription">
+          <el-input v-model="dataForm.productDescription" />
+        </el-form-item>
+        <el-form-item label="小图" prop="productIcon">
+          <el-input v-model="dataForm.productIcon" />
+        </el-form-item>
+        <el-form-item label="类目" prop="categoryType">
+          <el-select v-model="dataForm.categoryType" placeholder="请选择类目">
+            <el-option
+              v-for="item in categoryList"
+              :key="item.categoryId"
+              :label="item.categoryName"
+              :value="item.categoryId"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态" prop="productStatus">
+          <el-switch v-model="dataForm.productStatus" active-color="#13ce66" inactive-color="#ff4949" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -46,10 +78,16 @@
 </template>
 
 <script>
+import { getCategoryList } from '@/api/category'
 import { getProductList, createProduct, updateProduct, deleteProduct } from '@/api/product'
 
 const initdataForm = {
-  categoryName: '',
+  productName: '',
+  productPrice: '',
+  productStock: '',
+  productStatus: 0,
+  productDescription: '',
+  productIcon: '',
   categoryType: ''
 }
 
@@ -66,17 +104,33 @@ export default {
       },
       status: 'edit',
       list: null,
+      categoryList: null,
       dataForm: { ...initdataForm },
       rules: {
-        categoryName: [{ required: true, message: '请输入类目名称', trigger: 'change' }],
-        categoryType: [{ required: true, message: '请输入类目编号', trigger: 'change' }]
+        productName: [{ required: true, message: '请输入名称', trigger: 'change' }],
+        productPrice: [{ required: true, message: '请输入单价', trigger: 'change' }],
+        productStock: [{ required: true, message: '请输入库存', trigger: 'change' }],
+        productStatus: [{ required: true, message: '请输入状态', trigger: 'change' }],
+        productDescription: [{ required: true, message: '请输入描述', trigger: 'change' }],
+        productIcon: [{ required: true, message: '请输入小图', trigger: 'change' }],
+        categoryType: [{ required: true, message: '请输入类目', trigger: 'change' }]
       }
     }
   },
   created() {
+    this.getCategoryList()
     this.getData()
   },
   methods: {
+    async getCategoryList() {
+      this.loading.table = true
+      const res = await getCategoryList()
+      this.loading.table = false
+      if (res.status !== 200) {
+        return this.$message.error(res.msg)
+      }
+      this.categoryList = res.data
+    },
     async getData() {
       this.loading.table = true
       const res = await getProductList()
@@ -94,6 +148,7 @@ export default {
         this.status = 'create'
         this.dataForm = { ...initdataForm }
       }
+      this.dataForm.productStatus = this.dataForm.productStatus === 0
       this.loading.formDialog = false
       this.visible.formDialog = true
       this.$nextTick(() => {
@@ -105,11 +160,12 @@ export default {
         if (!valid) return this.$message.error('请检查类目信息')
         this.loading.formDialog = true
         const req = { ...this.dataForm }
+        req.productStatus = req.productStatus ? 0 : 1
         let res
         if (this.status === 'edit') {
-          res = await updateCategory(req)
+          res = await updateProduct(req)
         } else {
-          res = await createCategory(req)
+          res = await createProduct(req)
         }
         this.loading.formDialog = false
         if (res.status !== 200) {
@@ -120,14 +176,14 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm('此操作将永久删除该类目, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(async() => {
           this.loading.table = true
-          const res = await deleteCategory({ categoryId: row.categoryId })
+          const res = await deleteProduct({ productId: row.productId })
           this.loading.table = false
           if (res.status !== 200) {
             return this.$message.error(res.msg)

@@ -76,4 +76,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
              save(productInfo);
          }
     }
+
+    @Override
+    public void delete(String productId) {
+        repository.deleteById(productId);
+    }
 }

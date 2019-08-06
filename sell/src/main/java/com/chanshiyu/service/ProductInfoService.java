@@ -26,4 +26,7 @@ public interface ProductInfoService {
 
     /** 减少库存 */
     void decreaseStock(List<CartDTO> cartDTOList);
+
+    /** 移除商品 */
+    void delete(String productId);
 }

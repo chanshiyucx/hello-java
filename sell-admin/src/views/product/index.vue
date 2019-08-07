@@ -44,6 +44,16 @@
         label-width="100px"
         style="width: 400px;"
       >
+        <el-form-item label="类目" prop="categoryId">
+          <el-select v-model="dataForm.categoryId" placeholder="请选择类目">
+            <el-option
+              v-for="item in categoryList"
+              :key="item.categoryId"
+              :label="item.categoryName"
+              :value="item.categoryId"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="名称" prop="productName">
           <el-input v-model="dataForm.productName" />
         </el-form-item>
@@ -57,17 +67,12 @@
           <el-input v-model="dataForm.productDescription" />
         </el-form-item>
         <el-form-item label="小图" prop="productIcon">
-          <el-input v-model="dataForm.productIcon" />
-        </el-form-item>
-        <el-form-item label="类目" prop="categoryId">
-          <el-select v-model="dataForm.categoryId" placeholder="请选择类目">
-            <el-option
-              v-for="item in categoryList"
-              :key="item.categoryId"
-              :label="item.categoryName"
-              :value="item.categoryId"
-            />
-          </el-select>
+          <Upload
+            :loading="loading.upload"
+            :preview="dataForm.productIcon"
+            @beforeUpload="beforeUpload"
+            @handleSuccess="handleSuccess"
+          />
         </el-form-item>
         <el-form-item label="状态" prop="productStatus">
           <el-switch v-model="dataForm.productStatus" active-color="#13ce66" inactive-color="#ff4949" />
@@ -82,6 +87,7 @@
 </template>
 
 <script>
+import Upload from '@/components/Upload'
 import { getCategoryList } from '@/api/category'
 import { getProductList, createProduct, updateProduct, deleteProduct } from '@/api/product'
 
@@ -97,10 +103,12 @@ const initdataForm = {
 
 export default {
   name: 'Product',
+  components: { Upload },
   data() {
     return {
       loading: {
         table: false,
+        upload: false,
         formDialog: false
       },
       visible: {
@@ -173,6 +181,21 @@ export default {
       if (!this.categoryList) return categoryId
       const category = this.categoryList.find(o => o.categoryId === categoryId)
       return category ? category.categoryName : categoryId
+    },
+    beforeUpload() {
+      this.loading.upload = true
+    },
+    handleSuccess(res, file, fileList) {
+      if (res.status !== 200) {
+        return this.$message.error('图片上传失败')
+      }
+      this.dataForm.productIcon = res.data
+
+      const img = new Image()
+      img.onload = () => {
+        this.loading.upload = false
+      }
+      img.src = res.data
     },
     handleDialog(row) {
       if (row) {

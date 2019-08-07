@@ -1,10 +1,10 @@
-package com.chanshiyu.dto;
+package com.chanshiyu.VO;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class PageDTO {
+public class PageVO {
 
     @ApiModelProperty("当前页码")
     private Integer pageNum;

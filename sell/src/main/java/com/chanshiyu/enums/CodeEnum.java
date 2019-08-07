@@ -1,4 +1,8 @@
 package com.chanshiyu.enums;
 
-public interface CodeEnum {
+/**
+ * 枚举类
+ */
+public interface CodeEnum<T> {
+    T getCode();
 }

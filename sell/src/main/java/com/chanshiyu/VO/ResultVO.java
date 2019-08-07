@@ -1,6 +1,5 @@
 package com.chanshiyu.VO;
 
-import com.chanshiyu.dto.PageDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,5 +21,5 @@ public class ResultVO<T> {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @ApiModelProperty("分页信息")
-    private PageDTO attributes;
+    private PageVO attributes;
 }

@@ -1,7 +1,7 @@
 package com.chanshiyu.utils;
 
 import com.chanshiyu.VO.ResultVO;
-import com.chanshiyu.dto.PageDTO;
+import com.chanshiyu.VO.PageVO;
 import org.springframework.data.domain.Page;
 
 public class ResultVOUtil {
@@ -19,13 +19,13 @@ public class ResultVOUtil {
     }
 
     public static ResultVO successPage(Page page) {
-        PageDTO pageDTO = new PageDTO();
-        pageDTO.setPageNum(page.getPageable().getPageNumber() + 1);
-        pageDTO.setPageSize(page.getSize());
-        pageDTO.setTotal(page.getTotalElements());
+        PageVO pageVO = new PageVO();
+        pageVO.setPageNum(page.getPageable().getPageNumber() + 1);
+        pageVO.setPageSize(page.getSize());
+        pageVO.setTotal(page.getTotalElements());
 
         ResultVO resultVO = success(page.getContent());
-        resultVO.setAttributes(pageDTO);
+        resultVO.setAttributes(pageVO);
         return resultVO;
     }
 

@@ -34,6 +34,14 @@
       </el-table-column>
     </el-table>
 
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="query.pageNum"
+      :limit.sync="query.pageSize"
+      @pagination="getData()"
+    />
+
     <el-dialog
       :title="`${status === 'edit' ? '编辑' : '新增'}类目`"
       :visible.sync="visible.formDialog"
@@ -91,6 +99,7 @@
 </template>
 
 <script>
+import Pagination from '@/components/Pagination'
 import Upload from '@/components/Upload'
 import { getCategoryList } from '@/api/category'
 import { getProductList, createProduct, updateProduct, deleteProduct } from '@/api/product'
@@ -107,7 +116,7 @@ const initdataForm = {
 
 export default {
   name: 'Product',
-  components: { Upload },
+  components: { Pagination, Upload },
   data() {
     return {
       loading: {
@@ -118,9 +127,14 @@ export default {
       visible: {
         formDialog: false
       },
-      status: 'edit',
+      total: 0,
       list: null,
       categoryList: null,
+      query: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      status: 'edit',
       dataForm: { ...initdataForm },
       rules: {
         productName: [{ required: true, message: '请输入名称', trigger: 'change' }],
@@ -157,26 +171,27 @@ export default {
     }
   },
   created() {
-    this.getCategoryList()
     this.getData()
+    this.getCategoryList()
   },
   methods: {
+    async getData() {
+      try {
+        this.loading.table = true
+        const res = await getProductList({ ...this.query })
+        this.loading.table = false
+        this.list = res.data
+        this.total = res.attributes.total
+      } catch (error) {
+        this.loading.table = false
+      }
+    },
     async getCategoryList() {
       try {
         this.loading.table = true
         const res = await getCategoryList()
         this.loading.table = false
         this.categoryList = res.data
-      } catch (error) {
-        this.loading.table = false
-      }
-    },
-    async getData() {
-      try {
-        this.loading.table = true
-        const res = await getProductList()
-        this.loading.table = false
-        this.list = res.data
       } catch (error) {
         this.loading.table = false
       }

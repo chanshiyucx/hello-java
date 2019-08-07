@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unchecked")
 @RestController
 @RequestMapping("/buyer/product")
-@SuppressWarnings("unchecked")
 @Api(tags = "买家商品")
 public class BuyerProductController {
 

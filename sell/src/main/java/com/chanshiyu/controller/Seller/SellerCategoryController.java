@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
-@RequestMapping("/seller/category")
 @SuppressWarnings("unchecked")
 @Slf4j
+@RestController
+@RequestMapping("/seller/category")
 @Api(tags = "商品类目")
 public class SellerCategoryController {
 

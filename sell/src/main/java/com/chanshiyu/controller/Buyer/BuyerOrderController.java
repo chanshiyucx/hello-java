@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
-@RequestMapping("/buyer/order")
 @SuppressWarnings("unchecked")
 @Slf4j
+@RestController
+@RequestMapping("/buyer/order")
 @Api(tags = "买家订单")
 public class BuyerOrderController {
 

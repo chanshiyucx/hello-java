@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 
-export function getCategoryList() {
+export function getCategoryList(params) {
   return request({
     url: '/seller/category/list',
-    method: 'GET'
+    method: 'GET',
+    params
   })
 }
 

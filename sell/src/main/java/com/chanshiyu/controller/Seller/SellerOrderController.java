@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/seller/order")
 @SuppressWarnings("unchecked")
 @Slf4j
+@RestController
+@RequestMapping("/seller/order")
 @Api(tags = "卖家订单")
 public class SellerOrderController {
 

@@ -59,8 +59,8 @@ export default {
       visible: {
         formDialog: false
       },
-      status: 'edit',
       list: null,
+      status: 'edit',
       dataForm: { ...initdataForm },
       rules: {
         categoryName: [{ required: true, message: '请输入类目名称', trigger: 'change' }]

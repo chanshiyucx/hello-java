@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
-@RequestMapping("/seller/product")
 @SuppressWarnings("unchecked")
 @Slf4j
+@RestController
+@RequestMapping("/seller/product")
 @Api(tags = "商品管理")
 public class SellerProductController {
 

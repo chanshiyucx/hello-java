@@ -2,6 +2,8 @@ package com.chanshiyu.controller.Seller;
 
 import com.chanshiyu.VO.ResultVO;
 import com.chanshiyu.dto.OrderDTO;
+import com.chanshiyu.enums.ResultEnum;
+import com.chanshiyu.exception.SellException;
 import com.chanshiyu.service.OrderService;
 import com.chanshiyu.utils.ResultVOUtil;
 import io.swagger.annotations.Api;
@@ -12,12 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("unchecked")
 @Slf4j
@@ -44,5 +44,19 @@ public class SellerOrderController {
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
         Page<OrderDTO> orderDTOPage= orderService.findList(pageRequest);
         return ResultVOUtil.successPage(orderDTOPage);
+    }
+
+    @ApiOperation(value = "取消订单")
+    @ApiImplicitParam(name = "order", value = "订单ID", required = true, dataType = "String")
+    @PutMapping("/cancel")
+    public ResultVO<OrderDTO> cancel(@RequestBody Map<String, String> order) {
+        String orderId = order.get("orderId");
+        OrderDTO orderDTO = orderService.findOne(orderId);
+        if (orderDTO == null) {
+            log.error("【取消订单】订单不存在，orderId={}", orderId);
+            throw new SellException(ResultEnum.ORDER_NOT_EXIST);
+        }
+        OrderDTO result = orderService.cancel(orderDTO);
+        return ResultVOUtil.success(result);
     }
 }

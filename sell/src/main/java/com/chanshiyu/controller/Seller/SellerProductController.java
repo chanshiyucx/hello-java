@@ -49,6 +49,7 @@ public class SellerProductController {
     }
 
     @ApiOperation(value = "新增商品")
+    @ApiImplicitParam(name = "productInfoForm", value = "商品详情", required = true, dataType = "ProductInfoForm")
     @PostMapping("/create")
     public ResultVO<ProductInfo> create(@Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -64,6 +65,7 @@ public class SellerProductController {
     }
 
     @ApiOperation(value = "更新商品")
+    @ApiImplicitParam(name = "productInfoForm", value = "商品详情", required = true, dataType = "ProductInfoForm")
     @PutMapping("/update")
     public ResultVO<ProductInfo> update(@Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {

@@ -21,6 +21,17 @@
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" align="center" min-width="150px" />
+      <el-table-column label="操作" align="center" min-width="150px">
+        <template slot-scope="scope">
+          <el-button size="mini" type="primary" @click="handleDeatil(scope.row)">详情</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            :disabled="scope.row.orderStatus !== 0"
+            @click="handleCancel(scope.row)"
+          >取消</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -35,7 +46,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-import { getOrderList } from '@/api/order'
+import { getOrderList, cancelOrder } from '@/api/order'
 
 const orderStatusEnum = [
   { title: '新订单', type: 'primary' },
@@ -87,6 +98,30 @@ export default {
       } catch (error) {
         this.loading.table = false
       }
+    },
+    handleCancel(row) {
+      this.$confirm('此操作将取消该订单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async() => {
+          try {
+            this.loading.table = true
+            await cancelOrder({ orderId: row.orderId })
+            this.loading.table = false
+            this.$message.success('操作成功')
+            this.getData()
+          } catch (error) {
+            this.loading.table = false
+          }
+        })
+        .catch(() => {
+          console.log('取消操作')
+        })
+    },
+    handleDeatil(row) {
+      this.visible.detailDialog = true
     }
   }
 }

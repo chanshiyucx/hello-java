@@ -7,3 +7,11 @@ export function getOrderList(params) {
     params
   })
 }
+
+export function cancelOrder(data) {
+  return request({
+    url: '/seller/order/cancel',
+    method: 'PUT',
+    data
+  })
+}

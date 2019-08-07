@@ -45,6 +45,7 @@ public class SellerCategoryController {
     }
 
     @ApiOperation(value = "创建类目")
+    @ApiImplicitParam(name = "productCategoryForm", value = "商品类目", required = true, dataType = "ProductCategoryForm")
     @PostMapping("/create")
     public ResultVO<ProductCategory> create(@Valid @RequestBody ProductCategoryForm productCategoryForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -59,6 +60,7 @@ public class SellerCategoryController {
     }
 
     @ApiOperation(value = "更新类目")
+    @ApiImplicitParam(name = "productCategoryForm", value = "商品类目", required = true, dataType = "ProductCategoryForm")
     @PutMapping("/update")
     public ResultVO<ProductCategory> update(@Valid @RequestBody ProductCategoryForm productCategoryForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {

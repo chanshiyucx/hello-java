@@ -5,9 +5,13 @@
     </div>
 
     <el-table v-loading="loading.table" :data="list" border fit highlight-current-row stripe>
+      <el-table-column prop="productIcon" label="小图" align="center" min-width="150px">
+        <template slot-scope="scope">
+          <img class="thumb" :src="scope.row.productIcon" alt="小图" >
+        </template>
+      </el-table-column>
       <el-table-column prop="productName" label="名称" align="center" min-width="150px" />
       <el-table-column prop="productDescription" label="描述" align="center" min-width="150px" />
-      <el-table-column prop="productIcon" label="小图" align="center" min-width="150px" />
       <el-table-column prop="productPrice" label="单价" align="center" min-width="100px" />
       <el-table-column prop="productStock" label="库存" align="center" min-width="100px" />
       <el-table-column label="类目" align="center" min-width="100px">
@@ -189,13 +193,13 @@ export default {
       if (res.status !== 200) {
         return this.$message.error('图片上传失败')
       }
-      this.dataForm.productIcon = res.data
+      this.dataForm.productIcon = res.data.link
 
       const img = new Image()
       img.onload = () => {
         this.loading.upload = false
       }
-      img.src = res.data
+      img.src = res.data.link
     },
     handleDialog(row) {
       if (row) {

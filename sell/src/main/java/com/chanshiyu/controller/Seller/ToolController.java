@@ -40,8 +40,8 @@ public class ToolController {
         log.info("上传的文件名为: " + fileName);
 
 
-        MultiValueMap<String, MultipartFile> formData = new LinkedMultiValueMap<>();
-        formData.add("smfile", file);
+        MultiValueMap<String, MultipartFile> parts = new LinkedMultiValueMap<>();
+        parts.add("smfile", file);
 
         String basicAuth = "Basic 14ac5499cfdd2bb2859e4476d2e5b1d2bad079bf";
         log.info("basicAuth: " + basicAuth);

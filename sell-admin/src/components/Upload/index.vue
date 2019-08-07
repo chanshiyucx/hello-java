@@ -2,8 +2,9 @@
   <el-upload
     v-loading="loading"
     class="uploader"
+    name="image"
     :show-file-list="false"
-    :action="uploadUrl"
+    :action="apiUrl"
     :headers="headers"
     :accept="accept"
     :before-upload="beforeUpload"
@@ -17,8 +18,10 @@
 </template>
 
 <script>
-import config from '@/config'
-import { getToken } from '@/utils/auth'
+const auth = {
+  ClientID: '4433d0ee1f85168',
+  ClientSecret: '17408a8b7389c562acfdf80c2c24f903cbcc02c5'
+}
 
 export default {
   name: 'Upload',
@@ -38,9 +41,9 @@ export default {
   },
   data() {
     return {
-      uploadUrl: `${config.baseURL}/tool/upload`,
+      apiUrl: 'https://api.imgur.com/3/image',
       headers: {
-        Authorization: `Bearer ${getToken()}`
+        Authorization: 'Client-ID ' + auth.ClientID
       }
     }
   },
@@ -58,22 +61,26 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.uploader /deep/.el-upload {
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  border-radius: 6px;
-  border: 1px dashed #d9d9d9;
-  background-color: #eee;
-  &:hover {
-    .mask {
-      opacity: 1;
+.uploader {
+  width: 162px;
+  height: 162px;
+
+  /deep/.el-upload {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    border: 1px dashed #d9d9d9;
+    background-color: #eee;
+    &:hover {
+      .mask {
+        opacity: 1;
+      }
     }
   }
 }
 
 .uploader-icon {
-  border: 1px dashed #d9d9d9;
   font-size: 28px;
   color: #8c939d;
   width: 160px;

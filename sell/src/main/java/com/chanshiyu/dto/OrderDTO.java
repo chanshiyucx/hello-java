@@ -1,14 +1,8 @@
 package com.chanshiyu.dto;
 
 import com.chanshiyu.dataobject.OrderDetail;
-import com.chanshiyu.enums.OrderStatusEnum;
-import com.chanshiyu.enums.PayStatusEnum;
-import com.chanshiyu.utils.EnumUtil;
-import com.chanshiyu.utils.serializer.Date2LongSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -49,19 +43,22 @@ public class OrderDTO {
     private Date createTime;
 
     @ApiModelProperty("更新时间")
+    //@JsonSerialize(using = Date2LongSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     @ApiModelProperty("商品列表")
     private List<OrderDetail> orderDetailList;
 
-    @JsonIgnore
-    public OrderStatusEnum getOrderStatusEnum() {
-        return EnumUtil.getByCode(orderStatus, OrderStatusEnum.class);
-    }
 
-    @JsonIgnore
-    public PayStatusEnum getPayStatusEnum() {
-        return EnumUtil.getByCode(payStatus, PayStatusEnum.class);
-    }
+    //使用模板时可以使用
+    //@JsonIgnore
+    //public OrderStatusEnum getOrderStatusEnum() {
+    //    return EnumUtil.getByCode(orderStatus, OrderStatusEnum.class);
+    //}
+    //
+    //@JsonIgnore
+    //public PayStatusEnum getPayStatusEnum() {
+    //    return EnumUtil.getByCode(payStatus, PayStatusEnum.class);
+    //}
 }

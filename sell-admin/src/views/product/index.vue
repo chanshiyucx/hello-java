@@ -43,7 +43,7 @@
     />
 
     <el-dialog
-      :title="`${status === 'edit' ? '编辑' : '新增'}类目`"
+      :title="`${status === 'edit' ? '编辑' : '新增'}商品`"
       :visible.sync="visible.formDialog"
       :close-on-click-modal="false"
       width="500px"
@@ -53,7 +53,7 @@
         :rules="rules"
         :model="dataForm"
         label-position="left"
-        label-width="100px"
+        label-width="80px"
         style="width: 400px;"
       >
         <el-form-item label="类目" prop="categoryId">
@@ -205,9 +205,6 @@ export default {
       this.loading.upload = true
     },
     handleSuccess(res, file, fileList) {
-      if (res.status !== 200) {
-        return this.$message.error('图片上传失败')
-      }
       this.dataForm.productIcon = res.data.link
 
       const img = new Image()

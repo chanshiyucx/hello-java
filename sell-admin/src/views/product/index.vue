@@ -5,7 +5,8 @@
     </div>
 
     <el-table v-loading="loading.table" :data="list" border fit highlight-current-row stripe>
-      <el-table-column prop="productIcon" label="小图" align="center" min-width="150px">
+      <el-table-column prop="productId" label="商品ID" align="center" min-width="150px" />
+      <el-table-column label="小图" align="center" min-width="150px">
         <template slot-scope="scope">
           <img class="thumb" :src="scope.row.productIcon" alt="小图" >
         </template>

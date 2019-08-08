@@ -50,7 +50,6 @@ public class OrderDTO {
     @ApiModelProperty("商品列表")
     private List<OrderDetail> orderDetailList;
 
-
     //使用模板时可以使用
     //@JsonIgnore
     //public OrderStatusEnum getOrderStatusEnum() {

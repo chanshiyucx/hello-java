@@ -1,10 +1,11 @@
 <template>
   <div class="app-container">
     <el-table v-loading="loading.table" :data="list" border fit highlight-current-row stripe>
+      <el-table-column prop="orderId" label="订单ID" align="center" min-width="150px" />
       <el-table-column prop="buyerName" label="买家名称" align="center" min-width="100px" />
       <el-table-column prop="buyerPhone" label="买家电话" align="center" min-width="100px" />
       <el-table-column prop="buyerAddress" label="买家地址" align="center" min-width="150px" />
-      <el-table-column prop="buyerOpenid" label="买家openid" align="center" min-width="150px" />
+      <el-table-column prop="buyerOpenid" label="买家openid" align="center" min-width="100px" />
       <el-table-column prop="orderAmount" label="订单金额" align="center" min-width="100px" />
       <el-table-column label="订单状态" align="center" min-width="100px">
         <template slot-scope="scope">
@@ -41,12 +42,27 @@
       :limit.sync="query.pageSize"
       @pagination="getData()"
     />
+
+    <el-dialog title="订单详情" :visible.sync="visible.detailDialog" :close-on-click-modal="false" width="900px">
+      <el-table v-loading="loading.detailDialog" :data="orderDetail.orderDetailList" border fit highlight-current-row>
+        <el-table-column prop="productId" label="商品ID" align="center" min-width="150px" />
+        <el-table-column label="小图" align="center" min-width="150px">
+          <template slot-scope="scope">
+            <img class="thumb" :src="scope.row.productIcon" alt="小图" >
+          </template>
+        </el-table-column>
+        <el-table-column prop="productName" label="名称" align="center" min-width="100px" />
+        <el-table-column prop="productPrice" label="单价" align="center" min-width="100px" />
+        <el-table-column prop="productQuantity" label="数量" align="center" min-width="100px" />
+        <el-table-column prop="createTime" label="创建时间" align="center" min-width="150px" />
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'
-import { getOrderList, cancelOrder } from '@/api/order'
+import { getOrderList, cancelOrder, getOrderDetail } from '@/api/order'
 
 const orderStatusEnum = [
   { title: '新订单', type: 'primary' },
@@ -71,17 +87,18 @@ export default {
     return {
       loading: {
         table: false,
-        formDialog: false
+        detailDialog: false
       },
       visible: {
-        formDialog: false
+        detailDialog: false
       },
       total: 0,
       list: null,
       query: {
         pageNum: 1,
         pageSize: 10
-      }
+      },
+      orderDetail: {}
     }
   },
   created() {
@@ -120,8 +137,16 @@ export default {
           console.log('取消操作')
         })
     },
-    handleDeatil(row) {
+    async handleDeatil(row) {
       this.visible.detailDialog = true
+      try {
+        this.loading.detailDialog = true
+        const res = await getOrderDetail({ orderId: row.orderId })
+        this.loading.detailDialog = false
+        this.orderDetail = res.data
+      } catch (error) {
+        this.loading.detailDialog = false
+      }
     }
   }
 }

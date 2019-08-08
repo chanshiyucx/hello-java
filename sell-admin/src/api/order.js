@@ -15,3 +15,11 @@ export function cancelOrder(data) {
     data
   })
 }
+
+export function getOrderDetail(params) {
+  return request({
+    url: '/seller/order/detail',
+    method: 'GET',
+    params
+  })
+}

@@ -59,4 +59,16 @@ public class SellerOrderController {
         OrderDTO result = orderService.cancel(orderDTO);
         return ResultVOUtil.success(result);
     }
+
+    @ApiOperation(value = "订单详情")
+    @ApiImplicitParam(name = "orderId", value = "订单ID", required = true, dataType = "String")
+    @GetMapping("/detail")
+    public ResultVO<OrderDTO> detail(@RequestParam(value = "orderId", defaultValue = "") String orderId) {
+        OrderDTO orderDTO = orderService.findOne(orderId);
+        if (orderDTO == null) {
+            log.error("【订单详情】订单不存在，orderId={}", orderId);
+            throw new SellException(ResultEnum.ORDER_NOT_EXIST);
+        }
+        return ResultVOUtil.success(orderDTO);
+    }
 }

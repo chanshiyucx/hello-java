@@ -5,8 +5,12 @@
     </div>
 
     <el-table v-loading="loading.table" :data="list" border fit highlight-current-row stripe>
-      <el-table-column prop="productId" label="商品ID" align="center" min-width="150px" />
-      <el-table-column label="小图" align="center" min-width="150px">
+      <el-table-column label="商品ID" align="center" min-width="150px">
+        <template slot-scope="scope">
+          <el-link type="primary" @click="handleDialog(scope.row)">{{ scope.row.productId }}</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="小图" align="center" min-width="100px">
         <template slot-scope="scope">
           <img class="thumb" :src="scope.row.productIcon" alt="小图" >
         </template>
@@ -27,9 +31,14 @@
           >{{ scope.row.productStatus === 0 ? '上架' : '下架' }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="createTime" label="创建时间" align="center" min-width="150px" />
       <el-table-column label="操作" align="center" min-width="150px">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleDialog(scope.row)">编辑</el-button>
+          <el-button
+            size="mini"
+            :type="scope.row.productStatus === 0 ? 'danger' : 'success'"
+            @click="handleStatus(scope.row)"
+          >{{ scope.row.productStatus === 0 ? '下架' : '上架' }}</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -248,6 +257,28 @@ export default {
           this.loading.formDialog = false
         }
       })
+    },
+    handleStatus(row) {
+      this.$confirm(`将此商品${row.productStatus === 0 ? '下架' : '上架'}, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async() => {
+          try {
+            this.loading.table = true
+            const req = { ...row }
+            req.productStatus = req.productStatus === 0 ? 1 : 0
+            await updateProduct(req)
+            this.loading.table = false
+            this.getData()
+          } catch (error) {
+            this.loading.table = false
+          }
+        })
+        .catch(() => {
+          console.log('取消操作')
+        })
     },
     handleDelete(row) {
       this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {

@@ -1,12 +1,14 @@
 package com.chanshiyu.dataobject;
 
 import com.chanshiyu.enums.ProductStatusEnum;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 商品详情
@@ -40,4 +42,12 @@ public class ProductInfo {
 
     /** 商品类目 */
     private Integer categoryId;
+
+    /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    /** 更新时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 }

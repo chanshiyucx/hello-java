@@ -2,6 +2,7 @@ package com.chanshiyu.dataobject;
 
 import com.chanshiyu.enums.OrderStatusEnum;
 import com.chanshiyu.enums.PayStatusEnum;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -44,8 +45,10 @@ public class OrderMaster {
     private Integer payStatus = PayStatusEnum.WAIT.getCode();
 
     /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /** 更新时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 }

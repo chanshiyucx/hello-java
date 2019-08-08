@@ -1,10 +1,14 @@
 <template>
   <div class="app-container">
     <el-table v-loading="loading.table" :data="list" border fit highlight-current-row stripe>
-      <el-table-column prop="orderId" label="订单ID" align="center" min-width="150px" />
+      <el-table-column label="订单ID" align="center" min-width="150px">
+        <template slot-scope="scope">
+          <el-link type="primary" @click="handleDeatil(scope.row)">{{ scope.row.orderId }}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column prop="buyerName" label="买家名称" align="center" min-width="100px" />
       <el-table-column prop="buyerPhone" label="买家电话" align="center" min-width="100px" />
-      <el-table-column prop="buyerAddress" label="买家地址" align="center" min-width="150px" />
+      <el-table-column prop="buyerAddress" label="买家地址" align="center" min-width="120px" />
       <el-table-column prop="buyerOpenid" label="买家openid" align="center" min-width="100px" />
       <el-table-column prop="orderAmount" label="订单金额" align="center" min-width="100px" />
       <el-table-column label="订单状态" align="center" min-width="100px">
@@ -24,7 +28,12 @@
       <el-table-column prop="createTime" label="创建时间" align="center" min-width="150px" />
       <el-table-column label="操作" align="center" min-width="150px">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleDeatil(scope.row)">详情</el-button>
+          <el-button
+            size="mini"
+            type="success"
+            :disabled="scope.row.orderStatus !== 0"
+            @click="handleFinish(scope.row)"
+          >完结</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -43,7 +52,7 @@
       @pagination="getData()"
     />
 
-    <el-dialog title="订单详情" :visible.sync="visible.detailDialog" :close-on-click-modal="false" width="900px">
+    <el-dialog title="订单详情" :visible.sync="visible.detailDialog" width="900px">
       <el-table v-loading="loading.detailDialog" :data="orderDetail.orderDetailList" border fit highlight-current-row>
         <el-table-column prop="productId" label="商品ID" align="center" min-width="150px" />
         <el-table-column label="小图" align="center" min-width="150px">
@@ -62,7 +71,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-import { getOrderList, cancelOrder, getOrderDetail } from '@/api/order'
+import { getOrderList, cancelOrder, finishOrder, getOrderDetail } from '@/api/order'
 
 const orderStatusEnum = [
   { title: '新订单', type: 'primary' },
@@ -115,6 +124,27 @@ export default {
       } catch (error) {
         this.loading.table = false
       }
+    },
+    handleFinish(row) {
+      this.$confirm('此操作将完结该订单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async() => {
+          try {
+            this.loading.table = true
+            await finishOrder({ orderId: row.orderId })
+            this.loading.table = false
+            this.$message.success('操作成功')
+            this.getData()
+          } catch (error) {
+            this.loading.table = false
+          }
+        })
+        .catch(() => {
+          console.log('取消操作')
+        })
     },
     handleCancel(row) {
       this.$confirm('此操作将取消该订单, 是否继续?', '提示', {

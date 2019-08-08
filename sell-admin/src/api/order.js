@@ -8,6 +8,14 @@ export function getOrderList(params) {
   })
 }
 
+export function finishOrder(data) {
+  return request({
+    url: '/seller/order/finish',
+    method: 'PUT',
+    data
+  })
+}
+
 export function cancelOrder(data) {
   return request({
     url: '/seller/order/cancel',

@@ -15,10 +15,10 @@
           <img class="thumb" :src="scope.row.productIcon" alt="小图" >
         </template>
       </el-table-column>
-      <el-table-column prop="productName" label="名称" align="center" min-width="150px" />
+      <el-table-column prop="productName" label="名称" align="center" min-width="100px" />
       <el-table-column prop="productDescription" label="描述" align="center" min-width="150px" />
-      <el-table-column prop="productPrice" label="单价" align="center" min-width="100px" />
-      <el-table-column prop="productStock" label="库存" align="center" min-width="100px" />
+      <el-table-column prop="productPrice" label="单价" align="center" min-width="80px" />
+      <el-table-column prop="productStock" label="库存" align="center" min-width="80px" />
       <el-table-column label="类目" align="center" min-width="100px">
         <template slot-scope="scope">
           <span>{{ getCategoryName(scope.row.categoryId) }}</span>

@@ -8,6 +8,7 @@
       <el-table-column prop="categoryId" label="ID" align="center" min-width="150px" />
       <el-table-column prop="categoryName" label="类目名称" align="center" min-width="150px" />
       <el-table-column prop="createTime" label="创建时间" align="center" min-width="150px" />
+      <el-table-column prop="updateTime" label="更新时间" align="center" min-width="150px" />
       <el-table-column label="操作" align="center" min-width="150px">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleDialog(scope.row)">编辑</el-button>
@@ -121,7 +122,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       })
-        .then(async () => {
+        .then(async() => {
           try {
             this.loading.table = true
             await deleteCategory({ categoryId: row.categoryId })

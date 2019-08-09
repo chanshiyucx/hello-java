@@ -13,8 +13,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class BuyerServiceImpl implements BuyerService {
 
-    @Autowired
     private OrderService orderService;
+
+    @Autowired
+    public BuyerServiceImpl(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     private OrderDTO checkOrderOwner(String openid, String orderId) {
         OrderDTO orderDTO = orderService.findOne(orderId);

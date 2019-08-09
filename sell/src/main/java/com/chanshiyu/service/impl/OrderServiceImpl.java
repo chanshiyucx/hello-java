@@ -34,14 +34,18 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
     private ProductInfoService productInfoService;
 
-    @Autowired
     private OrderDetailRepository orderDetailRepository;
 
-    @Autowired
     private OrderMasterRepository orderMasterRepository;
+
+    @Autowired
+    public OrderServiceImpl(ProductInfoService productInfoService, OrderDetailRepository orderDetailRepository, OrderMasterRepository orderMasterRepository) {
+        this.productInfoService = productInfoService;
+        this.orderDetailRepository = orderDetailRepository;
+        this.orderMasterRepository = orderMasterRepository;
+    }
 
     @Override
     @Transactional

@@ -5,10 +5,22 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <div class="right-menu-item hover-effect avatar-wrapper">
+      <el-dropdown class="avatar-container" trigger="click">
+        <div class="avatar-wrapper">
+          <img src="@/assets/images/avatar.gif" class="user-avatar" >
+          <i class="el-icon-caret-bottom" />
+        </div>
+        <el-dropdown-menu slot="dropdown" class="user-dropdown">
+          <el-dropdown-item>
+            <span style="display:block;" @click="logout">退出登录</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+
+      <!-- <div class="right-menu-item hover-effect avatar-wrapper">
         <img src="@/assets/images/avatar.gif" class="user-avatar" >
         <i class="el-icon-caret-bottom" />
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
@@ -92,7 +104,8 @@ export default {
 
     .avatar-wrapper {
       position: relative;
-      transform: translateY(-1px);
+      padding-right: 8px;
+      transform: translateY(-2px);
 
       .user-avatar {
         cursor: pointer;

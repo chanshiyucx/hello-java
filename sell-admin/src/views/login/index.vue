@@ -105,6 +105,8 @@ export default {
           this.$store
             .dispatch('user/login', this.loginForm)
             .then(() => {
+              const { username, password } = this.loginForm
+              localSave('u_p', `${username}_${password}`)
               this.$router.push({ path: '/' })
               this.loading = false
             })

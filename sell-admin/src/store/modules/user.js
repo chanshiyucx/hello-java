@@ -1,4 +1,4 @@
-import { login, logout } from '@/api/user'
+import { login } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -41,16 +41,10 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token)
-        .then(() => {
-          commit('SET_TOKEN', '')
-          removeToken()
-          resetRouter()
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
+      commit('SET_TOKEN', '')
+      removeToken()
+      resetRouter()
+      resolve()
     })
   },
 

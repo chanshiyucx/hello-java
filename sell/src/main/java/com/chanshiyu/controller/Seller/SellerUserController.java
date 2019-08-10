@@ -82,6 +82,10 @@ public class SellerUserController {
         }
 
         SellerInfo sellerInfo = sellerService.findSellerByUsername(sellerLoginForm.getUsername());
+        if (sellerInfo == null) {
+            log.error("【卖家登录】用户不存在，sellerLoginForm={}", sellerLoginForm);
+            throw new SellException(ResultEnum.USER_NOT_EXIST);
+        }
         if (!sellerInfo.getPassword().equals(sellerLoginForm.getPassword())) {
             log.error("【卖家登录】密码错误，sellerLoginForm={}", sellerLoginForm);
             throw new SellException(ResultEnum.PASSWORD_ERROR);

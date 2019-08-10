@@ -8,7 +8,7 @@
       </el-table-column>
       <el-table-column prop="buyerName" label="买家名称" align="center" min-width="100px" />
       <el-table-column prop="buyerPhone" label="买家电话" align="center" min-width="100px" />
-      <el-table-column prop="buyerAddress" label="买家地址" align="center" min-width="120px" />
+      <el-table-column prop="buyerAddress" label="买家地址" align="center" min-width="100px" />
       <el-table-column prop="buyerOpenid" label="买家openid" align="center" min-width="100px" />
       <el-table-column prop="orderAmount" label="订单金额" align="center" min-width="100px" />
       <el-table-column label="订单状态" align="center" min-width="100px">

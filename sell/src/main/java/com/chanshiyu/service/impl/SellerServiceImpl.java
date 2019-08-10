@@ -22,7 +22,12 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
+    public SellerInfo findSellerByUsername(String username) {
+        return sellerInfoRepository.findByUsername(username);
+    }
+
+    @Override
     public SellerInfo save(SellerInfo sellerInfo) {
-        return null;
+        return sellerInfoRepository.save(sellerInfo);
     }
 }

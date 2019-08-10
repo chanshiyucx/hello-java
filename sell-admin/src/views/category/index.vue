@@ -74,14 +74,14 @@ export default {
   },
   methods: {
     async getData() {
+      this.loading.table = true
       try {
-        this.loading.table = true
         const res = await getCategoryList()
-        this.loading.table = false
         this.list = res.data
       } catch (error) {
-        this.loading.table = false
+        console.log(error)
       }
+      this.loading.table = false
     },
     handleDialog(row) {
       if (row) {
@@ -100,20 +100,20 @@ export default {
     async handleSure() {
       this.$refs['dataForm'].validate(async valid => {
         if (!valid) return this.$message.error('请检查类目信息')
+        const req = { ...this.dataForm }
+        this.loading.formDialog = true
         try {
-          this.loading.formDialog = true
-          const req = { ...this.dataForm }
           if (this.status === 'edit') {
             await updateCategory(req)
           } else {
             await createCategory(req)
           }
-          this.loading.formDialog = false
-          this.visible.formDialog = false
-          this.getData()
         } catch (error) {
-          this.loading.formDialog = false
+          console.log(error)
         }
+        this.loading.formDialog = false
+        this.visible.formDialog = false
+        this.getData()
       })
     },
     handleDelete(row) {
@@ -123,14 +123,14 @@ export default {
         type: 'warning'
       })
         .then(async() => {
+          this.loading.table = true
           try {
-            this.loading.table = true
             await deleteCategory({ categoryId: row.categoryId })
-            this.loading.table = false
-            this.getData()
           } catch (error) {
-            this.loading.table = false
+            console.log(error)
           }
+          this.loading.table = false
+          this.getData()
         })
         .catch(() => {
           console.log('取消操作')

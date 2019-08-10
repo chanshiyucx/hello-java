@@ -6,5 +6,7 @@ public interface SellerService {
 
     SellerInfo findSellerByOpenid(String openid);
 
+    SellerInfo findSellerByUsername(String username);
+
     SellerInfo save(SellerInfo sellerInfo);
 }

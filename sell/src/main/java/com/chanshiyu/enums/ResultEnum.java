@@ -20,7 +20,9 @@ public enum ResultEnum {
     CATEGORY_IS_EXIST(21, "商品类目已存在"),
     CATEGORY_NOT_EXIST(22, "商品类目不存在"),
     CATEGORY_IS_ACTIVE(23, "商品类目尚在使用"),
-    FILE_NOT_EMPTY(24, "文件不能为空")
+    FILE_NOT_EMPTY(24, "文件不能为空"),
+    USER_IS_EXIT(25, "用户已存在"),
+    PASSWORD_ERROR(26, "密码错误")
     ;
 
     private Integer code;

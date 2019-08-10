@@ -15,11 +15,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-
-/**
- * @Configuration 告诉 Spring Boot 需要加载这个配置类
- * @EnableSwagger2 启用 Swagger2
- */
 @Configuration
 @EnableSwagger2
 @ConditionalOnClass(EnableSwagger2.class)

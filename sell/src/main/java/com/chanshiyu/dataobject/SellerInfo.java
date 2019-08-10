@@ -1,5 +1,6 @@
 package com.chanshiyu.dataobject;
 
+import com.chanshiyu.enums.SellerStatusEnum;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -20,4 +21,8 @@ public class SellerInfo {
     private String password;
 
     private String openid;
+
+    private String avatar;
+
+    private Integer status = SellerStatusEnum.ACTIVE.getCode();
 }

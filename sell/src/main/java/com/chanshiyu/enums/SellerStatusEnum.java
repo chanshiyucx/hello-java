@@ -2,20 +2,18 @@ package com.chanshiyu.enums;
 
 import lombok.Getter;
 
-/**
- * 商品状态
- */
 @Getter
-public enum ProductStatusEnum {
+public enum SellerStatusEnum {
 
-    UP(0, "上架"),
-    DOWN(1, "下架");
+    ACTIVE(0, "正常"),
+    BLOCK(1, "封禁")
+    ;
 
     private Integer code;
 
     private String message;
 
-    ProductStatusEnum(Integer code, String message) {
+    SellerStatusEnum(Integer code, String message) {
         this.code = code;
         this.message = message;
     }

@@ -5,7 +5,7 @@ package com.chanshiyu.constant;
  */
 public interface RedisConstatnt {
 
-    String TOKEN_PREFIX = "token_%s";
+    String TOKEN_PREFIX = "Bearer %s";
 
     Integer EXPIRE = 7200; // 2小时
 }

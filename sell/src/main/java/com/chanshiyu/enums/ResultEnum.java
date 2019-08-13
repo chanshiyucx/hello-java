@@ -23,7 +23,9 @@ public enum ResultEnum {
     FILE_NOT_EMPTY(24, "文件不能为空"),
     USER_IS_EXIT(25, "用户已存在"),
     PASSWORD_ERROR(26, "密码错误"),
-    USER_NOT_EXIST(27, "用户不存在")
+    USER_NOT_EXIST(27, "用户不存在"),
+    USER_NOT_LOGIN(28, "用户未登录"),
+    TOKEN_NOT_ACTIVE(29, "无效token")
     ;
 
     private Integer code;

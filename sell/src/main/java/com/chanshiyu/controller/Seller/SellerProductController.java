@@ -14,6 +14,9 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.BindingResult;
@@ -50,6 +53,7 @@ public class SellerProductController {
 
     @ApiOperation(value = "新增商品")
     @ApiImplicitParam(name = "productInfoForm", value = "商品详情", required = true, dataType = "ProductInfoForm")
+    @CacheEvict(cacheNames = "product", key = "123456")
     @PostMapping("/create")
     public ResultVO<ProductInfo> create(@Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -66,6 +70,7 @@ public class SellerProductController {
 
     @ApiOperation(value = "更新商品")
     @ApiImplicitParam(name = "productInfoForm", value = "商品详情", required = true, dataType = "ProductInfoForm")
+    @CacheEvict(cacheNames = "product", key = "123456")
     @PutMapping("/update")
     public ResultVO<ProductInfo> update(@Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -86,6 +91,7 @@ public class SellerProductController {
 
     @ApiOperation(value = "移除商品")
     @ApiImplicitParam(name = "productId", value = "商品ID", required = true, dataType = "Integer")
+    @CacheEvict(cacheNames = "product", key = "123456")
     @DeleteMapping("/delete")
     public ResultVO delete(@RequestParam("productId") String productId) {
         productInfoService.delete(productId);

@@ -4,13 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * 商品详情
  */
 @Data
-public class ProductInfoVO {
+public class ProductInfoVO implements Serializable {
+
+    private static final long serialVersionUID = 3119738209445686625L;
 
     @ApiModelProperty("商品ID")
     @JsonProperty("id")

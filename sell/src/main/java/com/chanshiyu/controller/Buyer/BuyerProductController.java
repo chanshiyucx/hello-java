@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,7 @@ public class BuyerProductController {
     }
 
     @ApiOperation(value = "上架商品列表")
+    @Cacheable(cacheNames = "product", key="123456")
     @GetMapping("/list")
     public ResultVO<List<ProductVO>> list() {
         // 1. 查询所有商品

@@ -12,6 +12,7 @@ public class SellExceptionHandler {
 
     @ExceptionHandler(value = SellException.class)
     @ResponseBody
+    // @ResponseStatus(HttpStatus.FORBIDDEN)  // 设置HTTP状态
     public ResultVO handlerSellException(SellException e) {
         return ResultVOUtil.error(e.getCode(), e.getMessage());
     }

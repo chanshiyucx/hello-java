@@ -59,7 +59,7 @@ public class HttpAspect {
             log.warn("【登录校验】token 不存在");
             throw new SellException(ResultEnum.USER_NOT_LOGIN);
         }
-        String tokenValue = stringRedisTemplate.opsForValue().get(String.format(RedisConstatnt.TOKEN_PREFIX, token));
+        String tokenValue = stringRedisTemplate.opsForValue().get(token);
         if (StringUtils.isEmpty(tokenValue)) {
             log.warn("【登录校验】token 已失效");
             throw new SellException(ResultEnum.TOKEN_NOT_ACTIVE);

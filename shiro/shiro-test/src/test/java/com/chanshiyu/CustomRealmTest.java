@@ -8,8 +8,6 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.junit.Test;
 
-import java.sql.SQLOutput;
-
 public class CustomRealmTest {
 
     @Test

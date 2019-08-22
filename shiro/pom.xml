@@ -10,5 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>shiro-test</module>
+        <module>shiro-spring</module>
+        <module>shiro-web</module>
     </modules>
 </project>

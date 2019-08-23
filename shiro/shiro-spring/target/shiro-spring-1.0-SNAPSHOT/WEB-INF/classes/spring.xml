@@ -2,10 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <import resource="spring-dao.xml" />
+    <import resource="spring-redis.xml" />
     <context:component-scan base-package="com.chanshiyu"/>
 
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -16,13 +18,26 @@
             <value>
                 /login.html = anon
                 /subLogin = anon
+                /testRoles = roles["admin"]
+                /testRoles1 = roles["admin","admin1"]
+                /testPerms = perms["user:delete"]
+                /testPerms1 = perms["user:delete","user:update"]
+                /testRolesOr = rolesOr["admin", "user"]
                 /* = authc
             </value>
         </property>
+        <property name="filters">
+            <util:map>
+               <entry key="rolesOr" value-ref="rolesOrFilter" />
+            </util:map>
+        </property>
     </bean>
+
+    <bean class="com.chanshiyu.filter.RolesOrFilter" id="rolesOrFilter" />
 
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="realm" />
+        <property name="sessionManager" ref="sessionManager"/>
     </bean>
 
     <bean id="realm" class="com.chanshiyu.realm.CustomRealm">
@@ -33,5 +48,11 @@
         <property name="hashAlgorithmName" value="md5" />
         <property name="hashIterations" value="1" />
     </bean>
+
+    <!-- 自定义SessionManager -->
+    <bean class="com.chanshiyu.session.CustomSessionManage" id="sessionManager" >
+        <property name="sessionDAO" ref="redisSessionDao" />
+    </bean>
+    <bean class="com.chanshiyu.session.RedisSessionDao" id="redisSessionDao"/>
 
 </beans>

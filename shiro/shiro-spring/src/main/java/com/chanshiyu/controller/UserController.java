@@ -3,6 +3,8 @@ package com.chanshiyu.controller;
 import com.chanshiyu.vo.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,5 +32,35 @@ public class UserController {
         }
 
         return "登录成功！";
+    }
+
+    @RequestMapping(value="/testRoles", method=RequestMethod.GET)
+    @ResponseBody
+    public String testRole() {
+        return "test roles success";
+    }
+
+    @RequestMapping(value="/testRoles1", method=RequestMethod.GET)
+    @ResponseBody
+    public String testRole1() {
+        return "test roles success";
+    }
+
+    @RequestMapping(value="/testRolesOr", method=RequestMethod.GET)
+    @ResponseBody
+    public String testRolesOr() {
+        return "test testRolesOr success";
+    }
+
+    @RequestMapping(value="/testPerms", method=RequestMethod.GET)
+    @ResponseBody
+    public String testPerms() {
+        return "test permissions success";
+    }
+
+    @RequestMapping(value="/testPerms1", method=RequestMethod.GET)
+    @ResponseBody
+    public String testPerms1() {
+        return "test permissions1 success";
     }
 }

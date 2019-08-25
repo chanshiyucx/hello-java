@@ -77,6 +77,7 @@ public class CustomRealm extends AuthorizingRealm {
      * 获取角色
      */
     private Set<String> getRoleNamesForUser(String username) throws SQLException {
+        System.out.println("从数据库中获取权限数据");
         List<String> roles = userService.getRoleByUsername(username);
         LinkedHashSet sets = new LinkedHashSet(roles);
         return sets;

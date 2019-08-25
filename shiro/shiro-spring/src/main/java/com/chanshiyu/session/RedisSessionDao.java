@@ -16,7 +16,7 @@ import java.util.Set;
 public class RedisSessionDao extends AbstractSessionDAO {
 
     @Resource
-    private JedisUtil jedisUtil;
+    private JedisUtil    jedisUtil;
 
     private final String SHIRO_SESSION_PREFIX = "shiro-session";
 
@@ -56,10 +56,12 @@ public class RedisSessionDao extends AbstractSessionDAO {
         return (Session) SerializationUtils.deserialize(value);
     }
 
+    @Override
     public void update(Session session) throws UnknownSessionException {
         saveSession(session);
     }
 
+    @Override
     public void delete(Session session) {
         if (session == null || session.getId() == null) {
             return;
@@ -68,9 +70,10 @@ public class RedisSessionDao extends AbstractSessionDAO {
         jedisUtil.del(key);
     }
 
+    @Override
     public Collection<Session> getActiveSessions() {
         Set<byte[]> keys = jedisUtil.keys(SHIRO_SESSION_PREFIX);
-        Set<Session> sessions = new HashSet<Session>();
+        Set<Session> sessions = new HashSet<>();
         if (CollectionUtils.isEmpty(keys)) {
             return sessions;
         }

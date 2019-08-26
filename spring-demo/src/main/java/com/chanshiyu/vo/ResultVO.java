@@ -23,7 +23,7 @@ public class ResultVO<T> {
     private T data;
 
     /** 分页描述信息 */
-    private ResultVOAttributes attributes;
+    private ResultAttributesVO attributes;
 
     private ResultVO(T data) {
         this.status = 200;
@@ -31,7 +31,7 @@ public class ResultVO<T> {
         this.data = data;
     }
 
-    private ResultVO(T data, ResultVOAttributes attributes) {
+    private ResultVO(T data, ResultAttributesVO attributes) {
         this.status = 200;
         this.msg = "OK";
         this.data = data;
@@ -48,7 +48,7 @@ public class ResultVO<T> {
         return new ResultVO<>(data);
     }
 
-    public static <T> ResultVO<T> ok(T data, ResultVOAttributes attributes) {
+    public static <T> ResultVO<T> ok(T data, ResultAttributesVO attributes) {
         return new ResultVO<>(data, attributes);
     }
 

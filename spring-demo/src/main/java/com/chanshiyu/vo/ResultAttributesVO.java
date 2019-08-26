@@ -9,15 +9,15 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class ResultVOAttributes {
+public class ResultAttributesVO {
 
     /** 当前页数 */
-    private int pageNum;
+    private Integer pageNum;
 
     /** 页大小 */
-    private int pageSize;
+    private Integer pageSize;
 
     /** 总数 */
-    private long total;
+    private Long total;
 
 }

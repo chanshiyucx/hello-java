@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class JSONResultAttributes {
+public class ResultVOAttributes {
 
     /** 当前页数 */
     private int pageNum;

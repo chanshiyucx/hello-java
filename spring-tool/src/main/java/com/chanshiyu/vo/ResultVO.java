@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class JSONResult<T> {
+public class ResultVO<T> {
 
     /** 响应业务状态 */
     private Integer status;
@@ -23,37 +23,37 @@ public class JSONResult<T> {
     private T data;
 
     /** 分页描述信息 */
-    private JSONResultAttributes attributes;
+    private ResultVOAttributes attributes;
 
-    private JSONResult(T data) {
+    private ResultVO(T data) {
         this.status = 200;
         this.msg = "OK";
         this.data = data;
     }
 
-    private JSONResult(T data, JSONResultAttributes attributes) {
+    private ResultVO(T data, ResultVOAttributes attributes) {
         this.status = 200;
         this.msg = "OK";
         this.data = data;
         this.attributes = attributes;
     }
 
-    private JSONResult(Integer status, String msg, T data) {
+    private ResultVO(Integer status, String msg, T data) {
         this.status = status;
         this.msg = msg;
         this.data = data;
     }
 
-    public static <T> JSONResult<T> ok(T data) {
-        return new JSONResult<>(data);
+    public static <T> ResultVO<T> ok(T data) {
+        return new ResultVO<>(data);
     }
 
-    public static <T> JSONResult<T> ok(T data, JSONResultAttributes attributes) {
-        return new JSONResult<>(data, attributes);
+    public static <T> ResultVO<T> ok(T data, ResultVOAttributes attributes) {
+        return new ResultVO<>(data, attributes);
     }
 
-    public static <T> JSONResult<T> errorMsg(String msg) {
-        return new JSONResult<>(500, msg, null);
+    public static <T> ResultVO<T> errorMsg(String msg) {
+        return new ResultVO<>(500, msg, null);
     }
 
     public Boolean isOK() {

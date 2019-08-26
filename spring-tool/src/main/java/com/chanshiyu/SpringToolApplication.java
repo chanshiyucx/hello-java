@@ -1,13 +1,15 @@
-package com.chanshiyu.springredis;
+package com.chanshiyu;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
-public class SpringRedisApplication {
+@EnableCaching
+public class SpringToolApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringRedisApplication.class, args);
+        SpringApplication.run(SpringToolApplication.class, args);
     }
 
 }

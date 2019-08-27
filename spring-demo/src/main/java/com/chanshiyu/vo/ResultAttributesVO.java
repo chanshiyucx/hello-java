@@ -5,7 +5,8 @@ import lombok.Data;
 
 /**
  * @author chanshiyu
- * @Description: 分页描述信息
+ * @date 2019/8/27 9:50
+ * @description 分页描述信息
  */
 @Data
 @AllArgsConstructor

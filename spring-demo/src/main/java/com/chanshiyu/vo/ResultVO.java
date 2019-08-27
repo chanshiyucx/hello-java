@@ -5,7 +5,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author chanshiyu
- * @Description: 自定义响应数据结构
+ * @date 2019/8/27 9:50
+ * @description 自定义响应数据结构
  * 200：表示成功
  * 500：表示错误
  */

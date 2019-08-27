@@ -3,12 +3,13 @@ package com.chanshiyu.util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.CollectionUtils;
 
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author chanshiyu
- * @Description: Redis工具类
+ * @description Redis工具类
  */
 @SuppressWarnings("unchecked")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -16,13 +17,15 @@ public class RedisUtil {
 
     private final RedisTemplate redisTemplate;
 
+    //=============================common============================
+
     /**
      * 指定缓存失效时间
      * @param key 键
      * @param time 时间(秒)
      * @return boolean
      */
-    public boolean expire(String key, long time){
+    public boolean expire(String key, long time) {
         try {
             if(time > 0) {
                 redisTemplate.expire(key, time, TimeUnit.SECONDS);
@@ -35,12 +38,40 @@ public class RedisUtil {
     }
 
     /**
-     * 根据key 获取过期时间
+     * 根据key获取过期时间
      * @param key 键 不能为null
      * @return 时间(秒) 返回0代表为永久有效
      */
-    public long getExpire(String key){
+    public long getExpire(String key) {
         return redisTemplate.getExpire(key, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 判断key是否存在
+     * @param key 键
+     * @return true存在 false不存在
+     */
+    public boolean hasKey(String key) {
+        try {
+            return redisTemplate.hasKey(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 删除缓存
+     * @param key 可以传一个值 或多个
+     */
+    public void del(String ...key){
+        if(key != null && key.length > 0){
+            if (key.length == 1) {
+                redisTemplate.delete(key[0]);
+            } else {
+                redisTemplate.delete(CollectionUtils.arrayToList(key));
+            }
+        }
     }
 
     //============================String=============================
@@ -50,7 +81,7 @@ public class RedisUtil {
      * @param key 键
      * @return 值
      */
-    public Object get(String key){
+    public Object get(String key) {
         return key == null ? null : redisTemplate.opsForValue().get(key);
     }
 
@@ -77,7 +108,7 @@ public class RedisUtil {
      * @param time 时间(秒) time要大于0 如果time小于等于0 将设置无限期
      * @return true成功 false 失败
      */
-    public boolean set(String key, Object value, long time){
+    public boolean set(String key, Object value, long time) {
         try {
             if(time > 0) {
                 redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);

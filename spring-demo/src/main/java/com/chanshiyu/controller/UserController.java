@@ -1,6 +1,7 @@
 package com.chanshiyu.controller;
 
 import com.chanshiyu.dataobject.User;
+import com.chanshiyu.util.RedisUtil;
 import com.chanshiyu.vo.ResultVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +20,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
 
-    private final RedisTemplate redisTemplate;
+    private final RedisUtil redisUtil;
 
     @GetMapping("/getUser")
     public ResultVO<User> getUser() {
         String key = "shiyu";
-        redisTemplate.opsForValue().set(key, "chanshiyu.com");
-        String value = (String) redisTemplate.opsForValue().get(key);
+        redisUtil.set(key, "chanshiyu.com");
+        String value = (String) redisUtil.get(key);
         System.out.println("获取缓存中key为" + key + "的值为：" + value);
 
         User user = new User("shiyu", 18);
         String userKey = "chan";
-        redisTemplate.opsForValue().set(userKey, user);
-        User newUser = (User) redisTemplate.opsForValue().get(userKey);
+        redisUtil.set(userKey, user);
+        User newUser = (User) redisUtil.get(userKey);
         System.out.println("获取缓存中key为" + userKey + "的值为：" + newUser);
 
         return ResultVO.ok(user);

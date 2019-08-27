@@ -1,5 +1,7 @@
 package com.chanshiyu.vo;
 
+import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +13,6 @@ import lombok.NoArgsConstructor;
  * 500：表示错误
  */
 @Data
-@NoArgsConstructor
 public class ResultVO<T> {
 
     /** 响应业务状态 */
@@ -25,6 +26,11 @@ public class ResultVO<T> {
 
     /** 分页描述信息 */
     private ResultAttributesVO attributes;
+
+    private ResultVO() {
+        this.status = 200;
+        this.msg = "OK";
+    }
 
     private ResultVO(T data) {
         this.status = 200;
@@ -44,6 +50,8 @@ public class ResultVO<T> {
         this.msg = msg;
         this.data = data;
     }
+
+    public static <T> ResultVO<T> ok() { return new ResultVO<>(); }
 
     public static <T> ResultVO<T> ok(T data) {
         return new ResultVO<>(data);

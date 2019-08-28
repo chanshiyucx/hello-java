@@ -2,7 +2,6 @@ package com.chanshiyu.controller;
 
 import com.chanshiyu.dataobject.ProductCategory;
 import com.chanshiyu.enums.ResultEnum;
-import com.chanshiyu.exception.CommException;
 import com.chanshiyu.service.ProductCategoryService;
 import com.chanshiyu.vo.ResultAttributesVO;
 import com.chanshiyu.vo.ResultVO;
@@ -50,7 +49,7 @@ public class ProductCategoryController {
     public ResultVO<ProductCategory> create(@ApiParam(value = "创建类目", required = true) @Valid @RequestBody ProductCategory bean, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             log.error("【创建类目】参数不正确，productCategory={}", bean);
-            throw new CommException(ResultEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
+            return ResultVO.errorMsg(bindingResult.getFieldError().getDefaultMessage());
         }
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(bean, productCategory);
@@ -63,14 +62,14 @@ public class ProductCategoryController {
     public ResultVO<ProductCategory> update(@ApiParam(value = "更新类目", required = true) @Valid @RequestBody ProductCategory bean, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             log.error("【更新类目】参数不正确，productCategory={}", bean);
-            throw new CommException(ResultEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
+            return ResultVO.errorMsg(bindingResult.getFieldError().getDefaultMessage());
         }
 
         // 判断类目是否已存在
         ProductCategory productCategory = productCategoryService.findOne(bean.getId());
         if (productCategory == null) {
             log.error("【更新类目】类目不存在，productCategory={}", bean);
-            throw new CommException(ResultEnum.CATEGORY_NOT_EXIST);
+            return ResultVO.errorMsg(ResultEnum.CATEGORY_NOT_EXIST.getMessage());
         }
         BeanUtils.copyProperties(bean, productCategory);
         ProductCategory result = productCategoryService.save(productCategory);

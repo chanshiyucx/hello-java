@@ -10,9 +10,7 @@ import lombok.Getter;
 @Getter
 public enum ResultEnum {
 
-    PARAM_ERROR(1, "参数不正确"),
-    CATEGORY_IS_EXIST(10, "商品类目已存在"),
-    CATEGORY_NOT_EXIST(11, "商品类目已存在")
+    CATEGORY_NOT_EXIST(11, "商品类目不存在")
     ;
 
     private Integer code;

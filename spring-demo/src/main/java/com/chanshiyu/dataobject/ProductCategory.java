@@ -7,6 +7,7 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
@@ -28,6 +29,7 @@ public class ProductCategory {
 
     @ApiModelProperty(value = "类目名称", dataType = "String")
     @Column(name = "category_name")
+    @NotBlank(message = "类目名称不能为空")
     private String name;
 
     @ApiModelProperty(value = "创建时间", dataType = "String")

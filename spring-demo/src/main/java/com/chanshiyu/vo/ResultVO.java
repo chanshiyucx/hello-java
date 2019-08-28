@@ -1,9 +1,6 @@
 package com.chanshiyu.vo;
 
-import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @author chanshiyu

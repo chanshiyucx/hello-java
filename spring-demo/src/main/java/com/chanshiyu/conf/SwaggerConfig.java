@@ -1,6 +1,7 @@
 package com.chanshiyu.conf;
 
 import lombok.Data;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
+@ConditionalOnClass(EnableSwagger2.class)
 @Data
 @Component
 @ConfigurationProperties(prefix = "swagger")

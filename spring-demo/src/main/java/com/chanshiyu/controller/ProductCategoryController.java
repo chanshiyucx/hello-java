@@ -49,7 +49,8 @@ public class ProductCategoryController {
     public ResultVO<ProductCategory> create(@ApiParam(value = "创建类目", required = true) @Valid @RequestBody ProductCategory bean, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             log.error("【创建类目】参数不正确，productCategory={}", bean);
-            return ResultVO.errorMsg(bindingResult.getFieldError().getDefaultMessage());
+
+            //return ResultVO.errorMsg(bindingResult.getFieldError().getDefaultMessage());
         }
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(bean, productCategory);

@@ -1,7 +1,5 @@
 package com.chanshiyu.controller;
 
-import com.chanshiyu.exception.ApiEnum;
-import com.chanshiyu.exception.ApiException;
 import com.chanshiyu.pojo.ProductCategory;
 import com.chanshiyu.service.CategoryService;
 import com.chanshiyu.util.CommJSONResult;
@@ -13,7 +11,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,21 +43,13 @@ public class CategoryController {
 
     @ApiOperation(value = "创建类目", notes = "创建类目")
     @PostMapping("/create")
-    public CommJSONResult<ProductCategory> create(@ApiParam(value = "创建类目", required = true) @Valid @RequestBody ProductCategory bean, BindingResult bindingResult) throws Exception {
-            if(bindingResult.hasErrors()) {
-                log.error("【创建类目】参数不正确，error={}, productCategory={}", bindingResult.getFieldError().getDefaultMessage(), bean);
-                throw new ApiException(ApiEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
-            }
+    public CommJSONResult<ProductCategory> create(@ApiParam(value = "创建类目", required = true) @Valid @RequestBody ProductCategory bean) throws Exception {
             return CommJSONResult.ok(this.categoryService.create(bean));
     }
 
     @ApiOperation(value = "更新类目", notes = "更新类目")
     @PutMapping("/update")
-    public CommJSONResult<ProductCategory> update(@ApiParam(value = "更新类目", required = true) @Valid @RequestBody ProductCategory bean, BindingResult bindingResult) throws Exception {
-        if(bindingResult.hasErrors()) {
-            log.error("【更新类目】参数不正确，error={}, productCategory={}", bindingResult.getFieldError().getDefaultMessage(), bean);
-            throw new ApiException(ApiEnum.PARAM_ERROR.getCode(), bindingResult.getFieldError().getDefaultMessage());
-        }
+    public CommJSONResult<ProductCategory> update(@ApiParam(value = "更新类目", required = true) @Valid @RequestBody ProductCategory bean) throws Exception {
         return CommJSONResult.ok(this.categoryService.update(bean));
     }
 

@@ -32,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
         PageHelper.startPage(pageNum, pageSize);
         // 获取列表
         Example example = new Example(ProductCategory.class);
-        List<ProductCategory> vos = this.productCategoryMapper.selectByExample(example);
+        List<ProductCategory> vos = productCategoryMapper.selectByExample(example);
         // 用PageInfo对结果进行包装
         PageInfo info = new PageInfo<>(vos);
         JSONResultAttributes attributes = new JSONResultAttributes(info.getPageNum(), info.getPageSize(), info.getTotal());
@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public ProductCategory create(ProductCategory bean) throws Exception {
-        if (this.productCategoryMapper.insertSelective(bean) <= 0) {
+        if (productCategoryMapper.insertSelective(bean) <= 0) {
             throw new Exception("创建失败");
         }
         return bean;
@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public ProductCategory update(ProductCategory bean) throws Exception {
-        if (this.productCategoryMapper.updateByPrimaryKeySelective(bean) <= 0) {
+        if (productCategoryMapper.updateByPrimaryKeySelective(bean) <= 0) {
             throw new Exception("更新失败");
         }
         return bean;
@@ -60,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void delete(int id) throws Exception {
-        this.productCategoryMapper.deleteByPrimaryKey(id);
+        productCategoryMapper.deleteByPrimaryKey(id);
     }
 
 }

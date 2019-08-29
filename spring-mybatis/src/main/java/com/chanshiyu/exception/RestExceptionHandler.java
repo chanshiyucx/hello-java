@@ -29,17 +29,6 @@ public class RestExceptionHandler {
     }
 
     /**
-     * 自定义异常
-     * @param e 具体异常
-     * @return 包括的类型
-     */
-    @ExceptionHandler(ApiException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public CommJSONResult<String> handleBindException(ApiException e) {
-        return CommJSONResult.errorMsg(e.getMessage());
-    }
-
-    /**
      * 普通Restful接口参数判断
      *
      * @param e 具体异常

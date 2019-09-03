@@ -1,5 +1,6 @@
 package com.chanshiyu.controller;
 
+import com.chanshiyu.dto.category.CategoryDetail;
 import com.chanshiyu.pojo.Category;
 import com.chanshiyu.service.CategoryService;
 import com.chanshiyu.util.CommJSONResult;
@@ -58,6 +59,12 @@ public class CategoryController {
     public CommJSONResult<String> delete(@ApiParam(value = "移除类目", required = true) int id) throws Exception {
         this.categoryService.delete(id);
         return CommJSONResult.ok("删除成功");
+    }
+
+    @ApiOperation(value = "类目详情", notes = "类目详情")
+    @GetMapping("/detail")
+    public CommJSONResult<CategoryDetail> detail(@ApiParam(value = "类目ID", required = true) int id) {
+        return CommJSONResult.ok(this.categoryService.detail(id));
     }
 
 }

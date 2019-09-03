@@ -1,6 +1,7 @@
 package com.chanshiyu.pojo;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
 
@@ -27,4 +28,5 @@ public class Category {
      */
     @Column(name = "update_time")
     private Date updateTime;
+
 }

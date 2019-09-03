@@ -10,4 +10,15 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <resultMap id="DetailResultMap" type="com.chanshiyu.dto.category.CategoryDetail" extends="BaseResultMap">
+    <collection property="productList" resultMap="com.chanshiyu.mapper.ProductMapper.BaseResultMap" />
+  </resultMap>
+
+  <select id="selectCategoryDetail" resultMap="DetailResultMap">
+    SELECT c.*, p.*
+    FROM category c JOIN product p ON p.category=c.id
+    WHERE c.id=#{categoryId}
+  </select>
+
 </mapper>

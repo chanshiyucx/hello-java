@@ -1,5 +1,6 @@
 package com.chanshiyu.service.impl;
 
+import com.chanshiyu.dto.category.CategoryDetail;
 import com.chanshiyu.mapper.CategoryMapper;
 import com.chanshiyu.pojo.Category;
 import com.chanshiyu.service.CategoryService;
@@ -59,8 +60,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public void delete(int id) throws Exception {
-        categoryMapper.deleteByPrimaryKey(id);
+    public void delete(int categoryId) throws Exception {
+        final int result = categoryMapper.deleteByPrimaryKey(categoryId);
+        if (result == 0) {
+            throw new Exception("删除失败");
+        }
+    }
+
+    @Override
+    public CategoryDetail detail(int categoryId) {
+        final CategoryDetail result = categoryMapper.selectCategoryDetail(categoryId);
+        return result;
     }
 
 }

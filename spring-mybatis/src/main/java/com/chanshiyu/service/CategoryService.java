@@ -1,5 +1,6 @@
 package com.chanshiyu.service;
 
+import com.chanshiyu.dto.category.CategoryDetail;
 import com.chanshiyu.pojo.Category;
 import com.chanshiyu.util.CommListResult;
 
@@ -11,5 +12,8 @@ public interface CategoryService {
 
     Category update(Category bean) throws Exception;
 
-    void delete(int id) throws Exception;
+    void delete(int categoryId) throws Exception;
+
+    CategoryDetail detail(int categoryId);
+
 }

@@ -1,6 +1,6 @@
 package com.chanshiyu.controller;
 
-import com.chanshiyu.pojo.ProductCategory;
+import com.chanshiyu.pojo.Category;
 import com.chanshiyu.service.CategoryService;
 import com.chanshiyu.util.CommJSONResult;
 import com.chanshiyu.util.CommListResult;
@@ -32,24 +32,24 @@ public class CategoryController {
 
     @ApiOperation(value = "类目列表", notes = "类目列表")
     @GetMapping("/list")
-    public CommJSONResult<List<ProductCategory>> list(
+    public CommJSONResult<List<Category>> list(
             @ApiParam(value = "页码", defaultValue = "1") Integer pageNum,
             @ApiParam(value = "每页大小", defaultValue = "10") Integer pageSize
     ) {
-        CommListResult<ProductCategory> list = this.categoryService.list(pageNum, pageSize);
+        CommListResult<Category> list = this.categoryService.list(pageNum, pageSize);
         JSONResultAttributes attributes = list.getAttributes();
         return CommJSONResult.ok(list.getList(), attributes);
     }
 
     @ApiOperation(value = "创建类目", notes = "创建类目")
     @PostMapping("/create")
-    public CommJSONResult<ProductCategory> create(@ApiParam(value = "创建类目", required = true) @Valid @RequestBody ProductCategory bean) throws Exception {
+    public CommJSONResult<Category> create(@ApiParam(value = "创建类目", required = true) @Valid @RequestBody Category bean) throws Exception {
             return CommJSONResult.ok(this.categoryService.create(bean));
     }
 
     @ApiOperation(value = "更新类目", notes = "更新类目")
     @PutMapping("/update")
-    public CommJSONResult<ProductCategory> update(@ApiParam(value = "更新类目", required = true) @Valid @RequestBody ProductCategory bean) throws Exception {
+    public CommJSONResult<Category> update(@ApiParam(value = "更新类目", required = true) @Valid @RequestBody Category bean) throws Exception {
         return CommJSONResult.ok(this.categoryService.update(bean));
     }
 

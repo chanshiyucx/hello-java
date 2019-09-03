@@ -1,7 +1,7 @@
 package com.chanshiyu.service.impl;
 
-import com.chanshiyu.mapper.ProductCategoryMapper;
-import com.chanshiyu.pojo.ProductCategory;
+import com.chanshiyu.mapper.CategoryMapper;
+import com.chanshiyu.pojo.Category;
 import com.chanshiyu.service.CategoryService;
 import com.chanshiyu.util.CommListResult;
 import com.chanshiyu.util.JSONResultAttributes;
@@ -24,15 +24,15 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CategoryServiceImpl implements CategoryService {
 
-    private final ProductCategoryMapper productCategoryMapper;
+    private final CategoryMapper categoryMapper;
 
     @Override
-    public CommListResult<ProductCategory> list(int pageNum, int pageSize) {
+    public CommListResult<Category> list(int pageNum, int pageSize) {
         // 开始分页
         PageHelper.startPage(pageNum, pageSize);
         // 获取列表
-        Example example = new Example(ProductCategory.class);
-        List<ProductCategory> vos = productCategoryMapper.selectByExample(example);
+        Example example = new Example(Category.class);
+        List<Category> vos = categoryMapper.selectByExample(example);
         // 用PageInfo对结果进行包装
         PageInfo info = new PageInfo<>(vos);
         JSONResultAttributes attributes = new JSONResultAttributes(info.getPageNum(), info.getPageSize(), info.getTotal());
@@ -41,8 +41,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public ProductCategory create(ProductCategory bean) throws Exception {
-        if (productCategoryMapper.insertSelective(bean) <= 0) {
+    public Category create(Category bean) throws Exception {
+        if (categoryMapper.insertSelective(bean) <= 0) {
             throw new Exception("创建失败");
         }
         return bean;
@@ -50,8 +50,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public ProductCategory update(ProductCategory bean) throws Exception {
-        if (productCategoryMapper.updateByPrimaryKeySelective(bean) <= 0) {
+    public Category update(Category bean) throws Exception {
+        if (categoryMapper.updateByPrimaryKeySelective(bean) <= 0) {
             throw new Exception("更新失败");
         }
         return bean;
@@ -60,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void delete(int id) throws Exception {
-        productCategoryMapper.deleteByPrimaryKey(id);
+        categoryMapper.deleteByPrimaryKey(id);
     }
 
 }

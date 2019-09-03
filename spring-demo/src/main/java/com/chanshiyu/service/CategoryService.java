@@ -1,19 +1,19 @@
 package com.chanshiyu.service;
 
-import com.chanshiyu.dataobject.ProductCategory;
+import com.chanshiyu.dataobject.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface ProductCategoryService {
+public interface CategoryService {
 
     /** 查询单个类目 */
-    ProductCategory findOne(Integer id);
+    Category findOne(Integer id);
 
     /** 查询商品类目列表 */
-    Page<ProductCategory> findList(Pageable pageable);
+    Page<Category> findList(Pageable pageable);
 
     /** 保存类目 */
-    ProductCategory save(ProductCategory productCategory);
+    Category save(Category category);
 
     /** 移除类目 */
     void delete(Integer id);

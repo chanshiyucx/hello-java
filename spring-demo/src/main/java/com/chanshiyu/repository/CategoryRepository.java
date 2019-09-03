@@ -1,6 +1,6 @@
 package com.chanshiyu.repository;
 
-import com.chanshiyu.dataobject.ProductCategory;
+import com.chanshiyu.dataobject.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -8,4 +8,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @date 2019/8/27 14:16
  * @description
  */
-public interface ProductCategoryRepository extends JpaRepository<ProductCategory, Integer> {}
+public interface CategoryRepository extends JpaRepository<Category, Integer> {}

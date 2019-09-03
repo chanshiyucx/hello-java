@@ -2,23 +2,19 @@ package com.chanshiyu.pojo;
 
 import java.util.Date;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-
 import lombok.Data;
 
 @Data
-@Table(name = "product_category")
-public class ProductCategory {
+@Table(name = "category")
+public class Category {
     @Id
-    @Column(name = "category_id")
-    private Integer categoryId;
+    @GeneratedValue(generator = "JDBC")
+    private Integer id;
 
     /**
      * 类目名称
      */
-    @Column(name = "category_name")
-    @NotBlank(message = "类目名称不能为空")
-    private String categoryName;
+    private String name;
 
     /**
      * 创建时间

@@ -19,16 +19,14 @@ import java.util.Date;
 @Data
 @DynamicUpdate
 @ApiModel(value = "商品类目")
-public class ProductCategory {
+public class Category {
 
     @ApiModelProperty(value = "类目ID", dataType = "Integer")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
     private Integer id;
 
     @ApiModelProperty(value = "类目名称", dataType = "String")
-    @Column(name = "category_name")
     @NotBlank(message = "类目名称不能为空")
     private String name;
 

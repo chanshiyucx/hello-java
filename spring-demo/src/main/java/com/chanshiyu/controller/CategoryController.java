@@ -1,8 +1,8 @@
 package com.chanshiyu.controller;
 
-import com.chanshiyu.dataobject.ProductCategory;
+import com.chanshiyu.dataobject.Category;
 import com.chanshiyu.enums.ResultEnum;
-import com.chanshiyu.service.ProductCategoryService;
+import com.chanshiyu.service.CategoryService;
 import com.chanshiyu.vo.ResultAttributesVO;
 import com.chanshiyu.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -30,57 +30,56 @@ import java.util.List;
 @Slf4j
 @Api(value = "商品类目管理", tags = {"商品类目管理Controller"})
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ProductCategoryController {
+public class CategoryController {
 
-    private final ProductCategoryService productCategoryService;
+    private final CategoryService categoryService;
 
     @ApiOperation(value = "类目列表", notes = "类目列表")
     @GetMapping("/list")
-    public ResultVO<List<ProductCategory>> list(@ApiParam(value = "页码", defaultValue = "1") Integer pageNum,
-                                                @ApiParam(value = "每页大小", defaultValue = "10") Integer pageSize) {
+    public ResultVO<List<Category>> list(@ApiParam(value = "页码", defaultValue = "1") Integer pageNum,
+                                         @ApiParam(value = "每页大小", defaultValue = "10") Integer pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
-        Page<ProductCategory> page = productCategoryService.findList(pageRequest);
+        Page<Category> page = categoryService.findList(pageRequest);
         ResultAttributesVO resultAttributesVO = new ResultAttributesVO(page.getPageable().getPageNumber() + 1, page.getSize(), page.getTotalElements());
         return ResultVO.ok(page.getContent(), resultAttributesVO);
     }
 
     @ApiOperation(value = "创建类目", notes = "创建类目")
     @PostMapping("/create")
-    public ResultVO<ProductCategory> create(@ApiParam(value = "创建类目", required = true) @Valid @RequestBody ProductCategory bean, BindingResult bindingResult) {
+    public ResultVO<Category> create(@ApiParam(value = "创建类目", required = true) @Valid @RequestBody Category bean, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-            log.error("【创建类目】参数不正确，productCategory={}", bean);
-
-            //return ResultVO.errorMsg(bindingResult.getFieldError().getDefaultMessage());
+            log.error("【创建类目】参数不正确，category={}", bean);
+            return ResultVO.errorMsg(bindingResult.getFieldError().getDefaultMessage());
         }
-        ProductCategory productCategory = new ProductCategory();
-        BeanUtils.copyProperties(bean, productCategory);
-        ProductCategory result = productCategoryService.save(productCategory);
+        Category category = new Category();
+        BeanUtils.copyProperties(bean, category);
+        Category result = categoryService.save(category);
         return ResultVO.ok(result);
     }
 
     @ApiOperation(value = "更新类目", notes = "更新类目")
     @PutMapping("/update")
-    public ResultVO<ProductCategory> update(@ApiParam(value = "更新类目", required = true) @Valid @RequestBody ProductCategory bean, BindingResult bindingResult) {
+    public ResultVO<Category> update(@ApiParam(value = "更新类目", required = true) @Valid @RequestBody Category bean, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             log.error("【更新类目】参数不正确，productCategory={}", bean);
             return ResultVO.errorMsg(bindingResult.getFieldError().getDefaultMessage());
         }
 
         // 判断类目是否已存在
-        ProductCategory productCategory = productCategoryService.findOne(bean.getId());
-        if (productCategory == null) {
+        Category category = categoryService.findOne(bean.getId());
+        if (category == null) {
             log.error("【更新类目】类目不存在，productCategory={}", bean);
             return ResultVO.errorMsg(ResultEnum.CATEGORY_NOT_EXIST.getMessage());
         }
-        BeanUtils.copyProperties(bean, productCategory);
-        ProductCategory result = productCategoryService.save(productCategory);
+        BeanUtils.copyProperties(bean, category);
+        Category result = categoryService.save(category);
         return ResultVO.ok(result);
     }
 
     @ApiOperation(value = "移除类目", notes = "移除类目")
     @DeleteMapping("/delete")
     public ResultVO delete(@ApiParam(value = "类目ID", required = true) Integer id) {
-        productCategoryService.delete(id);
+        categoryService.delete(id);
         return ResultVO.ok();
     }
 

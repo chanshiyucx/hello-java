@@ -17,7 +17,7 @@
 
   <select id="selectCategoryDetail" resultMap="DetailResultMap">
     SELECT c.*, p.*
-    FROM category c JOIN product p ON p.category=c.id
+    FROM CATEGORY c LEFT JOIN PRODUCT p ON p.category=c.id
     WHERE c.id=#{categoryId}
   </select>
 

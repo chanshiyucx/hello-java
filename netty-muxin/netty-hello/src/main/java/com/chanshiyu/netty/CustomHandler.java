@@ -15,6 +15,7 @@ import io.netty.util.CharsetUtil;
  */
 public class CustomHandler extends SimpleChannelInboundHandler<HttpObject> {
 
+    @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, HttpObject httpObject) throws Exception {
         // 获取 channel
         Channel channel = channelHandlerContext.channel();

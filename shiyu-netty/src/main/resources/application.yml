@@ -1,0 +1,12 @@
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1124chanshiyu
+    url: jdbc:mysql://${mysql.address}:3306/shiyu?nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.chanshiyu.pojo
+server:
+  port: 8090

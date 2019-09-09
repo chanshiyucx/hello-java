@@ -1,10 +1,18 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { localRead } from '@/utils'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {},
+  state: {
+    userInfo: localRead('userInfo'),
+    token: localRead('token')
+  },
   mutations: {},
-  actions: {}
+  actions: {},
+  getters: {
+    userInfo: state => state.userInfo,
+    token: state => state.token
+  }
 })

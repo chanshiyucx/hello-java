@@ -1,4 +1,4 @@
-package com.chanshiyu.vo;
+package com.chanshiyu.pojo.vo;
 
 import lombok.Data;
 
@@ -16,5 +16,5 @@ public class UsersVO {
     private String avatarBig;
 
     private String qrcode;
-    
+
 }

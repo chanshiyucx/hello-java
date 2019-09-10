@@ -17,4 +17,7 @@ public interface UserService {
 
     /** 注册用户 */
     public Users saveUser(Users user) throws Exception;
+
+    /** 更新用户 */
+    public Users updateUser(Users user) throws Exception;
 }

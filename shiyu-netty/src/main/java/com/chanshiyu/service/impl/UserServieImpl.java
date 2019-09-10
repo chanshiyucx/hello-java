@@ -52,6 +52,7 @@ public class UserServieImpl implements UserService {
         return result;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Users saveUser(Users user) throws Exception {
         String userId = sid.nextShort();
@@ -63,6 +64,17 @@ public class UserServieImpl implements UserService {
         user.setQrcode("");
         usersMapper.insert(user);
         return user;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public Users updateUser(Users user) throws Exception {
+        usersMapper.updateByPrimaryKeySelective(user);
+        return queryUserById(user.getId());
+    }
+
+    private Users queryUserById(String id) {
+        return usersMapper.selectByPrimaryKey(id);
     }
 
 }

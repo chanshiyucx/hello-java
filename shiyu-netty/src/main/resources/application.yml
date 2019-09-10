@@ -15,3 +15,11 @@ swagger:
   description: 测试用 Api 接口
   version: 1.0.0
   base-package: com.chanshiyu.controller
+fdfs:
+  so-timeout: 1501
+  connect-timeout: 601
+  thumb-image:
+    width: 150
+    height: 150
+  tracker-list:
+    - 192.168.205.10:22122

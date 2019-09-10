@@ -13,16 +13,18 @@
       @uploaded="handleUploaded"
       @completed="handleCompleted"
       @error="handlerError"
+      :upload-url="uploadUrl"
       trigger="#pick-avatar"
-      upload-url="https://demo.overtrue.me/upload.php"
     />
   </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
 import AvatarCropper from 'vue-avatar-cropper'
-import { mapGetters } from 'vuex'
+import config from '@/config'
 import { downloadImg } from '@/utils'
+import request from '@/utils/request'
 
 export default {
   name: 'avatar',
@@ -30,6 +32,7 @@ export default {
   data() {
     return {
       defaultAvatar: require('@/assets/images/avatar.png'),
+      uploadUrl: `${config.baseURL}/tool/upload`,
       visible: {
         popup: true
       }
@@ -38,7 +41,7 @@ export default {
   computed: {
     ...mapGetters(['userInfo']),
     avatar() {
-      return this.userInfo.avatar || this.defaultAvatar
+      return this.userInfo.avatarBig || this.defaultAvatar
     }
   },
   mounted() {
@@ -48,6 +51,9 @@ export default {
     })
   },
   methods: {
+    ...mapMutations({
+      setUserInfo: 'setUserInfo'
+    }),
     onClickLeft() {
       this.$router.go(-1)
     },
@@ -58,20 +64,42 @@ export default {
       downloadImg(this.avatar, 'avatar.png')
       this.visible.popup = false
     },
-    handleUploading(form, xhr) {
-      this.message = 'uploading...'
+    handleUploading() {
+      this.$toast.loading({
+        mask: true,
+        duration: 0,
+        message: '上传中...'
+      })
     },
-    handleUploaded(response) {
-      if (response.status == 'success') {
-        this.user.avatar = response.url
-        this.message = 'user avatar updated.'
+    async handleUploaded(response) {
+      if (response.status !== 200) {
+        return this.$toast.fail(response.msg)
+      }
+      try {
+        const url = response.data
+        const imgArr = url.split('.')
+        imgArr[imgArr.length - 2] = imgArr[imgArr.length - 2] + '_150x150'
+        const avatar = imgArr.join('.')
+        const req = {
+          id: this.userInfo.id,
+          avatarBig: url,
+          avatar
+        }
+        const res = await request({
+          url: '/user/update',
+          method: 'POST',
+          data: req
+        })
+        this.setUserInfo(res.data)
+      } catch (error) {
+        console.log(error)
       }
     },
-    handleCompleted(response, form, xhr) {
-      this.message = 'upload completed.'
+    handleCompleted() {
+      this.$toast.clear()
     },
-    handlerError(message, type, xhr) {
-      this.message = 'Oops! Something went wrong...'
+    handlerError(message) {
+      this.$toast.fail(message || '上传失败')
     }
   }
 }

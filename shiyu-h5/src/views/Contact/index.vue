@@ -1,3 +1,5 @@
 <template>
-  <div>contact</div>
+  <div>
+    <van-nav-bar title="通信录" class="header" />
+  </div>
 </template>

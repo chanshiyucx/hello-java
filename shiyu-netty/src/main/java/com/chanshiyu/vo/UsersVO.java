@@ -16,7 +16,5 @@ public class UsersVO {
     private String avatarBig;
 
     private String qrcode;
-
-    private String cid;
-
+    
 }

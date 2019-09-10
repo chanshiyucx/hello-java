@@ -1,10 +1,12 @@
 package com.chanshiyu.pojo;
 
-import java.util.Date;
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-
 import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 @Data
 @Table(name = "users")
@@ -45,22 +47,5 @@ public class Users {
      * 二维码
      */
     private String qrcode;
-
-    /**
-     * 设备ID
-     */
-    private String cid;
-
-    /**
-     * 创建时间
-     */
-    @Column(name = "create_time")
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    @Column(name = "update_time")
-    private Date updateTime;
 
 }

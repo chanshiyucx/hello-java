@@ -17,10 +17,6 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      meta: {
-        hideNavbar: true,
-        hideTabbar: true
-      },
       component: () => import('./views/Login')
     },
     {
@@ -37,6 +33,11 @@ const router = new Router({
       path: '/me',
       name: 'me',
       component: () => import('./views/Me')
+    },
+    {
+      path: '/avatar',
+      name: 'avatar',
+      component: () => import('./views/Avatar')
     }
   ]
 })

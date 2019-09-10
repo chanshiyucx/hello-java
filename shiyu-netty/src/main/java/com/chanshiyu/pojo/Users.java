@@ -43,9 +43,4 @@ public class Users {
     @Column(name = "avatar_big")
     private String avatarBig;
 
-    /**
-     * 二维码
-     */
-    private String qrcode;
-
 }

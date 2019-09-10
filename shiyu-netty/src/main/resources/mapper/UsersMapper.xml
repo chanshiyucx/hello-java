@@ -11,6 +11,5 @@
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="avatar_big" jdbcType="VARCHAR" property="avatarBig" />
-    <result column="qrcode" jdbcType="VARCHAR" property="qrcode" />
   </resultMap>
 </mapper>

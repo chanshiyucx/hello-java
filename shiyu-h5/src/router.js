@@ -38,6 +38,16 @@ const router = new Router({
       path: '/avatar',
       name: 'avatar',
       component: () => import('./views/Avatar')
+    },
+    {
+      path: '/nickname',
+      name: 'nickname',
+      component: () => import('./views/Nickname')
+    },
+    {
+      path: '/qrcode',
+      name: 'qrcode',
+      component: () => import('./views/Qrcode')
     }
   ]
 })

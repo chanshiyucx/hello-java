@@ -25,6 +25,8 @@ public class UserServieImpl implements UserService {
 
     private final Sid sid;
 
+    private final String NICKNAME = "時語-";
+
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public boolean queryUsernameIsExist(String username) {
@@ -58,10 +60,9 @@ public class UserServieImpl implements UserService {
         String userId = sid.nextShort();
         user.setId(userId);
         user.setPassword(MD5Utils.getMD5Str(user.getPassword()));
-        user.setNickname(user.getUsername());
+        user.setNickname(NICKNAME + user.getUsername());
         user.setAvatar("");
         user.setAvatarBig("");
-        user.setQrcode("");
         usersMapper.insert(user);
         return user;
     }

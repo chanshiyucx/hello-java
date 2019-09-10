@@ -3,7 +3,7 @@
     <van-nav-bar title="个人头像" class="header" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
       <van-icon name="ellipsis" slot="right" />
     </van-nav-bar>
-    <img :src="avatar" alt="头像" />
+    <img :src="userInfo.avatarBig" alt="头像" />
     <van-popup v-model="visible.popup" position="bottom" class="popup">
       <div id="pick-avatar" class="popup-item" @click="visible.popup = false">从手机相册选择</div>
       <div class="popup-item" @click="saveAvatar">保存到手机</div>
@@ -31,7 +31,6 @@ export default {
   components: { AvatarCropper },
   data() {
     return {
-      defaultAvatar: require('@/assets/images/avatar.png'),
       uploadUrl: `${config.baseURL}/tool/upload`,
       visible: {
         popup: true
@@ -39,10 +38,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo']),
-    avatar() {
-      return this.userInfo.avatarBig || this.defaultAvatar
-    }
+    ...mapGetters(['userInfo'])
   },
   mounted() {
     // popup 是懒加载组件，需要初始挂载一次
@@ -90,6 +86,9 @@ export default {
           method: 'POST',
           data: req
         })
+        if (res.status !== 200) {
+          return this.$toast.fail(res.msg)
+        }
         this.setUserInfo(res.data)
       } catch (error) {
         console.log(error)

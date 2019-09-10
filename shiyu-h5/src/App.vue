@@ -5,7 +5,7 @@
       <van-tabbar-item name="home" icon="home-o" to="/">时语</van-tabbar-item>
       <van-tabbar-item name="contact" icon="friends-o" to="/contact">通讯录</van-tabbar-item>
       <van-tabbar-item name="discover" icon="search" to="/discover">发现</van-tabbar-item>
-      <van-tabbar-item name="me" icon="contact" to="/me">我的</van-tabbar-item>
+      <van-tabbar-item name="me" icon="contact" to="/me">我の</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>

@@ -1,6 +1,7 @@
 package com.chanshiyu.service;
 
 import com.chanshiyu.pojo.Users;
+import com.chanshiyu.pojo.bo.SearchUser;
 
 /**
  * @author shiyu
@@ -20,4 +21,11 @@ public interface UserService {
 
     /** 更新用户 */
     public Users updateUser(Users user) throws Exception;
+
+    /** 根据用户名查询用户 */
+    public Users queryUserByUsername(String username) throws Exception;
+
+    /** 搜索好友 */
+    public Integer searchFriend(SearchUser searchUser) throws Exception;
+
 }

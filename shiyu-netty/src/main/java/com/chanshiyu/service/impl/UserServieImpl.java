@@ -1,9 +1,14 @@
 package com.chanshiyu.service.impl;
 
+import com.chanshiyu.enums.ApiStatusEnums;
+import com.chanshiyu.mapper.MyFriendsMapper;
 import com.chanshiyu.mapper.UsersMapper;
+import com.chanshiyu.pojo.MyFriends;
 import com.chanshiyu.pojo.Users;
+import com.chanshiyu.pojo.bo.SearchUser;
 import com.chanshiyu.service.UserService;
 import com.chanshiyu.util.MD5Utils;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +27,8 @@ import tk.mybatis.mapper.entity.Example;
 public class UserServieImpl implements UserService {
 
     private final UsersMapper usersMapper;
+
+    private final MyFriendsMapper myFriendsMapper;
 
     private final Sid sid;
 
@@ -72,6 +79,42 @@ public class UserServieImpl implements UserService {
     public Users updateUser(Users user) throws Exception {
         usersMapper.updateByPrimaryKeySelective(user);
         return queryUserById(user.getId());
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public Integer searchFriend(SearchUser searchUser) throws Exception {
+        // 搜索的用户是否存在
+        Users user = queryUserByUsername(searchUser.getFriendUserName());
+        if (user == null) {
+            return ApiStatusEnums.FRIEND_NOT_NULL.getStatus();
+        }
+
+        // 搜索的用户是否为自己
+        if (user.getId().equals(searchUser.getMyUserId())) {
+            return ApiStatusEnums.FRIEND_NOT_SELF.getStatus();
+        }
+
+        // 搜索的用户是否已经是好友
+        Example example = new Example(MyFriends.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("myUserId", searchUser.getMyUserId());
+        criteria.andEqualTo("myFriendUserId", user.getId());
+        MyFriends friend = myFriendsMapper.selectOneByExample(example);
+        if (friend != null) {
+            return ApiStatusEnums.FRIEND_ON_LIST.getStatus();
+        }
+
+        return ApiStatusEnums.SUCCESS.getStatus();
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public Users queryUserByUsername(String username) {
+        Example example = new Example(Users.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("username", username);
+        return usersMapper.selectOneByExample(example);
     }
 
     private Users queryUserById(String id) {

@@ -1,5 +1,6 @@
 package com.chanshiyu.controller;
 
+import com.chanshiyu.enums.ApiStatusEnums;
 import com.chanshiyu.util.CommJSONResult;
 import com.chanshiyu.util.FastDFSClient;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class ToolController {
     @PostMapping("/upload")
     public CommJSONResult<String> upload(@RequestParam("file") MultipartFile file) throws Exception {
         if (file.isEmpty()) {
-            return CommJSONResult.errorMsg("请选择上传文件");
+            return CommJSONResult.errorMsg(ApiStatusEnums.FILE_NOT_EMPTY.getMsg());
         }
         String url = fastDFSClient.uploadBase64(file);
         String avatar = AVATARHOST + url;

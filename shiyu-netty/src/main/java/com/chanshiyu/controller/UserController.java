@@ -1,13 +1,16 @@
 package com.chanshiyu.controller;
 
+import com.chanshiyu.enums.ApiStatusEnums;
 import com.chanshiyu.pojo.Users;
+import com.chanshiyu.pojo.bo.SearchUser;
+import com.chanshiyu.pojo.vo.UsersVO;
 import com.chanshiyu.service.UserService;
 import com.chanshiyu.util.CommJSONResult;
 import com.chanshiyu.util.MD5Utils;
-import com.chanshiyu.pojo.vo.UsersVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -41,7 +43,7 @@ public class UserController {
             // 登录
             userResult = userService.queryUserForLogin(bean.getUsername(), MD5Utils.getMD5Str(bean.getPassword()));
             if (userResult == null) {
-                return CommJSONResult.errorMsg("用户名或密码错误");
+                return CommJSONResult.errorMsg(ApiStatusEnums.USERNAME_PASSWORD_NOT_EMPTY.getMsg());
             }
         } else {
             // 注册
@@ -61,4 +63,17 @@ public class UserController {
         Users result = userService.updateUser(user);
         return CommJSONResult.ok(result);
     }
+
+    @ApiOperation(value = "搜索好友", notes = "搜索好友")
+    @PostMapping("/search")
+    public CommJSONResult search(@ApiParam(value = "搜索用户", required = true) @Valid @RequestBody SearchUser bean) throws Exception {
+        Integer status = userService.searchFriend(bean);
+        if (!status.equals(ApiStatusEnums.SUCCESS.getStatus())) {
+            return CommJSONResult.errorMsg(ApiStatusEnums.getMsgByKey(status));
+        }
+
+        Users friend = userService.queryUserByUsername(bean.getFriendUserName());
+        return CommJSONResult.ok(friend);
+    }
+
 }

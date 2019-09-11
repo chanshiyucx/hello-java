@@ -2,7 +2,7 @@ const autoprefixer = require('autoprefixer')
 const pxtoviewport = require('postcss-px-to-viewport')
 
 module.exports = {
-  baseUrl: process.env.NODE_ENV === 'production' ? '/treasure/shiyu' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/treasure/shiyu' : '/',
   css: {
     loaderOptions: {
       postcss: {

@@ -21,13 +21,15 @@
 <script>
 import { mapMutations } from 'vuex'
 import request from '@/utils/request'
+import { localSave, localRead } from '@/utils'
 
 export default {
   name: 'login',
   data() {
+    const [username, password] = localRead('u_p') ? localRead('u_p').split('_') : ['', '']
     return {
-      username: '',
-      password: ''
+      username,
+      password
     }
   },
   methods: {
@@ -56,6 +58,7 @@ export default {
         if (res.status !== 200) {
           return this.$toast.fail(res.msg)
         }
+        localSave('u_p', `${this.username}_${this.password}`)
         this.setUserInfo(res.data)
         this.$router.push('/')
       } catch (error) {

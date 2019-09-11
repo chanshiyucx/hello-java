@@ -1,7 +1,7 @@
 <template>
   <div id="contact">
     <van-nav-bar title="通信录" class="header" />
-    <div class="request">
+    <div v-if="requestList.length" class="request">
       <div v-for="item in requestList" :key="item.id" class="user">
         <div>
           <Avatar :url="item.avatar" />
@@ -18,39 +18,51 @@
         </div>
       </div>
     </div>
-    <div class="request">
-      <div v-for="item in friendList" :key="item.id" class="user">
-        <div>
-          <Avatar :url="item.avatar" />
-          <div class="info">
-            <span>{{ item.nickname }}</span>
+
+    <van-index-bar :index-list="friendList">
+      <div v-for="(item, idx) in friendList" :key="idx">
+        <van-index-anchor :index="item">{{ item }}</van-index-anchor>
+        <div v-for="(item, i) in friendObj[item]" :key="i" class="user">
+          <div>
+            <Avatar :url="item.avatar" />
+            <div class="info">
+              <span>{{ item.nickname }}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </van-index-bar>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import request from '@/utils/request'
+import pinyin from '@/utils/pinyin'
 
 export default {
   name: 'contact',
   data() {
     return {
       requestList: [],
-      friendList: []
+      friendList: [],
+      friendObj: {}
     }
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   created() {
-    this.getFriendRequest()
-    this.getFriendList()
+    this.init()
+    setTimeout(() => {
+      this.init()
+    }, 5000)
   },
   methods: {
+    init() {
+      this.getFriendRequest()
+      this.getFriendList()
+    },
     async getFriendList() {
       try {
         const res = await request({
@@ -60,7 +72,20 @@ export default {
             userId: this.userInfo.id
           }
         })
-        this.friendList = res.data
+
+        const friendObj = {}
+        const friendList = []
+        res.data.forEach(o => {
+          const py = pinyin.getFirstCamelChars(o.nickname).toUpperCase()
+          if (!friendObj[py]) {
+            friendObj[py] = []
+            friendList.push(py)
+          }
+          friendObj[py].push(o)
+        })
+        friendList.sort()
+        this.friendList = friendList
+        this.friendObj = friendObj
       } catch (error) {
         console.log(error)
       }
@@ -95,7 +120,7 @@ export default {
         }
         this.$toast.success('操作成功')
         this.getFriendRequest()
-        this.friendList()
+        this.getFriendList()
       } catch (error) {
         console.log(error)
       }

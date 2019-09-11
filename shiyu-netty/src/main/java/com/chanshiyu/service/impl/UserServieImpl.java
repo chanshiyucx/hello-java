@@ -143,6 +143,12 @@ public class UserServieImpl implements UserService {
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
+    public Users queryUserById(String id) {
+        return usersMapper.selectByPrimaryKey(id);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
     public Users queryUserByUsername(String username) {
         Example example = new Example(Users.class);
         Example.Criteria criteria = example.createCriteria();
@@ -203,10 +209,6 @@ public class UserServieImpl implements UserService {
         myFriends.setMyUserId(sendUserId);
         myFriends.setMyFriendUserId(acceptUserId);
         myFriendsMapper.insert(myFriends);
-    }
-
-    private Users queryUserById(String id) {
-        return usersMapper.selectByPrimaryKey(id);
     }
 
 }

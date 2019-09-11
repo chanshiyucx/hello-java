@@ -19,10 +19,10 @@
       </div>
     </div>
 
-    <van-index-bar :index-list="friendList">
+    <van-index-bar class="friends" :index-list="friendList">
       <div v-for="(item, idx) in friendList" :key="idx">
         <van-index-anchor :index="item">{{ item }}</van-index-anchor>
-        <div v-for="(item, i) in friendObj[item]" :key="i" class="user">
+        <div v-for="(item, i) in friendObj[item]" :key="i" class="user" @click="handleDetail(item)">
           <div>
             <Avatar :url="item.avatar" />
             <div class="info">
@@ -124,6 +124,14 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    handleDetail(user) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          id: user.id
+        }
+      })
     }
   }
 }

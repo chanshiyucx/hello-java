@@ -29,6 +29,9 @@ public interface UserService {
     /** 根据用户名查询用户 */
     public Users queryUserByUsername(String username) throws Exception;
 
+    /** 根据用户ID查询用户 */
+    public Users queryUserById(String userId) throws Exception;
+
     /** 搜索好友 */
     public Integer searchFriend(SearchUser searchUser) throws Exception;
 

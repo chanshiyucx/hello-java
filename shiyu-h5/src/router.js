@@ -53,6 +53,11 @@ const router = new Router({
       path: '/search',
       name: 'search',
       component: () => import('./views/Search')
+    },
+    {
+      path: '/detail',
+      name: 'detail',
+      component: () => import('./views/Detail')
     }
   ]
 })

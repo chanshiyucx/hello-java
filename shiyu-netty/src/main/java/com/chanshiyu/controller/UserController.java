@@ -65,6 +65,15 @@ public class UserController {
         return CommJSONResult.ok(result);
     }
 
+    @ApiOperation(value = "用户详情", notes = "用户详情")
+    @GetMapping("/detail")
+    public CommJSONResult<UsersVO> detail(@ApiParam(value = "用户ID", required = true) String userId) throws Exception {
+        Users user = userService.queryUserById(userId);
+        UsersVO usersVO = new UsersVO();
+        BeanUtils.copyProperties(user, usersVO);
+        return CommJSONResult.ok(usersVO);
+    }
+
     @ApiOperation(value = "搜索好友", notes = "搜索好友")
     @PostMapping("/search")
     public CommJSONResult search(@ApiParam(value = "搜索用户", required = true) @Valid @RequestBody SearchUser bean) throws Exception {

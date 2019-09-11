@@ -9,7 +9,7 @@
           <p class="username">{{ userInfo.username }}</p>
         </div>
       </div>
-      <VueQrcode :value="userInfo.username" :options="{ width: 260, margin: 0 }" />
+      <VueQrcode :value="userInfo.username" :options="{ width: 290, margin: 0 }" />
       <p class="footer">扫一扫上面的二维码图案，加我時語</p>
     </div>
   </div>

@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum ApiStatusEnums {
 
     SUCCESS(1, "成功"),
+    PARAMS_ERROR(9, "参数错误"),
     FILE_NOT_EMPTY(10, "请上传文件"),
     USERNAME_PASSWORD_NOT_EMPTY(11, "用户名或密码不能为空"),
     FRIEND_NOT_NULL(12, "搜索好友不存在"),
@@ -24,7 +25,7 @@ public enum ApiStatusEnums {
 
     public static String getMsgByKey(Integer status) {
         for (ApiStatusEnums type : ApiStatusEnums.values()) {
-            if (type.getStatus() == status) {
+            if (status.equals(type.getStatus())) {
                 return type.msg;
             }
         }

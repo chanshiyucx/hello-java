@@ -12,4 +12,21 @@
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="avatar_big" jdbcType="VARCHAR" property="avatarBig" />
   </resultMap>
+
+  <select id="queryFriendRequestList" parameterType="String" resultType="com.chanshiyu.pojo.vo.UsersVO">
+    select u.id, u.username, u.nickname, u.avatar
+    from friends_request f
+    left join users u
+    on f.send_user_id = u.id
+    where f.accept_user_id = #{acceptUserId}
+  </select>
+
+  <select id="queryFriendList" parameterType="String" resultType="com.chanshiyu.pojo.vo.UsersVO">
+    select u.id, u.username, u.nickname, u.avatar
+    from my_friends m
+    left join users u
+    on m.my_friend_user_id = u.id
+    where m.my_user_id = #{myUserId}
+  </select>
+
 </mapper>

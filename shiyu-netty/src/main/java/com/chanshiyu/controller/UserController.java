@@ -1,7 +1,9 @@
 package com.chanshiyu.controller;
 
 import com.chanshiyu.enums.ApiStatusEnums;
+import com.chanshiyu.enums.OperFriendRequestEnum;
 import com.chanshiyu.pojo.Users;
+import com.chanshiyu.pojo.bo.OperFriendRequest;
 import com.chanshiyu.pojo.bo.SearchUser;
 import com.chanshiyu.pojo.vo.UsersVO;
 import com.chanshiyu.service.UserService;
@@ -12,14 +14,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author shiyu
@@ -72,8 +73,59 @@ public class UserController {
             return CommJSONResult.errorMsg(ApiStatusEnums.getMsgByKey(status));
         }
 
-        Users friend = userService.queryUserByUsername(bean.getFriendUserName());
+        Users result = userService.queryUserByUsername(bean.getFriendUserName());
+        UsersVO friend = new UsersVO();
+        BeanUtils.copyProperties(result, friend);
         return CommJSONResult.ok(friend);
+    }
+
+    @ApiOperation(value = "验证好友", notes = "验证好友")
+    @PostMapping("/sendFriendRequest")
+    public CommJSONResult sendFriendRequest(@ApiParam(value = "搜索用户", required = true) @Valid @RequestBody SearchUser bean) throws Exception {
+        Integer status = userService.searchFriend(bean);
+        if (!status.equals(ApiStatusEnums.SUCCESS.getStatus())) {
+            return CommJSONResult.errorMsg(ApiStatusEnums.getMsgByKey(status));
+        }
+        userService.sendFriendRequest(bean);
+        return CommJSONResult.ok();
+    }
+
+    @ApiOperation(value = "推荐用户", notes = "推荐用户")
+    @GetMapping("/recommend")
+    public CommJSONResult<List<UsersVO>> recommend() throws Exception {
+        List<UsersVO> result = userService.recommend();
+        return CommJSONResult.ok(result);
+    }
+
+    @ApiOperation(value = "好友申请", notes = "好友申请")
+    @GetMapping("/friendRequest")
+    public CommJSONResult<List<UsersVO>> friendRequest(@ApiParam(value = "用户ID", required = true) String userId) throws Exception {
+        List<UsersVO> result = userService.queryFriendRequestList(userId);
+        return CommJSONResult.ok(result);
+    }
+
+    @ApiOperation(value = "好友申请验证", notes = "好友申请验证")
+    @PostMapping("/operFriendRequest")
+    public CommJSONResult operFriendRequest(@ApiParam(value = "申请验证", required = true) @Valid @RequestBody OperFriendRequest bean) throws Exception {
+        // 如果 operType 没有对应的枚举值，抛出错误
+        if (StringUtils.isEmpty(OperFriendRequestEnum.getMsgByKey(bean.getOperType()))) {
+            return CommJSONResult.errorMsg(ApiStatusEnums.PARAMS_ERROR.getMsg());
+        }
+
+        if (bean.getOperType().equals(OperFriendRequestEnum.IGNORE.getStatus())) {
+            userService.deleteFriendRequest(bean.getSendUserId(), bean.getAcceptUserId());
+        } else if (bean.getOperType().equals(OperFriendRequestEnum.PASS.getStatus())) {
+            userService.passFriendRequest(bean.getSendUserId(), bean.getAcceptUserId());
+        }
+
+        return CommJSONResult.ok();
+    }
+
+    @ApiOperation(value = "好友列表", notes = "好友列表")
+    @GetMapping("/friendList")
+    public CommJSONResult<List<UsersVO>> friendList(@ApiParam(value = "用户ID", required = true) String userId) throws Exception {
+        List<UsersVO> result = userService.queryFriendList(userId);
+        return CommJSONResult.ok(result);
     }
 
 }

@@ -2,6 +2,10 @@ package com.chanshiyu.service;
 
 import com.chanshiyu.pojo.Users;
 import com.chanshiyu.pojo.bo.SearchUser;
+import com.chanshiyu.pojo.vo.UsersVO;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 /**
  * @author shiyu
@@ -27,5 +31,23 @@ public interface UserService {
 
     /** 搜索好友 */
     public Integer searchFriend(SearchUser searchUser) throws Exception;
+
+    /** 发送好友验证 */
+    public void sendFriendRequest(SearchUser searchUser) throws Exception;
+
+    /** 推荐好友 */
+    public List<UsersVO> recommend();
+
+    /** 查询好友申请 */
+    public List<UsersVO> queryFriendRequestList(String userId);
+
+    /** 删除好友申请记录 */
+    public void deleteFriendRequest(String sendUserId, String acceptUserId);
+
+    /** 通过好友申请 */
+    public void passFriendRequest(String sendUserId, String acceptUserId);
+
+    /** 获取好友列表 */
+    public List<UsersVO> queryFriendList(String userId);
 
 }

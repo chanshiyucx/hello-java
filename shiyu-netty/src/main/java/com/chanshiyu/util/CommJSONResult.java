@@ -35,6 +35,10 @@ public class CommJSONResult<T> {
         this.data = data;
     }
 
+    public static <T> CommJSONResult<T> ok() {
+        return new CommJSONResult<>(null);
+    }
+
     public static <T> CommJSONResult<T> ok(T data) {
         return new CommJSONResult<>(data);
     }

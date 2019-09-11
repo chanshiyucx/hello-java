@@ -25,12 +25,15 @@ export default {
     ...mapGetters(['userInfo'])
   },
   watch: {
-    $route(val) {
-      if (this.tabbar.includes(val.name)) {
-        this.active = val.name
-        this.showTabbar = true
-      } else {
-        this.showTabbar = false
+    $route: {
+      immediate: true,
+      handler(val) {
+        if (this.tabbar.includes(val.name)) {
+          this.active = val.name
+          this.showTabbar = true
+        } else {
+          this.showTabbar = false
+        }
       }
     }
   }

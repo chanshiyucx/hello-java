@@ -1,21 +1,32 @@
 package com.chanshiyu.service.impl;
 
 import com.chanshiyu.enums.ApiStatusEnums;
+import com.chanshiyu.mapper.FriendsRequestMapper;
 import com.chanshiyu.mapper.MyFriendsMapper;
 import com.chanshiyu.mapper.UsersMapper;
+import com.chanshiyu.pojo.FriendsRequest;
 import com.chanshiyu.pojo.MyFriends;
 import com.chanshiyu.pojo.Users;
 import com.chanshiyu.pojo.bo.SearchUser;
+import com.chanshiyu.pojo.vo.UsersVO;
 import com.chanshiyu.service.UserService;
 import com.chanshiyu.util.MD5Utils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.n3r.idworker.Sid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author shiyu
@@ -29,6 +40,8 @@ public class UserServieImpl implements UserService {
     private final UsersMapper usersMapper;
 
     private final MyFriendsMapper myFriendsMapper;
+
+    private final FriendsRequestMapper friendsRequestMapper;
 
     private final Sid sid;
 
@@ -108,6 +121,26 @@ public class UserServieImpl implements UserService {
         return ApiStatusEnums.SUCCESS.getStatus();
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void sendFriendRequest(SearchUser searchUser) throws Exception {
+        Users user = queryUserByUsername(searchUser.getFriendUserName());
+
+        Example example = new Example(FriendsRequest.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sendUserId", searchUser.getMyUserId());
+        criteria.andEqualTo("acceptUserId", user.getId());
+        FriendsRequest friendsRequest = friendsRequestMapper.selectOneByExample(example);
+        if (friendsRequest == null) {
+            FriendsRequest request = new FriendsRequest();
+            request.setId(sid.nextShort());
+            request.setSendUserId(searchUser.getMyUserId());
+            request.setAcceptUserId(user.getId());
+            request.setRequestDateTime(new Date());
+            friendsRequestMapper.insert(request);
+        }
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public Users queryUserByUsername(String username) {
@@ -115,6 +148,61 @@ public class UserServieImpl implements UserService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("username", username);
         return usersMapper.selectOneByExample(example);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public List<UsersVO> recommend() {
+        PageHelper.startPage(1, 10);
+        Example example = new Example(Users.class);
+        List<Users> vos = usersMapper.selectByExample(example);
+        List<UsersVO> result = vos.stream().map(e -> {
+            UsersVO vo = new UsersVO();
+            BeanUtils.copyProperties(e, vo);
+            return vo;
+        }).collect(Collectors.toList());
+        return result;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public List<UsersVO> queryFriendRequestList(String userId) {
+        return usersMapper.queryFriendRequestList(userId);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void deleteFriendRequest(String sendUserId, String acceptUserId) {
+        Example example = new Example(FriendsRequest.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sendUserId", sendUserId);
+        criteria.andEqualTo("acceptUserId", acceptUserId);
+        friendsRequestMapper.deleteByExample(example);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+        public void passFriendRequest(String sendUserId, String acceptUserId) {
+        // 1. 保存好友
+        saveFriend(sendUserId, acceptUserId);
+        // 2. 逆向保存好友
+        saveFriend(acceptUserId, sendUserId);
+        // 3. 删除记录
+        deleteFriendRequest(sendUserId, acceptUserId);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public List<UsersVO> queryFriendList(String userId) {
+        return usersMapper.queryFriendList(userId);
+    }
+
+    private void saveFriend(String sendUserId, String acceptUserId) {
+        MyFriends myFriends = new MyFriends();
+        myFriends.setId(sid.nextShort());
+        myFriends.setMyUserId(sendUserId);
+        myFriends.setMyFriendUserId(acceptUserId);
+        myFriendsMapper.insert(myFriends);
     }
 
     private Users queryUserById(String id) {

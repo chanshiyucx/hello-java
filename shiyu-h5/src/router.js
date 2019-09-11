@@ -48,6 +48,11 @@ const router = new Router({
       path: '/qrcode',
       name: 'qrcode',
       component: () => import('./views/Qrcode')
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('./views/Search')
     }
   ]
 })

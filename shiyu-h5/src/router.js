@@ -58,6 +58,11 @@ const router = new Router({
       path: '/detail',
       name: 'detail',
       component: () => import('./views/Detail')
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: () => import('./views/Chat')
     }
   ]
 })

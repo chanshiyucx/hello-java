@@ -96,7 +96,7 @@ public class UserServieImpl implements UserService {
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
-    public Integer searchFriend(SearchUser searchUser) throws Exception {
+    public Integer searchFriend(SearchUser searchUser) {
         // 搜索的用户是否存在
         Users user = queryUserByUsername(searchUser.getFriendUserName());
         if (user == null) {
@@ -178,7 +178,7 @@ public class UserServieImpl implements UserService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public void deleteFriendRequest(String sendUserId, String acceptUserId) {
+    public void deleteFriendRequest(String sendUserId, String acceptUserId) throws Exception {
         Example example = new Example(FriendsRequest.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("sendUserId", sendUserId);
@@ -188,7 +188,7 @@ public class UserServieImpl implements UserService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-        public void passFriendRequest(String sendUserId, String acceptUserId) {
+        public void passFriendRequest(String sendUserId, String acceptUserId) throws Exception {
         // 1. 保存好友
         saveFriend(sendUserId, acceptUserId);
         // 2. 逆向保存好友
@@ -203,12 +203,27 @@ public class UserServieImpl implements UserService {
         return usersMapper.queryFriendList(userId);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void deleteMyFriend(String userId, String friendUserId) throws Exception {
+        deleteFriend(userId, friendUserId);
+        deleteFriend(friendUserId, userId);
+}
+
     private void saveFriend(String sendUserId, String acceptUserId) {
         MyFriends myFriends = new MyFriends();
         myFriends.setId(sid.nextShort());
         myFriends.setMyUserId(sendUserId);
         myFriends.setMyFriendUserId(acceptUserId);
         myFriendsMapper.insert(myFriends);
+    }
+
+    private void deleteFriend(String userId, String friendUserId) {
+        Example example = new Example(MyFriends.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("myUserId", userId);
+        criteria.andEqualTo("myFriendUserId", friendUserId);
+        myFriendsMapper.deleteByExample(example);
     }
 
 }

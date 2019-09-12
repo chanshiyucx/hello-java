@@ -1,8 +1,18 @@
 <template>
-  <div class="detail">
+  <div id="detail">
     <van-nav-bar title="好友详情" class="header" left-arrow @click-left="onClickLeft" />
     <div class="main">
-      <div class="footer"></div>
+      <div class="header">
+        <Avatar :url="user.avatar" alt="头像" />
+        <div>
+          <p>{{ user.nickname }}</p>
+          <p class="username">{{ user.username }}</p>
+        </div>
+      </div>
+      <div class="footer">
+        <van-button size="small" type="primary" @click="handleChat">发送消息</van-button>
+        <van-button size="small" type="danger" @click="handleDelete">删除好友</van-button>
+      </div>
     </div>
   </div>
 </template>
@@ -25,6 +35,9 @@ export default {
     this.getDetail()
   },
   methods: {
+    onClickLeft() {
+      this.$router.go(-1)
+    },
     async getDetail() {
       try {
         const { id } = this.$route.query
@@ -43,9 +56,45 @@ export default {
         console.log(error)
       }
     },
-    onClickLeft() {
-      this.$router.go(-1)
+    handleDelete() {
+      this.$dialog
+        .confirm({
+          title: '删除好友',
+          message: '确定删除该好友？'
+        })
+        .then(async () => {
+          const res = await request({
+            url: '/user/deleteFriend',
+            method: 'POST',
+            data: {
+              userId: this.userInfo.id,
+              friendUserId: this.user.id
+            }
+          })
+          if (res.status !== 200) {
+            return this.$toast.fail(res.msg)
+          }
+          this.$toast.success('删除成功')
+          setTimeout(() => {
+            this.onClickLeft()
+          }, 2000)
+        })
+        .catch(() => {
+          console.log('取消')
+        })
+    },
+    handleChat() {
+      this.$router.push({
+        path: '/chat',
+        query: {
+          userId: this.user.id
+        }
+      })
     }
   }
 }
 </script>
+
+<style lang="less" scope>
+@import url('./index.less');
+</style>

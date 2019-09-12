@@ -45,12 +45,15 @@ public interface UserService {
     public List<UsersVO> queryFriendRequestList(String userId);
 
     /** 删除好友申请记录 */
-    public void deleteFriendRequest(String sendUserId, String acceptUserId);
+    public void deleteFriendRequest(String sendUserId, String acceptUserId) throws Exception;
 
     /** 通过好友申请 */
-    public void passFriendRequest(String sendUserId, String acceptUserId);
+    public void passFriendRequest(String sendUserId, String acceptUserId) throws Exception;
 
     /** 获取好友列表 */
     public List<UsersVO> queryFriendList(String userId);
+
+    /** 删除好友 */
+    public void deleteMyFriend(String userId, String friendUserId) throws Exception ;
 
 }

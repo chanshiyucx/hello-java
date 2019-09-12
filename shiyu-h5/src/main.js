@@ -10,6 +10,10 @@ import Avatar from './components/Avatar'
 import '@/assets/style/reset.less'
 import '@/assets/icons'
 
+// 表单生成器
+import { formBuilder } from '@/utils'
+Vue.prototype.$formBuilder = formBuilder
+
 Vue.use(Vant)
 Vue.component('Avatar', Avatar)
 Vue.config.productionTip = false

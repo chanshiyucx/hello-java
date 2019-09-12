@@ -1,6 +1,12 @@
 <template>
   <div id="avatar">
-    <van-nav-bar title="个人头像" class="header" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar
+      title="个人头像"
+      class="header"
+      left-arrow
+      @click-left="onClickLeft"
+      @click-right="onClickRight"
+    >
       <van-icon name="ellipsis" slot="right" />
     </van-nav-bar>
     <img :src="userInfo.avatarBig" alt="头像" />

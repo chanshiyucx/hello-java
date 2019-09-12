@@ -3,6 +3,7 @@ package com.chanshiyu.controller;
 import com.chanshiyu.enums.ApiStatusEnums;
 import com.chanshiyu.enums.OperFriendRequestEnum;
 import com.chanshiyu.pojo.Users;
+import com.chanshiyu.pojo.bo.DeleteFriend;
 import com.chanshiyu.pojo.bo.OperFriendRequest;
 import com.chanshiyu.pojo.bo.SearchUser;
 import com.chanshiyu.pojo.vo.UsersVO;
@@ -135,6 +136,13 @@ public class UserController {
     public CommJSONResult<List<UsersVO>> friendList(@ApiParam(value = "用户ID", required = true) String userId) throws Exception {
         List<UsersVO> result = userService.queryFriendList(userId);
         return CommJSONResult.ok(result);
+    }
+
+    @ApiOperation(value = "删除好友", notes = "删除好友")
+    @PostMapping("/deleteFriend")
+    public CommJSONResult deleteFriend(@ApiParam(value = "删除好友", required = true) @Valid @RequestBody DeleteFriend bean) throws Exception {
+        userService.deleteMyFriend(bean.getUserId(), bean.getFriendUserId());
+        return CommJSONResult.ok();
     }
 
 }

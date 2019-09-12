@@ -46,7 +46,8 @@ export default {
     return {
       requestList: [],
       friendList: [],
-      friendObj: {}
+      friendObj: {},
+      timer: ''
     }
   },
   computed: {
@@ -54,14 +55,17 @@ export default {
   },
   created() {
     this.init()
-    setTimeout(() => {
-      this.init()
-    }, 5000)
+  },
+  beforeDestroy() {
+    clearTimeout(this.timer)
   },
   methods: {
     init() {
       this.getFriendRequest()
       this.getFriendList()
+      this.timer = setTimeout(() => {
+        this.init()
+      }, 5000)
     },
     async getFriendList() {
       try {

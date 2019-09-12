@@ -1,8 +1,13 @@
 package com.chanshiyu.netty;
 
+import com.chanshiyu.netty.handler.ConnectionCountHandler;
+import com.chanshiyu.netty.handler.IMHandler;
+import com.chanshiyu.netty.handler.IMIdleStateHandler;
+import com.chanshiyu.netty.handler.WebSocketPacketCodecHandler;
+import com.chanshiyu.netty.handler.request.HeartBeatRequestHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
@@ -13,11 +18,12 @@ import io.netty.handler.stream.ChunkedWriteHandler;
  * @date 2019/9/4 19:17
  * @Description: 初始化器，channel 注册后，会执行里面的初始化方法
  */
-public class WSServerInitializer extends ChannelInitializer<SocketChannel> {
+public class WSServerInitializer extends ChannelInitializer<NioSocketChannel> {
 
-    protected void initChannel(SocketChannel socketChannel) throws Exception {
+    @Override
+    protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
         // 通过 SocketChannel 去获得对应的管道，通过管道添加 handler
-        ChannelPipeline pipeline = socketChannel.pipeline();
+        ChannelPipeline pipeline = nioSocketChannel.pipeline();
 
         /**
          * ==========================================================================
@@ -41,6 +47,12 @@ public class WSServerInitializer extends ChannelInitializer<SocketChannel> {
          * ============================================================================
          */
         pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
-        pipeline.addLast(new ChatHandler());
+        pipeline.addLast(new ConnectionCountHandler());      // 链接检查
+        pipeline.addLast(new IMIdleStateHandler());          // 心跳包
+        pipeline.addLast(new WebSocketPacketCodecHandler()); // 编解码
+        pipeline.addLast(new HeartBeatRequestHandler());     // 心跳
+        pipeline.addLast(IMHandler.INSTANCE);                // 具体业务
+        // pipeline.addLast(new ChatHandler());              // 消息测试
     }
+
 }

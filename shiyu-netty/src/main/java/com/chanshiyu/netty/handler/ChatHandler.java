@@ -1,4 +1,4 @@
-package com.chanshiyu.netty;
+package com.chanshiyu.netty.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

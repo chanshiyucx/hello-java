@@ -122,6 +122,8 @@ import { mapGetters } from 'vuex'
 import { PullRefresh, Field, Uploader, Loading, ImagePreview, Icon } from 'vant'
 import LazyImg from '@/components/LazyImg'
 import emoji from '@/assets/emoji.json'
+import IM, { CMD, TYPES } from '@/IM'
+import config from '@/config'
 import { localRead, localSave, getFileExt } from '@/utils'
 import request from '@/utils/request'
 
@@ -130,6 +132,9 @@ export default {
   components: { PullRefresh, Field, Uploader, Loading, Icon, LazyImg },
   data() {
     return {
+      ImSocket: null,
+      CMD,
+      TYPES,
       visible: {
         emoji: false
       },
@@ -155,8 +160,48 @@ export default {
     Object.keys(emoji).forEach(o => {
       this.emojiList.push({ name: emoji[o], val: o })
     })
+    this.init()
   },
   methods: {
+    // 初始化
+    init() {
+      try {
+        this.$toast.loading({ duration: 0, message: '客服连接中' })
+        this.instaceIm()
+      } catch (error) {
+        this.$toast.fail('客服初始化失败')
+      }
+    },
+    // 创建 IM 连接
+    instaceIm() {
+      this.ImSocket = new IM({
+        url: config.imWSUrl,
+        onconnect: this.onconnect, // 服务器连接成功
+        ondisconnect: this.ondisconnect, // 服务器已断开连接
+        onerror: this.onerror, // 服务器连接发生错误
+        onreconnect: this.onreconnect, // 服务器开始重连
+        onmsgerror: this.onmsgerror, // 服务器接收消息内容错误
+        handleResponseEvent: this.handleResponseEvent, // 消息业务处理
+        heartBeatMsg: { command: this.CMD.HEARTBEAT_REQUEST, data: {} } // 心跳包消息
+      })
+    },
+    onconnect() {
+      this.$toast.loading({ duration: 0, message: '连接成功，正在联系客服' })
+      // this.linkStart()
+    },
+    ondisconnect() {
+      this.$toast.fail('服务器已断开连接')
+    },
+    onerror() {
+      this.$toast.fail('客服连接错误')
+    },
+    onreconnect() {
+      this.$toast.loading({ duration: 0, message: '重连客服中' })
+      // this.initData()
+    },
+    onmsgerror(error) {
+      this.$message.error(error)
+    },
     onClickLeft() {
       this.$router.go(-1)
     },

@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import Home from './views/Home'
-import { localRead } from '@/utils'
+import store from './store'
 
 Vue.use(Router)
 
@@ -72,8 +72,13 @@ NProgress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
   NProgress.start()
 
-  const token = localRead('token')
-  if (to.path === '/login' || token) {
+  const userId = store.getters.userId
+  if (to.path === '/login') {
+    next()
+  } else if (userId) {
+    if (!store.getters.IMSocket) {
+      store.dispatch('initIM')
+    }
     next()
   } else {
     next('/login')

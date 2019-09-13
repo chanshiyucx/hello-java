@@ -1,6 +1,5 @@
 import axios from 'axios'
 import config from '@/config'
-import store from '@/store'
 
 // create an axios instance
 const service = axios.create({
@@ -11,10 +10,6 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
-    const token = store.getters.token
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`
-    }
     return config
   },
   error => {

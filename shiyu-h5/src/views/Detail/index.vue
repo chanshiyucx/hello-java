@@ -83,13 +83,29 @@ export default {
           console.log('取消')
         })
     },
-    handleChat() {
-      this.$router.push({
-        path: '/chat',
-        query: {
-          userId: this.user.id
+    async handleChat() {
+      try {
+        const users = [this.userInfo.id, this.user.id].join(',')
+        const res = await request({
+          url: '/room/create',
+          method: 'POST',
+          data: {
+            createUser: this.userInfo.id,
+            users
+          }
+        })
+        if (res.status !== 200) {
+          return this.$toast.fail(res.msg)
         }
-      })
+        this.$router.push({
+          path: '/chat',
+          query: {
+            roomId: res.data.id
+          }
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

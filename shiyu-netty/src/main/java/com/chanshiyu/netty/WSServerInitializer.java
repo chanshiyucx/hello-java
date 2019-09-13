@@ -5,6 +5,7 @@ import com.chanshiyu.netty.handler.IMHandler;
 import com.chanshiyu.netty.handler.IMIdleStateHandler;
 import com.chanshiyu.netty.handler.WebSocketPacketCodecHandler;
 import com.chanshiyu.netty.handler.request.HeartBeatRequestHandler;
+import com.chanshiyu.netty.handler.request.LoginRequestHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -51,6 +52,7 @@ public class WSServerInitializer extends ChannelInitializer<NioSocketChannel> {
         pipeline.addLast(IMIdleStateHandler.INSTANCE);          // 心跳包
         pipeline.addLast(WebSocketPacketCodecHandler.INSTANCE); // 编解码
         pipeline.addLast(HeartBeatRequestHandler.INSTANCE);     // 心跳
+        pipeline.addLast(LoginRequestHandler.INSTANCE);         // 登录
         pipeline.addLast(IMHandler.INSTANCE);                   // 具体业务
         // pipeline.addLast(new ChatHandler());                 // 消息测试
     }

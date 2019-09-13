@@ -48,21 +48,21 @@ export default class IM {
   _onclose() {
     console.log('====== 连接关闭')
     this._readyReconnect()
-    this.options.ondisconnect()
+    this.options.ondisconnect && this.options.ondisconnect()
   }
 
   // 连接错误
   _onerror() {
     console.log('====== 连接错误')
     this._readyReconnect()
-    this.options.onerror()
+    this.options.onerror && this.options.onerror()
   }
 
   // 连接成功
   _onopen() {
     console.log('====== 连接成功')
     this._resetStatus()
-    this.options.onconnect()
+    this.options.onconnect && this.options.onconnect()
   }
 
   // 接收消息
@@ -106,7 +106,7 @@ export default class IM {
     if (this.reconnectCount > this.reconnectLimit) return
 
     console.log('====== 重连', this.reconnectCount)
-    this.options.onreconnect()
+    this.options.onreconnect && this.options.onreconnect()
     this.lockReconnect = true
     this.reconnectCount += 1
     this._init()

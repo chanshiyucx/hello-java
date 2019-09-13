@@ -14,6 +14,12 @@ public interface Command {
     int HEARTBEAT_RESPONSE = 2;
 
     /**
+     * 登陆
+     */
+    int LOGIN_REQUEST = 3;
+    int LOGIN_RESPONSE = 4;
+
+    /**
      * 消息
      */
     int MESSAGE_REQUEST = 5;

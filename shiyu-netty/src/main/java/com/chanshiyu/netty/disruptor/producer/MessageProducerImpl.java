@@ -19,10 +19,8 @@ public class MessageProducerImpl extends MessageProducer {
     private Integer commandId;
     private RingBuffer<TranslatorDataWrapper> ringBuffer;
 
-
     /**
      * 发布事件
-     *
      * @param packet 应用包
      * @param ctx    上下文
      */

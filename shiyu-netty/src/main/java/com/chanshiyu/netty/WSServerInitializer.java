@@ -47,12 +47,12 @@ public class WSServerInitializer extends ChannelInitializer<NioSocketChannel> {
          * ============================================================================
          */
         pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
-        pipeline.addLast(new ConnectionCountHandler());      // 链接检查
-        pipeline.addLast(new IMIdleStateHandler());          // 心跳包
-        pipeline.addLast(new WebSocketPacketCodecHandler()); // 编解码
-        pipeline.addLast(new HeartBeatRequestHandler());     // 心跳
-        pipeline.addLast(IMHandler.INSTANCE);                // 具体业务
-        // pipeline.addLast(new ChatHandler());              // 消息测试
+        pipeline.addLast(ConnectionCountHandler.INSTANCE);      // 链接检查
+        pipeline.addLast(IMIdleStateHandler.INSTANCE);          // 心跳包
+        pipeline.addLast(WebSocketPacketCodecHandler.INSTANCE); // 编解码
+        pipeline.addLast(HeartBeatRequestHandler.INSTANCE);     // 心跳
+        pipeline.addLast(IMHandler.INSTANCE);                   // 具体业务
+        // pipeline.addLast(new ChatHandler());                 // 消息测试
     }
 
 }

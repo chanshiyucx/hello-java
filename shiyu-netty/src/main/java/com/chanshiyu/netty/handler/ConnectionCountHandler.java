@@ -1,5 +1,6 @@
 package com.chanshiyu.netty.handler;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Description: 链接检查
  */
 @Slf4j
+@ChannelHandler.Sharable
 public class ConnectionCountHandler extends ChannelInboundHandlerAdapter {
+
+    public static final ConnectionCountHandler INSTANCE = new ConnectionCountHandler();
 
     private AtomicInteger mConnectionCount = new AtomicInteger();
 

@@ -144,6 +144,7 @@ export default {
       historyList: [], // 历史消息
       chatList: [], // 对话消息
       imgPreviewList: [],
+      msgIndex: 0,
       inputMsg: ''
     }
   },
@@ -283,10 +284,6 @@ export default {
     sendMsg() {
       const inputMsg = this.inputMsg.trim()
       if (!inputMsg) return
-      if (inputMsg.length > 500) {
-        return this.$toast.fail('咨询问题不能超过500字')
-      }
-
       const msgIndex = ++this.msgIndex
       const obj = {
         contentType: this.TYPES.TEXT,
@@ -294,18 +291,70 @@ export default {
       }
       const msg = {
         msg: obj,
-        sendUserId: this.imInfo.imUserId,
+        sendUserId: this.userInfo.id,
         state: 0,
         msgIndex
       }
-      this.chatMsgList.push(msg)
+      // this.chatMsgList.push(msg)
 
       const data = {
         msgIndex,
         msg: JSON.stringify(obj)
       }
+      console.log('data-->', data)
       this.handleRequestEvent('sendMessage', data)
       this.visible.emoji = false
+    },
+    /**
+     * 统一处理数据请求逻辑 【工作台 ===》IM】
+     * 将不同消息类型转换成对应的消息关键字
+     * @param { String } type 消息类型
+     * @param { Object } data 消息内容
+     */
+    handleRequestEvent(type, data) {
+      let command, newData
+      switch (type) {
+        case 'getHistoryMsg': // 请求历史消息
+          command = CMD.MESSAGE_HISTORY_REQUEST
+          newData = { ...data }
+          break
+        case 'sendMessage': // 发送消息
+          command = CMD.MESSAGE_REQUEST
+          newData = { ...data }
+          break
+        case 'signMsg': // 签收消息
+          command = CMD.MESSAGE_SIGN_REQUEST
+          newData = { ...data }
+          break
+        default:
+          return
+      }
+      const msg = { command, data: newData }
+      this.ImSocket.handleRequestEvent(msg)
+    },
+    /**
+     * 统一处理消息响应逻辑 【IM ===》工作台】
+     * 将接收消息关键字触发不同的回调事件
+     * @param { Enumerator } command 消息关键字
+     * @param { Object } data 消息内容
+     */
+    handleResponseEvent(command, data) {
+      switch (command) {
+        case CMD.MESSAGE_RESPONSE: // 接收消息
+          this.receiveMessage(data)
+          break
+        case CMD.MESSAGE_SUCCESS: // 发送消息成功的响应
+          this.messageSuccess(data)
+          break
+        case CMD.MESSAGE_SIGN_RESPONSE: // 签收消息响应
+          this.signSuccess(data)
+          break
+        case CMD.MESSAGE_HISTORY_RESPONSE: // 返回历史消息
+          this.getHistoryOk(data)
+          break
+        default:
+          break
+      }
     }
   }
 }

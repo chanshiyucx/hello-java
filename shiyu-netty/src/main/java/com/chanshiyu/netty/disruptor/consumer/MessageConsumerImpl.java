@@ -34,6 +34,7 @@ public class MessageConsumerImpl extends MessageConsumer {
         Channel channel = ctx.channel();
         // 命令字
         Integer command = event.getPacket().getCommand();
+        log.info("onEvent-->,{}", command);
     }
 
 }

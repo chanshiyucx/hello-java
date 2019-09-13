@@ -6,12 +6,14 @@ import com.chanshiyu.netty.protocol.Packet;
 import com.chanshiyu.util.SpringUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author shiyu
  * @date 2019/9/12 15:23
  * @Description
  */
+@Slf4j
 public class DisruptorRequestHandler<T extends Packet> extends SimpleChannelInboundHandler<T> {
 
     /**

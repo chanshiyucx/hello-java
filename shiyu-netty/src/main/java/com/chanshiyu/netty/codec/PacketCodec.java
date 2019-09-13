@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.chanshiyu.netty.protocol.Packet;
 import com.chanshiyu.netty.protocol.command.Command;
 import com.chanshiyu.netty.protocol.request.HeartBeatRequestPacket;
+import com.chanshiyu.netty.protocol.request.MessageRequestPacket;
 import com.chanshiyu.netty.protocol.response.HeartBeatResponsePacket;
+import com.chanshiyu.netty.protocol.response.MessageResponsePacket;
 import com.chanshiyu.netty.serialize.Serializer;
 import com.chanshiyu.netty.serialize.impl.JSONSerializer;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -31,6 +33,9 @@ public class PacketCodec {
         // 心跳
         packetTypeMap.put(Command.HEARTBEAT_REQUEST, HeartBeatRequestPacket.class);
         packetTypeMap.put(Command.HEARTBEAT_RESPONSE, HeartBeatResponsePacket.class);
+        // 消息
+        packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
         // 加入
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();

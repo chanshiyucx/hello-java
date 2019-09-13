@@ -1,5 +1,6 @@
 package com.chanshiyu.netty.handler;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -14,11 +15,14 @@ import java.util.concurrent.TimeUnit;
  * @Description: 心跳包
  */
 @Slf4j
+@ChannelHandler.Sharable
 public class IMIdleStateHandler extends IdleStateHandler {
+
+    public static final IMIdleStateHandler INSTANCE = new IMIdleStateHandler();
 
     private static final int READER_IDLE_TIME = 180;
 
-    public IMIdleStateHandler() {
+    private IMIdleStateHandler() {
         super(READER_IDLE_TIME, 0, 0, TimeUnit.SECONDS);
     }
 

@@ -18,7 +18,7 @@ public class MessageProducer {
      * @param ctx    上下文
      */
     public void publish(Packet packet, ChannelHandlerContext ctx) {
-        log.info("生成消息 -> {}",packet.getCommand());
+        // log.info("生成消息 -> {}",packet.getCommand());
     }
 
 }

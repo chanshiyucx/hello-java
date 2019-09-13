@@ -24,7 +24,7 @@ public class ConnectionCountHandler extends ChannelInboundHandlerAdapter {
 
     public ConnectionCountHandler() {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-            log.info("connections: {}", mConnectionCount.get());
+//            log.info("connections: {}", mConnectionCount.get());
         }, 0, 5, TimeUnit.SECONDS);
     }
 

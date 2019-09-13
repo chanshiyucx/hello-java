@@ -19,4 +19,9 @@ public interface Command {
     int MESSAGE_REQUEST = 5;
     int MESSAGE_RESPONSE = 6;
 
+    /**
+     * 消息发送成功
+     */
+    int MESSAGE_SUCCESS_RESPONSE = 7;
+
 }

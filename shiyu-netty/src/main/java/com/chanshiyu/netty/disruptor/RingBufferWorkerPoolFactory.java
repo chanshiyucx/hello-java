@@ -54,9 +54,7 @@ public class RingBufferWorkerPoolFactory {
     }
 
     public MessageProducer getMessageProducer(Integer commandId) {
-        log.info("getMessageProducer-->{}", commandId);
         MessageProducer messageProducer = producers.get(commandId);
-        log.info("messageProducer-->{}", messageProducer);
         if (messageProducer == null) {
             messageProducer = new MessageProducerImpl(commandId, this.ringBuffer);
             producers.put(commandId, messageProducer);

@@ -20,14 +20,20 @@ public interface Command {
     int LOGIN_RESPONSE = 4;
 
     /**
+     * 创建房间
+     */
+    int CREATE_ROOM_REQUEST = 5;
+    int CREATE_ROOM_RESPONSE = 6;
+
+    /**
      * 消息
      */
-    int MESSAGE_REQUEST = 5;
-    int MESSAGE_RESPONSE = 6;
+    int MESSAGE_REQUEST = 7;
+    int MESSAGE_RESPONSE = 8;
 
     /**
      * 消息发送成功
      */
-    int MESSAGE_SUCCESS_RESPONSE = 7;
+    int MESSAGE_SUCCESS_RESPONSE = 9;
 
 }

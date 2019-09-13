@@ -2,12 +2,30 @@
  * 消息命令字
  */
 export const CMD = {
-  HEARTBEAT_REQUEST: 1, // 心跳请求
-  HEARTBEAT_RESPONSE: 2, // 心跳响应
-  LOGIN_REQUEST: 3, // 登录请求
-  LOGIN_RESPONSE: 4, // 登录响应
-  MESSAGE_REQUEST: 5, // 发送消息
-  MESSAGE_RESPONSE: 6 // 响应消息
+  HEART_BEAT: {
+    // 心跳
+    REQUEST: 1,
+    RESPONSE: 2
+  },
+  LOGIN: {
+    // 登录
+    REQUEST: 3,
+    RESPONSE: 4
+  },
+  CREATE_ROOM: {
+    // 创建房间
+    REQUEST: 5,
+    RESPONSE: 6
+  },
+  SEND_MESSAGE: {
+    // 发送消息
+    REQUEST: 7,
+    RESPONSE: 8
+  },
+  ACCEPT_MESSAGE: {
+    // 接收消息
+    RESPONSE: 9
+  }
 }
 
 /**

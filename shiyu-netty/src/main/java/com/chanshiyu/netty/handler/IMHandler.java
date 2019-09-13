@@ -1,5 +1,7 @@
 package com.chanshiyu.netty.handler;
 
+import com.chanshiyu.netty.handler.request.CreateRoomRequestHandler;
+import com.chanshiyu.netty.handler.request.LoginRequestHandler;
 import com.chanshiyu.netty.handler.request.MessageRequestHandler;
 import com.chanshiyu.netty.protocol.Packet;
 import com.chanshiyu.netty.protocol.command.Command;
@@ -26,12 +28,17 @@ public class IMHandler extends SimpleChannelInboundHandler<Packet> {
 
     private IMHandler() {
         handlerMap = new HashMap<>();
+        // 登陆
+        handlerMap.put(Command.LOGIN_REQUEST, LoginRequestHandler.INSTANCE);
+        // 创建房间
+        handlerMap.put(Command.CREATE_ROOM_REQUEST, CreateRoomRequestHandler.INSTANCE);
         // 发送消息
         handlerMap.put(Command.MESSAGE_REQUEST, MessageRequestHandler.INSTANCE);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Packet packet) throws Exception {
+        log.info("packet.getCommand()-->{}", packet.getCommand());
         handlerMap.get(packet.getCommand()).channelRead(ctx, packet);
     }
 

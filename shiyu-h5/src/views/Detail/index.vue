@@ -29,7 +29,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo'])
+    ...mapGetters(['userInfo', 'IMSocket'])
   },
   created() {
     this.getDetail()
@@ -84,28 +84,21 @@ export default {
         })
     },
     async handleChat() {
-      try {
-        const users = [this.userInfo.id, this.user.id].join(',')
-        const res = await request({
-          url: '/room/create',
-          method: 'POST',
-          data: {
-            createUser: this.userInfo.id,
-            users
-          }
-        })
-        if (res.status !== 200) {
-          return this.$toast.fail(res.msg)
-        }
+      const users = [this.userInfo.id, this.user.id].sort().join(',')
+      const data = {
+        name: this.user.nickname,
+        createUserId: this.userInfo.id,
+        users
+      }
+      this.IMSocket.handleRequestEvent('CREATE_ROOM', data, msg => {
+        console.log('房间创建成功-->', msg)
         this.$router.push({
           path: '/chat',
           query: {
-            roomId: res.data.id
+            id: msg.id
           }
         })
-      } catch (error) {
-        console.log(error)
-      }
+      })
     }
   }
 }

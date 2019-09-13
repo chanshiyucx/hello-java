@@ -122,8 +122,7 @@ import { mapGetters } from 'vuex'
 import { PullRefresh, Field, Uploader, Loading, ImagePreview, Icon } from 'vant'
 import LazyImg from '@/components/LazyImg'
 import emoji from '@/assets/emoji.json'
-import IM, { CMD, TYPES } from '@/IM'
-import config from '@/config'
+import { CMD, TYPES } from '@/IM'
 import { localRead, localSave, getFileExt } from '@/utils'
 import request from '@/utils/request'
 
@@ -157,52 +156,13 @@ export default {
   },
   watch: {},
   async created() {
+    console.log('params-->', this.$route)
     // 处理表情包数据
     Object.keys(emoji).forEach(o => {
       this.emojiList.push({ name: emoji[o], val: o })
     })
-    this.init()
   },
   methods: {
-    // 初始化
-    init() {
-      try {
-        this.$toast.loading({ duration: 0, message: '客服连接中' })
-        this.instaceIm()
-      } catch (error) {
-        this.$toast.fail('客服初始化失败')
-      }
-    },
-    // 创建 IM 连接
-    instaceIm() {
-      this.ImSocket = new IM({
-        url: config.imWSUrl,
-        onconnect: this.onconnect, // 服务器连接成功
-        ondisconnect: this.ondisconnect, // 服务器已断开连接
-        onerror: this.onerror, // 服务器连接发生错误
-        onreconnect: this.onreconnect, // 服务器开始重连
-        onmsgerror: this.onmsgerror, // 服务器接收消息内容错误
-        handleResponseEvent: this.handleResponseEvent, // 消息业务处理
-        heartBeatMsg: { command: this.CMD.HEARTBEAT_REQUEST, data: {} } // 心跳包消息
-      })
-    },
-    onconnect() {
-      this.$toast.loading({ duration: 0, message: '连接成功，正在联系客服' })
-      // this.linkStart()
-    },
-    ondisconnect() {
-      this.$toast.fail('服务器已断开连接')
-    },
-    onerror() {
-      this.$toast.fail('客服连接错误')
-    },
-    onreconnect() {
-      this.$toast.loading({ duration: 0, message: '重连客服中' })
-      // this.initData()
-    },
-    onmsgerror(error) {
-      this.$message.error(error)
-    },
     onClickLeft() {
       this.$router.go(-1)
     },
@@ -304,57 +264,6 @@ export default {
       console.log('data-->', data)
       this.handleRequestEvent('sendMessage', data)
       this.visible.emoji = false
-    },
-    /**
-     * 统一处理数据请求逻辑 【工作台 ===》IM】
-     * 将不同消息类型转换成对应的消息关键字
-     * @param { String } type 消息类型
-     * @param { Object } data 消息内容
-     */
-    handleRequestEvent(type, data) {
-      let command, newData
-      switch (type) {
-        case 'getHistoryMsg': // 请求历史消息
-          command = CMD.MESSAGE_HISTORY_REQUEST
-          newData = { ...data }
-          break
-        case 'sendMessage': // 发送消息
-          command = CMD.MESSAGE_REQUEST
-          newData = { ...data }
-          break
-        case 'signMsg': // 签收消息
-          command = CMD.MESSAGE_SIGN_REQUEST
-          newData = { ...data }
-          break
-        default:
-          return
-      }
-      const msg = { command, data: newData }
-      this.ImSocket.handleRequestEvent(msg)
-    },
-    /**
-     * 统一处理消息响应逻辑 【IM ===》工作台】
-     * 将接收消息关键字触发不同的回调事件
-     * @param { Enumerator } command 消息关键字
-     * @param { Object } data 消息内容
-     */
-    handleResponseEvent(command, data) {
-      switch (command) {
-        case CMD.MESSAGE_RESPONSE: // 接收消息
-          this.receiveMessage(data)
-          break
-        case CMD.MESSAGE_SUCCESS: // 发送消息成功的响应
-          this.messageSuccess(data)
-          break
-        case CMD.MESSAGE_SIGN_RESPONSE: // 签收消息响应
-          this.signSuccess(data)
-          break
-        case CMD.MESSAGE_HISTORY_RESPONSE: // 返回历史消息
-          this.getHistoryOk(data)
-          break
-        default:
-          break
-      }
     }
   }
 }

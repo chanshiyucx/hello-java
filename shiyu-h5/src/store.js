@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '@/config'
-import IM, { CMD } from '@/IM'
+import IM from '@/IM'
 import { localRead, localSave } from '@/utils'
 import avatar from '@/assets/images/avatar.png'
 
@@ -38,12 +38,8 @@ export default new Vuex.Store({
         url: config.imWSUrl,
         onconnect: () => {
           const data = { userId: id, username, nickname }
-          IMSocket.handleRequestEvent({ command: CMD.LOGIN_REQUEST, data })
-        },
-        handleResponseEvent: (command, data) => {
-          console.log('接收消息 消息业务处理-->', data)
-        },
-        heartBeatMsg: { command: CMD.HEARTBEAT_REQUEST, data: {} }
+          IMSocket.handleRequestEvent('LOGIN', data)
+        }
       })
       commit('setIMSocket', IMSocket)
     }

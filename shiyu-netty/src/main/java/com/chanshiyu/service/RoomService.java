@@ -2,11 +2,9 @@ package com.chanshiyu.service;
 
 import com.chanshiyu.pojo.Room;
 
-import java.util.List;
-
 /**
  * @author shiyu
- * @date 2019/9/13 10:31
+ * @date 2019/9/13 16:51
  * @Description
  */
 public interface RoomService {

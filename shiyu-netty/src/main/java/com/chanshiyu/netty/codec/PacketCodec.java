@@ -3,9 +3,11 @@ package com.chanshiyu.netty.codec;
 import com.alibaba.fastjson.JSONObject;
 import com.chanshiyu.netty.protocol.Packet;
 import com.chanshiyu.netty.protocol.command.Command;
+import com.chanshiyu.netty.protocol.request.CreateRoomRequestPacket;
 import com.chanshiyu.netty.protocol.request.HeartBeatRequestPacket;
 import com.chanshiyu.netty.protocol.request.LoginRequestPacket;
 import com.chanshiyu.netty.protocol.request.MessageRequestPacket;
+import com.chanshiyu.netty.protocol.response.CreateRoomResponsePacket;
 import com.chanshiyu.netty.protocol.response.HeartBeatResponsePacket;
 import com.chanshiyu.netty.protocol.response.LoginResponsePacket;
 import com.chanshiyu.netty.protocol.response.MessageResponsePacket;
@@ -41,6 +43,9 @@ public class PacketCodec {
         // 消息
         packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
         packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
+        // 房间
+        packetTypeMap.put(Command.CREATE_ROOM_REQUEST, CreateRoomRequestPacket.class);
+        packetTypeMap.put(Command.CREATE_ROOM_RESPONSE, CreateRoomResponsePacket.class);
         // 加入
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();

@@ -19,6 +19,11 @@ public class Room {
     private String name;
 
     /**
+     * 房间图标
+     */
+    private String icon;
+
+    /**
      * 房间所有人
      */
     @NotBlank(message = "房间用户不能为空")

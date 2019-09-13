@@ -2,17 +2,24 @@ package com.chanshiyu.netty.disruptor.consumer;
 
 import com.chanshiyu.netty.disruptor.wapper.TranslatorDataWrapper;
 import com.chanshiyu.netty.protocol.command.Command;
+import com.chanshiyu.netty.protocol.request.CreateRoomRequestPacket;
 import com.chanshiyu.netty.protocol.request.LoginRequestPacket;
 import com.chanshiyu.netty.protocol.request.MessageRequestPacket;
+import com.chanshiyu.netty.protocol.response.CreateRoomResponsePacket;
 import com.chanshiyu.netty.protocol.response.LoginResponsePacket;
 import com.chanshiyu.netty.protocol.response.MessageSuccessResponsePacket;
 import com.chanshiyu.netty.session.Session;
 import com.chanshiyu.netty.session.SessionUtil;
+import com.chanshiyu.pojo.Room;
+import com.chanshiyu.pojo.Users;
+import com.chanshiyu.service.RoomService;
 import com.chanshiyu.service.UserService;
 import com.chanshiyu.util.SpringUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +32,7 @@ import java.util.TimeZone;
  * @Description
  */
 @Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MessageConsumerImpl extends MessageConsumer {
 
     // 时间
@@ -49,6 +57,9 @@ public class MessageConsumerImpl extends MessageConsumer {
                 // 登陆处理
                 login(ctx, (LoginRequestPacket) event.getPacket());
                 break;
+            case Command.CREATE_ROOM_REQUEST:
+                createRoom(ctx, (CreateRoomRequestPacket) event.getPacket());
+                break;
             case Command.MESSAGE_REQUEST:
                 // 消息处理
                 msg(ctx, (MessageRequestPacket) event.getPacket());
@@ -65,49 +76,51 @@ public class MessageConsumerImpl extends MessageConsumer {
     private void login(ChannelHandlerContext ctx, LoginRequestPacket packet) {
         Session session = new Session(packet.getUserId(), packet.getUsername(), packet.getNickname());
         SessionUtil.bindSession(session, ctx.channel());
-
         LoginResponsePacket response = new LoginResponsePacket(packet.getUserId(), packet.getUsername(), packet.getNickname(),true, "登录成功");
         ctx.writeAndFlush(response);
+    }
 
-        // 创建进数据库
-        // UserService usersService = SpringUtil.getBean(UserService.class);
-        // 记录下登陆的人
-//        Clients client = MessageCommonUtil.getRealClient(packet.getNodeId(), packet.getServiceImUserId());
-//        if (client == null) {
-//            // 说明没有这个客户，配置有问题，发送回去
-//            HintMessage message = new HintMessage("客服配置有误,请联系管理员!");
-//            MessageCommonUtil.sendMsg(ctx.channel(), message);
-//        } else {
-//            packet.setNodeId(client.getId());
-//            if (packet.getRoleType() != null && packet.getRoleType() == RoleTypeAttributes.ROLE_TYPE_SERVICE) {
-//                // 客服
-//                MessageServiceConsumerUtil.login(ctx, packet, client);
-//            } else {
-//                // 是否自动接待
-//                boolean isAutoReception = client.getAutoReception() == 1;
-//                if (isAutoReception) {
-//                    // 自动接待
-//                    String imUserId = getAutoReceptionImUserId(client.getId());
-//                    packet.setServiceImUserId(imUserId);
-//                }
-//                // 普通用户
-//                MessageClientConsumerUtil.login(ctx, packet, client);
-//            }
-//            // 记录一下信息
-//            String account = packet.getAccount();
-//            if (account != null) {
-//                MessageCommonUtil.setAccount(packet.getNodeId(), packet.getThirdPartyId(), account);
-//            }
-//        }
+    /**
+     * 创建房间
+     */
+    private void createRoom(ChannelHandlerContext ctx, CreateRoomRequestPacket packet)  {
+        RoomService roomService = SpringUtil.getBean(RoomService.class);
+        UserService userService = SpringUtil.getBean(UserService.class);
+        String users = packet.getUsers();
+        // 获取或创建房间
+        Room room = roomService.queryRoomByUsers(users);
+        if (room != null) {
+            // 返回已存在房间
+            CreateRoomResponsePacket response = new CreateRoomResponsePacket(room.getId(), room.getName(), room.getUsers(), room.getCreateUser(), room.getCreateTime(), room.getIcon());
+            ctx.writeAndFlush(response);
+        } else {
+            try {
+                // 创建新房间
+                Room newRoom = new Room();
+                newRoom.setName(packet.getName());
+                newRoom.setUsers(packet.getUsers());
+                newRoom.setCreateUser(packet.getCreateUserId());
+                // 取房间第一个用户头像为图标
+                String[] usersStr = packet.getUsers().split(",");
+                String userId = usersStr[0];
+                Users users1 = userService.queryUserById(userId);
+                if (users1 != null) {
+                    newRoom.setIcon(users1.getAvatar());
+                }
+                Room result = roomService.createRoom(newRoom);
+                CreateRoomResponsePacket response = new CreateRoomResponsePacket(result.getId(), result.getName(), result.getUsers(), result.getCreateUser(), result.getCreateTime(), result.getIcon());
+                ctx.writeAndFlush(response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     /**
      * 消息处理
-     * @param ctx
-     * @param packet
      */
     private void msg(ChannelHandlerContext ctx, MessageRequestPacket packet) {
-        log.info("收到一条消息");
         Channel channel = ctx.channel();
         int msgIndex = packet.getMsgIndex();
         sendMsgSuccess(channel, msgIndex, 10, new Date().getTime());

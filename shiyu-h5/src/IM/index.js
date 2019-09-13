@@ -1,4 +1,5 @@
-export { CMD, TYPES } from './const'
+import { CMD } from './const'
+export { TYPES } from './const'
 
 /**
  * =====================================================
@@ -23,7 +24,7 @@ export default class IM {
     this.forbidReconnect = false // 禁止重连
     this.lockReconnect = false // 锁定重连
     this.lockReconnectTask = false // 锁定重连任务队列
-    this.handers = {} // 事件广播
+    this.handlers = {} // 事件广播
 
     // Let's go
     this._init()
@@ -129,7 +130,7 @@ export default class IM {
   _heartBeat(immediate) {
     this.pingTimer = setTimeout(
       () => {
-        this._sendMessage(this.options.heartBeatMsg)
+        this._sendMessage({ command: CMD.HEART_BEAT.REQUEST, data: {} })
         this._heartBeat()
       },
       immediate ? 1000 : this.pingTimeout
@@ -151,29 +152,6 @@ export default class IM {
   }
 
   /**
-   * ================================================
-   *                事件广播【外部模块】
-   * ================================================
-   */
-  on(eventName, fn) {
-    if (!eventName) {
-      throw new Error('事件名无效')
-    }
-    if (!(typeof fn === 'function')) {
-      throw new Error('必须提供事件函数')
-    }
-    this.handers[eventName] = fn
-  }
-
-  emit(eventName, data) {
-    if (!eventName) {
-      throw new Error('事件名无效')
-    }
-    const handle = this.handers[eventName]
-    handle && handle(data)
-  }
-
-  /**
    * ============================================================
    *    统一处理内外部消息通信【外部模块】
    *    IM 只暴露给外部三个方法可使用
@@ -184,7 +162,18 @@ export default class IM {
    */
 
   // 处理外部请求命令
-  handleRequestEvent(msg) {
+  handleRequestEvent(type, data, cb) {
+    console.log('type-->', type)
+    const command = CMD[type].REQUEST
+    if (!command) {
+      console.log('无法识别的命令字')
+      return
+    }
+    // 绑定回调函数
+    if (CMD[type].RESPONSE && cb) {
+      this.handlers[CMD[type].RESPONSE] = cb
+    }
+    const msg = { command, data }
     console.log('%c发送消息', 'color:#F2C047;', msg)
     this._sendMessage(msg)
   }
@@ -192,10 +181,10 @@ export default class IM {
   // 处理消息回调给外部
   handleResponseEvent(msg) {
     // 过滤心跳消息
-    if (msg.command === 2) return
+    if (msg.command === CMD.HEART_BEAT.RESPONSE) return
     console.log('%c接收消息', 'color:#cd5da0;', msg)
-    // 返回信息给工作台
-    this.options.handleResponseEvent(msg.command, msg)
+    // 执行回调
+    this.handlers[msg.command] && this.handlers[msg.command](msg)
   }
 
   // 手动关闭连接

@@ -16,18 +16,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class MessageResponsePacket extends Packet {
+public class AcceptMessageResponsePacket extends Packet {
 
     private int msgId;                  // 消息ID
     private String roomId;              // 房间id
     private String sendUserId;          // 发送者id
+    private String sendUserNickname;    // 发送者昵称
     private String sendUserAvatar;      // 发送者头像
     private String msg;                 // 消息内容 json
     private long date;                  // 消息时间
 
     @Override
     public Integer getCommand() {
-        return Command.MESSAGE_RESPONSE;
+        return Command.ACCEPT_MESSAGE_RESPONSE;
     }
 
 }

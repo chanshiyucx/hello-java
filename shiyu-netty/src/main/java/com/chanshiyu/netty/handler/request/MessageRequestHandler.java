@@ -1,6 +1,6 @@
 package com.chanshiyu.netty.handler.request;
 
-import com.chanshiyu.netty.protocol.request.MessageRequestPacket;
+import com.chanshiyu.netty.protocol.request.SendMessageRequestPacket;
 import io.netty.channel.ChannelHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @ChannelHandler.Sharable
-public class MessageRequestHandler extends DisruptorRequestHandler<MessageRequestPacket> {
+public class MessageRequestHandler extends DisruptorRequestHandler<SendMessageRequestPacket> {
 
     public static final MessageRequestHandler INSTANCE = new MessageRequestHandler();
 

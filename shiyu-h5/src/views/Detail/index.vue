@@ -91,7 +91,6 @@ export default {
         users
       }
       this.IMSocket.handleRequestEvent('CREATE_ROOM', data, msg => {
-        console.log('房间创建成功-->', msg)
         this.$router.push({
           path: '/chat',
           query: {

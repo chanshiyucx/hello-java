@@ -12,7 +12,9 @@ const localUserInfo = localRead('userInfo') ? JSON.parse(localRead('userInfo')) 
 export default new Vuex.Store({
   state: {
     userInfo: localUserInfo,
-    IMSocket: null
+    IMSocket: null,
+    IMStatus: false,
+    roomList: {}
   },
   mutations: {
     setUserInfo(state, userInfo) {
@@ -25,6 +27,25 @@ export default new Vuex.Store({
     },
     setIMSocket(state, IMSocket) {
       state.IMSocket = IMSocket
+    },
+    setIMStatus(state, IMStatus) {
+      state.IMStatus = IMStatus
+    },
+    setChatMsg(state, data) {
+      const { roomId, msg, msgIndex } = data
+      const roomList = state.roomList
+      // 初始化房间信息
+      if (!roomList[roomId]) {
+        roomList[roomId] = { chatMsgList: [] }
+      }
+      // 设置聊天记录
+      const roomInfo = roomList[roomId]
+      if (msgIndex >= 0) {
+        roomInfo.chatMsgList[msgIndex] = msg
+      } else {
+        roomInfo.chatMsgList.push(msg)
+      }
+      state.roomList = { ...roomList }
     },
     logout(state) {
       state.userInfo = {}
@@ -41,12 +62,26 @@ export default new Vuex.Store({
           IMSocket.handleRequestEvent('LOGIN', data)
         }
       })
+      IMSocket.on('LOGIN', () => {
+        commit('setIMStatus', true)
+      })
+      IMSocket.on('ACCEPT_MESSAGE', data => {
+        console.log('接收消息-->', data)
+        try {
+          data.msg = JSON.parse(data.msg)
+          commit('setChatMsg', { roomId: data.roomId, msg: data })
+        } catch (error) {
+          console.log('消息转换失败')
+        }
+      })
       commit('setIMSocket', IMSocket)
     }
   },
   getters: {
     IMSocket: state => state.IMSocket,
+    IMStatus: state => state.IMStatus,
     userInfo: state => state.userInfo,
-    userId: state => state.userInfo.id
+    userId: state => state.userInfo.id,
+    roomList: state => state.roomList
   }
 })

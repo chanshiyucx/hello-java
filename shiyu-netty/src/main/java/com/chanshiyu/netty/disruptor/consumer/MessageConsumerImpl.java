@@ -4,11 +4,11 @@ import com.chanshiyu.netty.disruptor.wapper.TranslatorDataWrapper;
 import com.chanshiyu.netty.protocol.command.Command;
 import com.chanshiyu.netty.protocol.request.CreateRoomRequestPacket;
 import com.chanshiyu.netty.protocol.request.LoginRequestPacket;
-import com.chanshiyu.netty.protocol.request.MessageRequestPacket;
+import com.chanshiyu.netty.protocol.request.SendMessageRequestPacket;
 import com.chanshiyu.netty.protocol.response.CreateRoomResponsePacket;
 import com.chanshiyu.netty.protocol.response.LoginResponsePacket;
-import com.chanshiyu.netty.protocol.response.MessageResponsePacket;
-import com.chanshiyu.netty.protocol.response.MessageSuccessResponsePacket;
+import com.chanshiyu.netty.protocol.response.AcceptMessageResponsePacket;
+import com.chanshiyu.netty.protocol.response.SendMessageResponsePacket;
 import com.chanshiyu.netty.session.Session;
 import com.chanshiyu.netty.session.SessionUtil;
 import com.chanshiyu.pojo.ChatMsg;
@@ -76,9 +76,9 @@ public class MessageConsumerImpl extends MessageConsumer {
             case Command.CREATE_ROOM_REQUEST:
                 createRoom(ctx, (CreateRoomRequestPacket) event.getPacket());
                 break;
-            case Command.MESSAGE_REQUEST:
+            case Command.SEND_MESSAGE_REQUEST:
                 // 消息处理
-                msg(ctx, (MessageRequestPacket) event.getPacket());
+                msg(ctx, (SendMessageRequestPacket) event.getPacket());
                 break;
             default:
                 log.error("command -> {}, 该消息未被处理", command);
@@ -134,7 +134,7 @@ public class MessageConsumerImpl extends MessageConsumer {
     /**
      * 消息处理
      */
-    private void msg(ChannelHandlerContext ctx, MessageRequestPacket packet) {
+    private void msg(ChannelHandlerContext ctx, SendMessageRequestPacket packet) {
         try {
             Channel channel = ctx.channel();
             String roomId = packet.getRoomId();
@@ -144,7 +144,7 @@ public class MessageConsumerImpl extends MessageConsumer {
             if (room != null) {
                 Users sendUser = userService.queryUserById(session.getUserId());
                 // 消息入库
-                int msgId = chatMsgService.createChatMsg(new ChatMsg(null, room.getId(), sendUser.getId(), sendUser.getAvatar(), packet.getMsg(), new Date()));
+                int msgId = chatMsgService.createChatMsg(new ChatMsg(null, room.getId(), sendUser.getId(), sendUser.getNickname(), sendUser.getAvatar(), packet.getMsg(), new Date()));
                 // 找出房间所有用户并广播
                 String roomUsers = room.getUsers();
                 String[] roomUsersId = roomUsers.split(",");
@@ -153,7 +153,7 @@ public class MessageConsumerImpl extends MessageConsumer {
                     ConcurrentLinkedQueue<Channel> ch = SessionUtil.getUserIdChannel(s);
                     // 自己不推消息
                     if (!s.equals(sendUser.getId())) {
-                        sendMsg(ch, msgId, room.getId(), sendUser.getId(), sendUser.getAvatar(), packet.getMsg(), new Date());
+                        sendMsg(ch, msgId, room.getId(), sendUser.getId(), sendUser.getNickname(), sendUser.getAvatar(), packet.getMsg(), new Date());
                     }
                 }
                 // 消息发送成功
@@ -167,10 +167,10 @@ public class MessageConsumerImpl extends MessageConsumer {
     /**
      * 保存并转发消息
      */
-    private void sendMsg(ConcurrentLinkedQueue<Channel> channels, int msgId, String roomId, String sendUserId, String sendAvatar, String msg, Date date) {
+    private void sendMsg(ConcurrentLinkedQueue<Channel> channels, int msgId, String roomId, String sendUserId, String sendNickname, String sendAvatar, String msg, Date date) {
         if (channels != null && channels.size() > 0) {
             log.info("广播消息-->{}", channels.size());
-            MessageResponsePacket response = new MessageResponsePacket(msgId, roomId, sendUserId, sendAvatar, msg, date.getTime());
+            AcceptMessageResponsePacket response = new AcceptMessageResponsePacket(msgId, roomId, sendUserId, sendNickname, sendAvatar, msg, date.getTime());
             channels.forEach(channel -> channel.writeAndFlush(response));
         }
     }
@@ -179,7 +179,7 @@ public class MessageConsumerImpl extends MessageConsumer {
      * 消息发送成功
      */
     private static void sendMsgSuccess(Channel channel, int msgIndex, int msgId, long date) {
-        channel.writeAndFlush(new MessageSuccessResponsePacket(msgId, msgIndex, date));
+        channel.writeAndFlush(new SendMessageResponsePacket(msgId, msgIndex, date));
     }
 
 }

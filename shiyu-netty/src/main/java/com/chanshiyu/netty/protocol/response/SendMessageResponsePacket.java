@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class MessageSuccessResponsePacket extends Packet {
+public class SendMessageResponsePacket extends Packet {
 
     private int msgId;                  // 消息ID
     private int msgIndex;               // 消息序号，客户端用于检测消息是否到达
@@ -24,7 +24,7 @@ public class MessageSuccessResponsePacket extends Packet {
 
     @Override
     public Integer getCommand() {
-        return Command.MESSAGE_SUCCESS_RESPONSE;
+        return Command.SEND_MESSAGE_RESPONSE;
     }
 
 }

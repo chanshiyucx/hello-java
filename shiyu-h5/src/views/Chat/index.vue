@@ -1,6 +1,11 @@
 <template>
   <div id="chat">
-    <van-nav-bar title="聊天" class="header" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar
+      :title="`聊天${IMStatus ? '' : '-连接中'}`"
+      class="header"
+      left-arrow
+      @click-left="onClickLeft"
+    />
     <div ref="chat" :class="['main', visible.emoji && 'toggle']">
       <PullRefresh
         :disabled="historyLoading === 2"
@@ -15,7 +20,7 @@
           <div class="divider" v-else>下拉加载历史消息</div>
         </div>
 
-        <ul ref="chatList" class="chat-list">
+        <ul ref="chatMsgList" class="chat-list">
           <!-- 历史消息 -->
           <li v-for="(item, i) in historyList" :key="i" class="chat-msg">
             <!-- <div class="times">{{ formatTime(historyList[i > 0 ? i - 1 : 0].date, item.date) }}</div> -->
@@ -51,11 +56,11 @@
           <!-- 分界线 -->
           <li class="divider middle-divider" v-if="historyList.length">以下为最新消息</li>
           <!-- 聊天消息 -->
-          <li v-for="(item, i) in chatList" :key="`chat-${i}`" class="chat-msg">
-            <!-- <div class="times">{{ formatTime(chatList[i > 0 ? i - 1 : 0].date, item.date) }}</div> -->
+          <li v-for="(item, i) in chatMsgList" :key="`chat-${i}`" class="chat-msg">
+            <div class="times">{{ formatTime(chatMsgList[i > 0 ? i - 1 : 0].date, item.date) }}</div>
             <!-- 自己 -->
-            <!-- <div v-if="imInfo.imUserId && item.sendUserId === imInfo.imUserId" class="msg me">
-              <img class="avatar" src="@/assets/images/service/client.jpg" alt />
+            <div v-if="item.sendUserId === userInfo.id" class="msg me">
+              <Avatar class="avatar" :url="userInfo.avatar" alt="头像" />
               <div :class="['me-msg', item.state === 0 && 'loading-msg']">
                 <div v-if="item.msg.contentType === TYPES.TEXT" v-html="toHtml(item.msg.text)" />
                 <div v-else-if="item.msg.contentType === TYPES.PICTURE">
@@ -74,10 +79,11 @@
                   }"
                 />
               </div>
-            </div>-->
+            </div>
             <!-- 好友 -->
-            <!-- <div v-else class="msg user">
-              <img class="avatar" :src="item.sendAvatar || serviceInfo.sysAvatar || defaultAvatar" alt />
+            <div v-else class="msg user">
+              <Avatar class="avatar" :url="item.sendUserAvatar" alt="头像" />
+              <p class="nickname">{{ item.sendUserNickname }}</p>
               <div class="user-msg">
                 <div v-if="item.msg.contentType === TYPES.TEXT" v-html="toHtml(item.msg.text)" />
                 <div v-else-if="item.msg.contentType === TYPES.PICTURE">
@@ -88,7 +94,7 @@
                   />
                 </div>
               </div>
-            </div>-->
+            </div>
           </li>
         </ul>
       </PullRefresh>
@@ -118,12 +124,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import { PullRefresh, Field, Uploader, Loading, ImagePreview, Icon } from 'vant'
 import LazyImg from '@/components/LazyImg'
 import emoji from '@/assets/emoji.json'
 import { CMD, TYPES } from '@/IM'
-import { localRead, localSave, getFileExt } from '@/utils'
+import { getFormatTime } from '@/utils/date'
+import { getFileExt } from '@/utils'
 import request from '@/utils/request'
 
 export default {
@@ -140,39 +147,79 @@ export default {
       emoji,
       emojiList: [],
       roomId: this.$route.query.id,
-      roomInfo: {},
       historyLoading: 0, // 0: 正在拉取 1: 拉取历史消息 2: 暂无历史消息
       historyList: [], // 历史消息
-      chatList: [], // 对话消息
       imgPreviewList: [],
       msgIndex: 0,
       inputMsg: ''
     }
   },
   computed: {
-    ...mapGetters(['userInfo', 'IMSocket']),
+    ...mapGetters(['userInfo', 'IMSocket', 'IMStatus', 'roomList']),
     isDisabledSend() {
       const inputMsg = this.inputMsg.trim()
-      return !inputMsg
+      return !inputMsg || !this.IMStatus
+    },
+    chatMsgList() {
+      const roomInfo = this.roomList[this.roomId] || { chatMsgList: [] }
+      console.log('chatMsgList', roomInfo.chatMsgList)
+      return roomInfo.chatMsgList
     }
   },
-  watch: {},
+  watch: {
+    historyList: {
+      deep: true,
+      handler() {
+        this.setScrollHeight()
+      }
+    },
+    chatMsgList: {
+      deep: true,
+      handler() {
+        this.setScrollHeight()
+      }
+    },
+    'visible.emoji': {
+      immediate: true,
+      handler() {
+        this.setScrollHeight()
+      }
+    }
+  },
   async created() {
     // 处理表情包数据
     Object.keys(emoji).forEach(o => {
       this.emojiList.push({ name: emoji[o], val: o })
     })
-    // 获取房间信息
-    if (!this.roomInfo) {
-      this.$toast.fail('无法获取房间信息！')
-    } else {
-      this.getRoomInfo()
-    }
   },
   methods: {
-    getRoomInfo() {},
+    ...mapMutations({
+      setChatMsg: 'setChatMsg'
+    }),
     onClickLeft() {
       this.$router.go(-1)
+    },
+    // 调整滚动位置
+    setScrollHeight(type) {
+      setTimeout(() => {
+        this.$refs.chat.scrollTop = this.scrollTopState ? 0 : this.$refs.chatMsgList.scrollHeight + 1000
+        if (type === 'load') return
+
+        this.imgPreviewList = []
+        ;[...this.historyList, ...this.chatMsgList].forEach(({ msg }) => {
+          if (msg && msg['contentType'] === this.TYPES.PICTURE) {
+            this.imgPreviewList.push(msg.smallImgUrl)
+          }
+        })
+      }, 200)
+    },
+    // 图片预览
+    previewImg(source) {
+      const index = this.imgPreviewList.findIndex(src => src === source)
+      ImagePreview({
+        images: this.imgPreviewList,
+        startPosition: index
+      })
     },
     // 下拉刷新
     onRefresh() {
@@ -203,6 +250,11 @@ export default {
         .replace(/\n/g, '</br>')
       return str
     },
+    // 比较时间差
+    formatTime(time1, time2) {
+      const now = +new Date()
+      return getFormatTime(time1 || now, time2 || now)
+    },
     // 文件读取成功
     async afterRead({ file }) {
       if (!file) return
@@ -212,19 +264,20 @@ export default {
       if (!acceptType.includes(ext.toUpperCase())) {
         return this.$toast.fail('暂不支持该文件类型')
       }
-      // const msgIndex = ++this.msgIndex
-      // const obj = {
-      //   contentType: this.TYPES.PICTURE,
-      //   smallImgUrl: '',
-      //   bigImgUrl: ''
-      // }
-      // const msg = {
-      //   msg: obj,
-      //   sendUserId: this.imInfo.imUserId,
-      //   state: 0,
-      //   msgIndex
-      // }
-      // this.chatMsgList.push(msg)
+      const msgIndex = ++this.msgIndex
+      const obj = {
+        contentType: this.TYPES.PICTURE,
+        smallImgUrl: '',
+        bigImgUrl: ''
+      }
+      const msg = {
+        msg: obj,
+        sendUserId: this.userInfo.id,
+        state: 0,
+        msgIndex
+      }
+      this.setChatMsg({ roomId: this.roomId, msg })
+
       const req = this.$formBuilder({ file })
       const res = await request({
         url: '/tool/upload',
@@ -234,19 +287,23 @@ export default {
       if (res.status !== 200) {
         return this.$toast.fail(res.msg || '添加图片失败')
       }
-      // const img = new Image()
-      // img.src = res.data
-      // img.onload = () => {
-      //   obj.smallImgUrl = res.data
-      //   obj.bigImgUrl = res.data
-      //   obj.width = img.width
-      //   obj.height = img.height
-      //   const data = {
-      //     msgIndex,
-      //     msg: JSON.stringify(obj)
-      //   }
-      //   this.handleRequestEvent('sendMessage', data)
-      // }
+
+      const img = new Image()
+      img.src = res.data
+      img.onload = () => {
+        obj.smallImgUrl = res.data
+        obj.bigImgUrl = res.data
+        obj.width = img.width
+        obj.height = img.height
+        const data = {
+          roomId: this.roomId,
+          msgIndex,
+          msg: JSON.stringify(obj)
+        }
+        this.IMSocket.handleRequestEvent('SEND_MESSAGE', data, res => {
+          this.messageSuccess(res)
+        })
+      }
     },
     // 发送消息
     sendMsg() {
@@ -263,17 +320,28 @@ export default {
         state: 0,
         msgIndex
       }
-      // this.chatMsgList.push(msg)
+
+      this.setChatMsg({ roomId: this.roomId, msg })
 
       const data = {
         roomId: this.roomId,
         msgIndex,
         msg: JSON.stringify(obj)
       }
-      this.IMSocket.handleRequestEvent('SEND_MESSAGE', data, () => {
-        console.log('消息发送成功-->')
+      this.IMSocket.handleRequestEvent('SEND_MESSAGE', data, res => {
+        this.messageSuccess(res)
       })
       this.visible.emoji = false
+    },
+    // 消息发送成功
+    messageSuccess(data) {
+      this.scrollTopState = false
+      this.inputMsg = ''
+      const msgIndex = this.chatMsgList.findIndex(x => x.msgIndex === data.msgIndex)
+      const msg = this.chatMsgList[msgIndex]
+      msg.state = 1
+      msg.date = data.date || new Date().getTime()
+      this.setChatMsg({ roomId: this.roomId, msg, msgIndex })
     }
   }
 }

@@ -8,6 +8,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="room_id" jdbcType="VARCHAR" property="roomId" />
     <result column="send_user_id" jdbcType="VARCHAR" property="sendUserId" />
+    <result column="send_user_nickname" jdbcType="VARCHAR" property="sendUserNickname" />
     <result column="send_user_avatar" jdbcType="VARCHAR" property="sendUserAvatar" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="msg" jdbcType="LONGVARCHAR" property="msg" />

@@ -27,6 +27,12 @@ public class ChatMsg {
     private String sendUserId;
 
     /**
+     * 发送者昵称
+     */
+    @Column(name = "send_user_nickname")
+    private String sendUserNickname;
+
+    /**
      * 发送者头像
      */
     @Column(name = "send_user_avatar")

@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class MessageRequestPacket extends Packet {
+public class SendMessageRequestPacket extends Packet {
 
     private int msgIndex;               // 消息序列
     private String roomId;              // 房间Id
@@ -22,7 +22,7 @@ public class MessageRequestPacket extends Packet {
 
     @Override
     public Integer getCommand() {
-        return Command.MESSAGE_REQUEST;
+        return Command.SEND_MESSAGE_REQUEST;
     }
 
 }

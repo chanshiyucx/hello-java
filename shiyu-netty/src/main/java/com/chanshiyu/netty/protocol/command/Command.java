@@ -26,14 +26,14 @@ public interface Command {
     int CREATE_ROOM_RESPONSE = 6;
 
     /**
-     * 消息
+     * 发送消息
      */
-    int MESSAGE_REQUEST = 7;
-    int MESSAGE_RESPONSE = 8;
+    int SEND_MESSAGE_REQUEST = 7;
+    int SEND_MESSAGE_RESPONSE = 8;
 
     /**
-     * 消息发送成功
+     * 接收消息
      */
-    int MESSAGE_SUCCESS_RESPONSE = 9;
+    int ACCEPT_MESSAGE_RESPONSE = 9;
 
 }

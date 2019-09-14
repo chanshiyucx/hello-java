@@ -33,7 +33,7 @@ public class IMHandler extends SimpleChannelInboundHandler<Packet> {
         // 创建房间
         handlerMap.put(Command.CREATE_ROOM_REQUEST, CreateRoomRequestHandler.INSTANCE);
         // 发送消息
-        handlerMap.put(Command.MESSAGE_REQUEST, MessageRequestHandler.INSTANCE);
+        handlerMap.put(Command.SEND_MESSAGE_REQUEST, MessageRequestHandler.INSTANCE);
     }
 
     @Override

@@ -163,7 +163,6 @@ export default class IM {
 
   // 处理外部请求命令
   handleRequestEvent(type, data, cb) {
-    console.log('type-->', type)
     const command = CMD[type].REQUEST
     if (!command) {
       console.log('无法识别的命令字')
@@ -185,6 +184,12 @@ export default class IM {
     console.log('%c接收消息', 'color:#cd5da0;', msg)
     // 执行回调
     this.handlers[msg.command] && this.handlers[msg.command](msg)
+  }
+
+  // 绑定事件
+  on(type, cb) {
+    const command = CMD[type].RESPONSE
+    this.handlers[command] = cb
   }
 
   // 手动关闭连接

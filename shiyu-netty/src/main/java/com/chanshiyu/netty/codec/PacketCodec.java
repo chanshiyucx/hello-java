@@ -6,11 +6,11 @@ import com.chanshiyu.netty.protocol.command.Command;
 import com.chanshiyu.netty.protocol.request.CreateRoomRequestPacket;
 import com.chanshiyu.netty.protocol.request.HeartBeatRequestPacket;
 import com.chanshiyu.netty.protocol.request.LoginRequestPacket;
-import com.chanshiyu.netty.protocol.request.MessageRequestPacket;
+import com.chanshiyu.netty.protocol.request.SendMessageRequestPacket;
 import com.chanshiyu.netty.protocol.response.CreateRoomResponsePacket;
 import com.chanshiyu.netty.protocol.response.HeartBeatResponsePacket;
 import com.chanshiyu.netty.protocol.response.LoginResponsePacket;
-import com.chanshiyu.netty.protocol.response.MessageResponsePacket;
+import com.chanshiyu.netty.protocol.response.AcceptMessageResponsePacket;
 import com.chanshiyu.netty.serialize.Serializer;
 import com.chanshiyu.netty.serialize.impl.JSONSerializer;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -41,8 +41,8 @@ public class PacketCodec {
         packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
         packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
         // 消息
-        packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
-        packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetTypeMap.put(Command.SEND_MESSAGE_REQUEST, SendMessageRequestPacket.class);
+        packetTypeMap.put(Command.SEND_MESSAGE_RESPONSE, AcceptMessageResponsePacket.class);
         // 房间
         packetTypeMap.put(Command.CREATE_ROOM_REQUEST, CreateRoomRequestPacket.class);
         packetTypeMap.put(Command.CREATE_ROOM_RESPONSE, CreateRoomResponsePacket.class);

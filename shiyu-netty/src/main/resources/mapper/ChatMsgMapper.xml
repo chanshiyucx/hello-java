@@ -13,4 +13,14 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="msg" jdbcType="LONGVARCHAR" property="msg" />
   </resultMap>
+
+  <select id="queryChatMsgList" resultMap="BaseResultMap">
+    select *
+    from chat_msg c
+    where c.room_id = #{roomId}
+    <if test="lastMsgId != null and lastMsgId > 0">
+      and c.id &lt; #{lastMsgId,jdbcType=INTEGER}
+    </if>
+    order by create_time desc
+  </select>
 </mapper>

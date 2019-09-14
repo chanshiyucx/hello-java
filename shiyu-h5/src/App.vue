@@ -22,7 +22,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo'])
+    ...mapGetters(['userInfo', 'roomCache'])
   },
   watch: {
     $route: {

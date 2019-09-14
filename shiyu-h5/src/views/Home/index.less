@@ -1,0 +1,44 @@
+#home {
+  height: 100vh;
+  background-color: #f9f9f9;
+
+  .user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 14px;
+    height: 46px;
+    line-height: 46px;
+    letter-spacing: 1px;
+    background-color: #fff;
+
+    .left {
+      display: flex;
+      justify-content: flex-start;
+      line-height: 18px;
+      margin-left: 10px;
+      color: #222;
+      .info {
+        margin-top: 4px;
+        margin-left: 10px;
+      }
+    }
+    .right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      .msg {
+        margin-right: 5px;
+      }
+      .tag {
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  .empty {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+  }
+}

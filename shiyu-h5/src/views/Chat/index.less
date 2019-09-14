@@ -23,7 +23,7 @@
   box-sizing: border-box;
 
   &.toggle {
-    padding-bottom: 280px;
+    padding-bottom: 240px;
   }
 
   .divider {
@@ -69,7 +69,6 @@
   }
 
   .chat-list {
-    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -82,6 +81,12 @@
         /deep/ol {
           padding-left: 10px;
           list-style: initial !important;
+        }
+        img {
+          cursor: pointer;
+          max-width: 230px;
+          width: initial;
+          height: initial;
         }
       }
       .avatar {
@@ -111,7 +116,7 @@
 
         & > div {
           position: relative;
-          padding: 15px;
+          padding: 8px 12px;
           max-width: 600px;
           border-radius: 10px;
           background-color: #ed5a4a;
@@ -129,10 +134,6 @@
             border-top: 7px solid transparent;
             border-left: 10px solid #ed5a4a;
             border-bottom: 7px solid transparent;
-          }
-          img {
-            cursor: pointer;
-            max-width: 130px;
           }
         }
 
@@ -166,6 +167,7 @@
         margin-right: 15px;
       }
       .nickname {
+        text-align: left;
         transform: translateX(-5px);
         font-size: 12px;
         color: #222;
@@ -195,11 +197,6 @@
             border-top: 7px solid transparent;
             border-right: 10px solid #fff;
             border-bottom: 7px solid transparent;
-          }
-
-          img {
-            max-width: 130px;
-            cursor: pointer;
           }
         }
       }

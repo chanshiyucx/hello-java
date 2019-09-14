@@ -30,6 +30,9 @@ public class CreateRoomResponsePacket extends Packet {
 
     private String icon;
 
+    /** 是否已存在 0不存在 1已存在 */
+    private Integer isExist;
+
     @Override
     public Integer getCommand() {
         return Command.CREATE_ROOM_RESPONSE;

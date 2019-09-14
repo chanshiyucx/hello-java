@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import request from '@/utils/request'
 
 export default {
@@ -35,6 +35,9 @@ export default {
     this.getDetail()
   },
   methods: {
+    ...mapActions({
+      getRoomInfo: 'getRoomInfo'
+    }),
     onClickLeft() {
       this.$router.go(-1)
     },
@@ -91,6 +94,7 @@ export default {
         users
       }
       this.IMSocket.handleRequestEvent('CREATE_ROOM', data, msg => {
+        this.getRoomInfo(msg.id)
         this.$router.push({
           path: '/chat',
           query: {

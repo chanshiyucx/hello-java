@@ -63,6 +63,11 @@ const router = new Router({
       path: '/chat',
       name: 'chat',
       component: () => import('./views/Chat')
+    },
+    {
+      path: '/group',
+      name: 'group',
+      component: () => import('./views/Group')
     }
   ]
 })

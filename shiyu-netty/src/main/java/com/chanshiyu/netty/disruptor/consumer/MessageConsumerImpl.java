@@ -105,7 +105,7 @@ public class MessageConsumerImpl extends MessageConsumer {
         Room room = roomService.queryRoomByUsers(users);
         if (room != null) {
             // 返回已存在房间
-            CreateRoomResponsePacket response = new CreateRoomResponsePacket(room.getId(), room.getName(), room.getUsers(), room.getCreateUser(), room.getCreateTime(), room.getIcon());
+            CreateRoomResponsePacket response = new CreateRoomResponsePacket(room.getId(), room.getName(), room.getUsers(), room.getCreateUser(), room.getCreateTime(), room.getIcon(), 1);
             ctx.writeAndFlush(response);
         } else {
             try {
@@ -122,7 +122,7 @@ public class MessageConsumerImpl extends MessageConsumer {
                     newRoom.setIcon(users1.getAvatar());
                 }
                 Room result = roomService.createRoom(newRoom);
-                CreateRoomResponsePacket response = new CreateRoomResponsePacket(result.getId(), result.getName(), result.getUsers(), result.getCreateUser(), result.getCreateTime(), result.getIcon());
+                CreateRoomResponsePacket response = new CreateRoomResponsePacket(result.getId(), result.getName(), result.getUsers(), result.getCreateUser(), result.getCreateTime(), result.getIcon(), 0);
                 ctx.writeAndFlush(response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -169,7 +169,6 @@ public class MessageConsumerImpl extends MessageConsumer {
      */
     private void sendMsg(ConcurrentLinkedQueue<Channel> channels, int msgId, String roomId, String sendUserId, String sendNickname, String sendAvatar, String msg, Date date) {
         if (channels != null && channels.size() > 0) {
-            log.info("广播消息-->{}", channels.size());
             AcceptMessageResponsePacket response = new AcceptMessageResponsePacket(msgId, roomId, sendUserId, sendNickname, sendAvatar, msg, date.getTime());
             channels.forEach(channel -> channel.writeAndFlush(response));
         }

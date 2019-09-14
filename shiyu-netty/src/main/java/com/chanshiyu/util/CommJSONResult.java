@@ -23,10 +23,20 @@ public class CommJSONResult<T> {
     /** 响应中的数据 */
     private T data;
 
+    /** 分页描述信息 */
+    private JSONResultAttributes attributes;
+
     private CommJSONResult(T data) {
         this.status = 200;
         this.msg = "OK";
         this.data = data;
+    }
+
+    private CommJSONResult(T data, JSONResultAttributes attributes) {
+        this.status = 200;
+        this.msg = "OK";
+        this.data = data;
+        this.attributes = attributes;
     }
 
     private CommJSONResult(Integer status, String msg, T data) {
@@ -42,6 +52,8 @@ public class CommJSONResult<T> {
     public static <T> CommJSONResult<T> ok(T data) {
         return new CommJSONResult<>(data);
     }
+
+    public static <T> CommJSONResult<T> ok(T data, JSONResultAttributes attributes) { return new CommJSONResult<>(data, attributes); }
 
     public static <T> CommJSONResult<T> errorMsg(String msg) {
         return new CommJSONResult<>(500, msg, null);

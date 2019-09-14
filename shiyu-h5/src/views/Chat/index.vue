@@ -1,11 +1,6 @@
 <template>
   <div id="chat">
-    <van-nav-bar
-      :title="`聊天${IMStatus ? '' : '-连接中'}`"
-      class="header"
-      left-arrow
-      @click-left="onClickLeft"
-    />
+    <van-nav-bar :title="`聊天${IMStatus ? '' : '-连接中'}`" class="header" left-arrow @click-left="onClickLeft" />
     <div ref="chat" :class="['main', visible.emoji && 'toggle']">
       <PullRefresh
         :disabled="historyLoading === 2"
@@ -23,10 +18,10 @@
         <ul ref="chatMsgList" class="chat-list">
           <!-- 历史消息 -->
           <li v-for="(item, i) in historyList" :key="i" class="chat-msg">
-            <!-- <div class="times">{{ formatTime(historyList[i > 0 ? i - 1 : 0].date, item.date) }}</div> -->
+            <div class="times">{{ formatTime(historyList[i > 0 ? i - 1 : 0].date, item.date) }}</div>
             <!-- 自己 -->
-            <!-- <div v-if="imInfo.imUserId && item.sendUserId === imInfo.imUserId" class="msg me">
-              <img class="avatar" src="@/assets/images/service/client.jpg" alt />
+            <div v-if="item.sendUserId === userInfo.id" class="msg me">
+              <Avatar class="avatar" :url="userInfo.avatar" alt="头像" />
               <div class="me-msg">
                 <div v-if="item.msg.contentType === TYPES.TEXT" v-html="toHtml(item.msg.text)" />
                 <div v-else-if="item.msg.contentType === TYPES.PICTURE">
@@ -37,10 +32,11 @@
                   />
                 </div>
               </div>
-            </div>-->
+            </div>
             <!-- 好友 -->
-            <!-- <div v-else class="msg user">
-              <img class="avatar" :src="item.avatar || serviceInfo.sysAvatar || defaultAvatar" alt />
+            <div v-else class="msg user">
+              <Avatar class="avatar" :url="item.sendUserAvatar" alt="头像" />
+              <p class="nickname">{{ item.sendUserNickname }}</p>
               <div class="user-msg">
                 <div v-if="item.msg.contentType === TYPES.TEXT" v-html="toHtml(item.msg.text)" />
                 <div v-else-if="item.msg.contentType === TYPES.PICTURE">
@@ -51,10 +47,8 @@
                   />
                 </div>
               </div>
-            </div>-->
+            </div>
           </li>
-          <!-- 分界线 -->
-          <li class="divider middle-divider" v-if="historyList.length">以下为最新消息</li>
           <!-- 聊天消息 -->
           <li v-for="(item, i) in chatMsgList" :key="`chat-${i}`" class="chat-msg">
             <div class="times">{{ formatTime(chatMsgList[i > 0 ? i - 1 : 0].date, item.date) }}</div>
@@ -161,9 +155,7 @@ export default {
       return !inputMsg || !this.IMStatus
     },
     chatMsgList() {
-      const roomInfo = this.roomList[this.roomId] || { chatMsgList: [] }
-      console.log('chatMsgList', roomInfo.chatMsgList)
-      return roomInfo.chatMsgList
+      return this.roomList[this.roomId] || []
     }
   },
   watch: {
@@ -191,10 +183,22 @@ export default {
     Object.keys(emoji).forEach(o => {
       this.emojiList.push({ name: emoji[o], val: o })
     })
+    if (!this.roomId) {
+      this.$toast.fail('获取房间信息失败！')
+      return
+    }
+    this.getHistory(false)
+    this.resetChatMsg(this.roomId)
+    this.setCurRoomId(this.roomId)
+  },
+  beforeDestroy() {
+    this.setCurRoomId('')
   },
   methods: {
     ...mapMutations({
-      setChatMsg: 'setChatMsg'
+      setChatMsg: 'setChatMsg',
+      resetChatMsg: 'resetChatMsg',
+      setCurRoomId: 'setCurRoomId'
     }),
     onClickLeft() {
       this.$router.go(-1)
@@ -204,7 +208,6 @@ export default {
       setTimeout(() => {
         this.$refs.chat.scrollTop = this.scrollTopState ? 0 : this.$refs.chatMsgList.scrollHeight + 1000
         if (type === 'load') return
-
         this.imgPreviewList = []
         ;[...this.historyList, ...this.chatMsgList].forEach(({ msg }) => {
           if (msg && msg['contentType'] === this.TYPES.PICTURE) {
@@ -254,6 +257,42 @@ export default {
     formatTime(time1, time2) {
       const now = +new Date()
       return getFormatTime(time1 || now, time2 || now)
+    },
+    // 获取历史纪录
+    async getHistory(topState) {
+      this.scrollTopState = topState
+      this.historyLoading = 0
+      const lastMsg = this.historyList[0] || { id: 0 }
+      const data = {
+        roomId: this.roomId,
+        lastMsgId: lastMsg.id
+      }
+
+      const res = await request({
+        url: '/chat/list',
+        method: 'GET',
+        params: data
+      })
+
+      this.getHistoryOk(res)
+    },
+    // 成功获取历史纪录
+    getHistoryOk(res) {
+      const { data = [], attributes = {} } = res
+      try {
+        data
+          .filter(o => o.msg)
+          .forEach(o => {
+            if (typeof o.msg === 'string') {
+              o.msg = JSON.parse(o.msg)
+            }
+          })
+      } catch (error) {
+        console.log('消息转换失败')
+      }
+      this.historyList = data.reverse().concat(this.historyList)
+      const { pageNum, pageSize, total } = attributes
+      this.historyLoading = pageNum * pageSize < total ? 1 : 2 // 1: 拉取历史消息 2: 暂无历史消息
     },
     // 文件读取成功
     async afterRead({ file }) {

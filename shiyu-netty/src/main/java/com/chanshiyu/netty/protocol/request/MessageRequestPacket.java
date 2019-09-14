@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 public class MessageRequestPacket extends Packet {
 
     private int msgIndex;               // 消息序列
-    private String acceptUserId;        // 接收消息的Id
+    private String roomId;              // 房间Id
     private String msg;                 // 消息内容
 
     @Override

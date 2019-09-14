@@ -18,42 +18,42 @@ public interface UserService {
     public boolean queryUsernameIsExist(String username);
 
     /** 查询用户是否存在 */
-    public Users queryUserForLogin(String username, String pwd);
+    Users queryUserForLogin(String username, String pwd);
 
     /** 注册用户 */
-    public Users saveUser(Users user) throws Exception;
+    Users saveUser(Users user) throws Exception;
 
     /** 更新用户 */
-    public Users updateUser(Users user) throws Exception;
+    Users updateUser(Users user) throws Exception;
 
     /** 根据用户名查询用户 */
-    public Users queryUserByUsername(String username) throws Exception;
+    Users queryUserByUsername(String username) throws Exception;
 
     /** 根据用户ID查询用户 */
-    public Users queryUserById(String userId) throws Exception;
+    Users queryUserById(String userId) throws Exception;
 
     /** 搜索好友 */
-    public Integer searchFriend(SearchUser searchUser) throws Exception;
+    Integer searchFriend(SearchUser searchUser) throws Exception;
 
     /** 发送好友验证 */
-    public void sendFriendRequest(SearchUser searchUser) throws Exception;
+    void sendFriendRequest(SearchUser searchUser) throws Exception;
 
     /** 推荐好友 */
-    public List<UsersVO> recommend();
+    List<UsersVO> recommend();
 
     /** 查询好友申请 */
-    public List<UsersVO> queryFriendRequestList(String userId);
+    List<UsersVO> queryFriendRequestList(String userId);
 
     /** 删除好友申请记录 */
-    public void deleteFriendRequest(String sendUserId, String acceptUserId) throws Exception;
+    void deleteFriendRequest(String sendUserId, String acceptUserId) throws Exception;
 
     /** 通过好友申请 */
-    public void passFriendRequest(String sendUserId, String acceptUserId) throws Exception;
+    void passFriendRequest(String sendUserId, String acceptUserId) throws Exception;
 
     /** 获取好友列表 */
-    public List<UsersVO> queryFriendList(String userId);
+    List<UsersVO> queryFriendList(String userId);
 
     /** 删除好友 */
-    public void deleteMyFriend(String userId, String friendUserId) throws Exception ;
+    void deleteMyFriend(String userId, String friendUserId) throws Exception ;
 
 }

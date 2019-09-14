@@ -35,6 +35,12 @@ public class RoomServiceImpl implements RoomService {
         return roomMapper.selectOneByExample(example);
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public Room queryRoomById(String roomId) {
+        return roomMapper.selectByPrimaryKey(roomId);
+    }
+
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Room createRoom(Room room) throws Exception {

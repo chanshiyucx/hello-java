@@ -7,11 +7,14 @@ import com.chanshiyu.netty.protocol.request.LoginRequestPacket;
 import com.chanshiyu.netty.protocol.request.MessageRequestPacket;
 import com.chanshiyu.netty.protocol.response.CreateRoomResponsePacket;
 import com.chanshiyu.netty.protocol.response.LoginResponsePacket;
+import com.chanshiyu.netty.protocol.response.MessageResponsePacket;
 import com.chanshiyu.netty.protocol.response.MessageSuccessResponsePacket;
 import com.chanshiyu.netty.session.Session;
 import com.chanshiyu.netty.session.SessionUtil;
+import com.chanshiyu.pojo.ChatMsg;
 import com.chanshiyu.pojo.Room;
 import com.chanshiyu.pojo.Users;
+import com.chanshiyu.service.ChatMsgService;
 import com.chanshiyu.service.RoomService;
 import com.chanshiyu.service.UserService;
 import com.chanshiyu.util.SpringUtil;
@@ -25,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author shiyu
@@ -37,6 +41,18 @@ public class MessageConsumerImpl extends MessageConsumer {
 
     // 时间
     static SimpleDateFormat ChatDateFormat;
+
+    private RoomService roomService;
+
+    private UserService userService;
+
+    private ChatMsgService chatMsgService;
+
+    {
+        roomService = SpringUtil.getBean(RoomService.class);
+        userService = SpringUtil.getBean(UserService.class);
+        chatMsgService = SpringUtil.getBean(ChatMsgService.class);
+    }
 
     static {
         ChatDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
@@ -84,8 +100,6 @@ public class MessageConsumerImpl extends MessageConsumer {
      * 创建房间
      */
     private void createRoom(ChannelHandlerContext ctx, CreateRoomRequestPacket packet)  {
-        RoomService roomService = SpringUtil.getBean(RoomService.class);
-        UserService userService = SpringUtil.getBean(UserService.class);
         String users = packet.getUsers();
         // 获取或创建房间
         Room room = roomService.queryRoomByUsers(users);
@@ -121,36 +135,51 @@ public class MessageConsumerImpl extends MessageConsumer {
      * 消息处理
      */
     private void msg(ChannelHandlerContext ctx, MessageRequestPacket packet) {
-        Channel channel = ctx.channel();
-        int msgIndex = packet.getMsgIndex();
-        sendMsgSuccess(channel, msgIndex, 10, new Date().getTime());
-//        Session session = SessionUtil.getSession(ctx.channel());
-//        String sendImUserId = session.getImUserId();
-//        String sendAvatar = MessageCommonUtil.getImUserAvatar(session.getNodeId(), session.getThirdPartyId());
-//        String acceptUserId = getClientAcceptUserId(packet, session);
-//        // 不选择问题，直接发言
-//        speakDirectly(channel, session);
-//        // 消息处理
-//        int msgId;
-//        Date sysTimer = new Date();
-//        msgId = messageProcessing(channel, packet, session, sendImUserId,sendAvatar, acceptUserId, sysTimer);
-//        // 最后一次聊天时间
-//        session.setLastSendMsgDate(new Date());
-//        // 消息发送成功
-//        MessageCommonUtil.sendMsgSuccess(ctx.channel(), msgIndex, msgId, sysTimer.getTime());
-//        // 记录最后的的发送时间
-//        String time = ChatDateFormat.format(new Date());
-//        RedisOperator operator = SpringUtil.getBean(RedisOperator.class);
-//        operator.set(String.format(IM_LAST_CHAT_TIMER, sendImUserId), time);
+        try {
+            Channel channel = ctx.channel();
+            String roomId = packet.getRoomId();
+            Session session = SessionUtil.getSession(ctx.channel());
+            Room room = roomService.queryRoomById(roomId);
 
+            if (room != null) {
+                Users sendUser = userService.queryUserById(session.getUserId());
+                // 消息入库
+                int msgId = chatMsgService.createChatMsg(new ChatMsg(null, room.getId(), sendUser.getId(), sendUser.getAvatar(), packet.getMsg(), new Date()));
+                // 找出房间所有用户并广播
+                String roomUsers = room.getUsers();
+                String[] roomUsersId = roomUsers.split(",");
+
+                for (String s : roomUsersId) {
+                    ConcurrentLinkedQueue<Channel> ch = SessionUtil.getUserIdChannel(s);
+                    // 自己不推消息
+                    if (!s.equals(sendUser.getId())) {
+                        sendMsg(ch, msgId, room.getId(), sendUser.getId(), sendUser.getAvatar(), packet.getMsg(), new Date());
+                    }
+                }
+                // 消息发送成功
+                sendMsgSuccess(channel, packet.getMsgIndex(), msgId, new Date().getTime());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 保存并转发消息
+     */
+    private void sendMsg(ConcurrentLinkedQueue<Channel> channels, int msgId, String roomId, String sendUserId, String sendAvatar, String msg, Date date) {
+        if (channels != null && channels.size() > 0) {
+            log.info("广播消息-->{}", channels.size());
+            MessageResponsePacket response = new MessageResponsePacket(msgId, roomId, sendUserId, sendAvatar, msg, date.getTime());
+            channels.forEach(channel -> channel.writeAndFlush(response));
+        }
     }
 
     /**
      * 消息发送成功
      */
-    public static void sendMsgSuccess(Channel channel, int msgIndex, int msgId, long date) {
+    private static void sendMsgSuccess(Channel channel, int msgIndex, int msgId, long date) {
         channel.writeAndFlush(new MessageSuccessResponsePacket(msgId, msgIndex, date));
     }
-
 
 }

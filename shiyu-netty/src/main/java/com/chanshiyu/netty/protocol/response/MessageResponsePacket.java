@@ -18,10 +18,11 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class MessageResponsePacket extends Packet {
 
-    private int msgId;                  // 用于签收
-    private String sendUserId;          // 发送者的用户id
+    private int msgId;                  // 消息ID
+    private String roomId;              // 房间id
+    private String sendUserId;          // 发送者id
+    private String sendUserAvatar;      // 发送者头像
     private String msg;                 // 消息内容 json
-    private boolean sign;               // true 已读，未读消息
     private long date;                  // 消息时间
 
     @Override

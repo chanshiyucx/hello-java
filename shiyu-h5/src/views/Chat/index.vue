@@ -139,6 +139,8 @@ export default {
       },
       emoji,
       emojiList: [],
+      roomId: this.$route.query.id,
+      roomInfo: {},
       historyLoading: 0, // 0: 正在拉取 1: 拉取历史消息 2: 暂无历史消息
       historyList: [], // 历史消息
       chatList: [], // 对话消息
@@ -148,7 +150,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo']),
+    ...mapGetters(['userInfo', 'IMSocket']),
     isDisabledSend() {
       const inputMsg = this.inputMsg.trim()
       return !inputMsg
@@ -156,13 +158,19 @@ export default {
   },
   watch: {},
   async created() {
-    console.log('params-->', this.$route)
     // 处理表情包数据
     Object.keys(emoji).forEach(o => {
       this.emojiList.push({ name: emoji[o], val: o })
     })
+    // 获取房间信息
+    if (!this.roomInfo) {
+      this.$toast.fail('无法获取房间信息！')
+    } else {
+      this.getRoomInfo()
+    }
   },
   methods: {
+    getRoomInfo() {},
     onClickLeft() {
       this.$router.go(-1)
     },
@@ -258,11 +266,13 @@ export default {
       // this.chatMsgList.push(msg)
 
       const data = {
+        roomId: this.roomId,
         msgIndex,
         msg: JSON.stringify(obj)
       }
-      console.log('data-->', data)
-      this.handleRequestEvent('sendMessage', data)
+      this.IMSocket.handleRequestEvent('SEND_MESSAGE', data, () => {
+        console.log('消息发送成功-->')
+      })
       this.visible.emoji = false
     }
   }

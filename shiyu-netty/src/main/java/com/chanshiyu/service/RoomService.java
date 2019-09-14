@@ -10,9 +10,12 @@ import com.chanshiyu.pojo.Room;
 public interface RoomService {
 
     /** 查询房间是否存在 */
-    public Room queryRoomByUsers(String users);
+    Room queryRoomByUsers(String users);
+
+    /** 根据ID查询房间 */
+    Room queryRoomById(String roomId);
 
     /** 创建房间 */
-    public Room createRoom(Room room) throws Exception;
+    Room createRoom(Room room) throws Exception;
 
 }

@@ -16,6 +16,9 @@ import java.util.concurrent.ConcurrentSkipListMap;
 @Slf4j
 public class SessionUtil {
 
+    /**
+     * 一个用户ID可以对应Channel
+     */
     private static final Map<String, ConcurrentLinkedQueue<Channel>> mUserIdChannelMap = new ConcurrentSkipListMap<>();
 
     /**

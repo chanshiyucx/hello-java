@@ -45,7 +45,7 @@ public class UserServieImpl implements UserService {
 
     private final Sid sid;
 
-    private final String NICKNAME = "時語-";
+    private final String NICKNAME = "時語";
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override

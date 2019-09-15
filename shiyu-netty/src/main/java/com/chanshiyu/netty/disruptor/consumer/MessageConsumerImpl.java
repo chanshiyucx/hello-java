@@ -67,7 +67,6 @@ public class MessageConsumerImpl extends MessageConsumer {
         Channel channel = ctx.channel();
         // 命令字
         Integer command = event.getPacket().getCommand();
-        log.info("onEvent-->{}", command);
         switch (command) {
             case Command.LOGIN_REQUEST:
                 // 登陆处理

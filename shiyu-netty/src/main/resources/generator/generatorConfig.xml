@@ -20,6 +20,7 @@
                         connectionURL="${jdbc.url}"
                         userId="${jdbc.username}"
                         password="${jdbc.password}">
+            <property name="nullCatalogMeansCurrent" value="true" />
         </jdbcConnection>
 
         <!--实体-->

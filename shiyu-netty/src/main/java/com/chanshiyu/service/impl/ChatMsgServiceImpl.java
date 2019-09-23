@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -26,15 +29,16 @@ public class ChatMsgServiceImpl implements ChatMsgService {
 
     private final ChatMsgMapper chatMsgMapper;
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public int createChatMsg(ChatMsg chatMsg) {
         chatMsgMapper.insertUseGeneratedKeys(chatMsg);
         return chatMsg.getId();
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public CommListResult<ChatMsg> queryChatMsgList(String roomId, Integer lastMsgId, int pageNum, int pageSize) {
-        log.info("queryChatMsgList, {} - {} - {} - {}", roomId, lastMsgId, pageNum, pageSize);
         // 开始分页
         PageHelper.startPage(pageNum, pageSize);
         // 获取列表
@@ -44,4 +48,5 @@ public class ChatMsgServiceImpl implements ChatMsgService {
         JSONResultAttributes attributes = new JSONResultAttributes(info.getPageNum(), info.getPageSize(), info.getTotal());
         return new CommListResult<ChatMsg>(msgList, attributes);
     }
+
 }

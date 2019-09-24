@@ -17,7 +17,7 @@ public class HelloController {
 
     @GetMapping("say")
     public String hello(String message) {
-        return String.format("Your message is %s port %s", message, port);
+        return String.format("Your message is: %s, port: %s", message, port);
     }
 
 }

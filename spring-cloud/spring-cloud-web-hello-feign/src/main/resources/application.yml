@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: spring-cloud-web-hello-feign
+
+server:
+  port: 8765
+
+feign:
+  hystrix:
+    enabled: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

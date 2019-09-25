@@ -1,24 +1,25 @@
-package com.chanshiyu.nacosprovider.controller;
+package nacosconsumerfeign.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import nacosconsumerfeign.service.NacosProviderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author shiyu
- * @date 2019/9/25 11:18
+ * @date 2019/9/25 15:58
  * @Description
  */
 @RestController
 public class NacosProviderController {
 
-    @Value("${server.port}")
-    private String port;
+    @Autowired
+    private NacosProviderService nacosProviderService;
 
     @GetMapping("/echo/{message}")
     public String echo(@PathVariable String message) {
-        return String.format("Your message is %s and port is %s", message, port);
+        return nacosProviderService.echo(message);
     }
 
 }
